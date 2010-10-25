@@ -8,7 +8,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-import com.pod2.elevator.core.MotionStatus;
+import com.pod2.elevator.core.DoorDriverMechanism;
+import com.pod2.elevator.core.DoorSensor;
+import com.pod2.elevator.core.DriverMechanism;
+import com.pod2.elevator.core.PositionSensor;
 
 public class ElevatorStatus extends JFrame {
 
@@ -86,6 +89,13 @@ public class ElevatorStatus extends JFrame {
 		
 		public void statusUpdate(SystemSnapShot s){
 			//TODO: Update passenger number, motion status, component status
-			passengerNumber.setText(Integer.toString(s.elevatorSnapShot.requestCount));
+			passengerNumber.setText(Integer.toString(s.elevatorSnapShot[id].requestCount));
+			
+			motionStatus.setText(s.elevatorSnapShot[id].motionStatus.toString());
+			
+			componentStatus[0].setText(s.elevatorSnapShot[id].componentFailure.get(new DoorSensor()).toString());
+			componentStatus[1].setText(s.elevatorSnapShot[id].componentFailure.get(new DoorDriverMechanism()).toString());
+			componentStatus[2].setText(s.elevatorSnapShot[id].componentFailure.get(new PositionSensor()).toString());
+			componentStatus[3].setText(s.elevatorSnapShot[id].componentFailure.get(new DriverMechanism()).toString());
 		}
 }
