@@ -35,7 +35,8 @@ public class Simulation extends JPanel{
 	}
 	
 	public void statusUpdate(SystemSnapShot s){
-		//TODO: Update main panel, system status
+		mainPanel.statusUpdate(s);
+		systemStatus.statusUpdate(s);
 	}
 
 }

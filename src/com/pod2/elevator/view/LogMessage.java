@@ -10,4 +10,8 @@ public class LogMessage {
 		type = t;
 		description = d;
 	}
+	
+	public String toString(){
+		return new String(quantum + ": " + type + " - " + description);
+	}
 }

@@ -56,14 +56,14 @@ public class SystemStatus extends JPanel{
 		statusPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 		statusPanel.setLayout(new GridLayout(0, 3, 5, 5));
 		
-		for(int i=0; i<this.numFloor; i++){
+		for(int i=this.numFloor-1; i>= 0; i--){
 			//Add floor button status
 			if(i==0){
-				floorButtons[i] = new FloorButtonPanel(0);
+				floorButtons[i] = new FloorButtonPanel(i, 1);
 			}else if(i == numFloor -1){
-				floorButtons[i] = new FloorButtonPanel(1);
+				floorButtons[i] = new FloorButtonPanel(i, 0);
 			}else{
-				floorButtons[i] = new FloorButtonPanel(2);
+				floorButtons[i] = new FloorButtonPanel(i, 2);
 			}
 			statusPanel.add(floorButtons[i]);
 			
@@ -74,7 +74,7 @@ public class SystemStatus extends JPanel{
 			statusPanel.add(floorQueues[i]);
 		
 			//Add label for floor number
-			floors[i] = new JLabel("1");
+			floors[i] = new JLabel(Integer.toString(i));
 			floors[i].setHorizontalAlignment(JLabel.CENTER);
 			floors[i].setToolTipText("Floor Number");
 			statusPanel.add(floors[i]);
@@ -94,6 +94,13 @@ public class SystemStatus extends JPanel{
 	
 	public void statusUpdate(SystemSnapShot s){
 		//TODO: Update Time, Passenger Queue, Floor Button Panel
+		time.setText(Integer.toString(s.quantum));
+		
+		for(int i=0; i<floorQueues.length; i++){
+			floorQueues[i].setText(Integer.toString(s.floorSnapShot.floorQueues[i]));
+			floorButtons[i].statusUpdate(s);
+		}
+		
 	}
 
 }

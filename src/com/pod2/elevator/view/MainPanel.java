@@ -26,7 +26,7 @@ public class MainPanel extends JPanel{
 	
 	private JPanel elevatorsPanel = new JPanel();
 	private ElevatorPanel elevators[];
-	static private JFrame elevatorStatus[];
+	static private ElevatorStatus elevatorStatus[];
 	
 	private JPanel logPanel = new JPanel();
 	private JTextArea log = new JTextArea("Logging goes here");
@@ -38,7 +38,7 @@ public class MainPanel extends JPanel{
 		this.numComponent = numComponent;
 		positions = new JButton[numFloor];
 		elevators = new ElevatorPanel[numElevator];
-		elevatorStatus = new JFrame[numElevator];
+		elevatorStatus = new ElevatorStatus[numElevator];
 		
 		setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		setLayout(new BorderLayout());
@@ -64,7 +64,7 @@ public class MainPanel extends JPanel{
 		
 		for(int i=0; i<numElevator; i++){	
 			//Add elevator panels
-			elevators[i] = new ElevatorPanel(numFloor, numComponent);
+			elevators[i] = new ElevatorPanel(i, numFloor, numComponent);
 			elevatorsPanel.add(elevators[i]);
 		}
 		this.add(elevatorsPanel, BorderLayout.CENTER);
@@ -87,5 +87,20 @@ public class MainPanel extends JPanel{
 	
 	public void statusUpdate(SystemSnapShot s){
 		//TODO: Update log, elevator status, elevator, position
+		for(LogMessage m : s.messages){
+			log.append(m.toString() + "\n");
+		}
+		for(ElevatorStatus e : elevatorStatus){
+			if(e != null){
+				e.statusUpdate(s);
+			}
+		}
+		for(ElevatorPanel p : elevators){
+			p.statusUpdate(s);
+		}
+		for(int i=0; i<positions.length; i++){
+			String pos = Double.toString(s.elevatorSnapShot[i].currentPosition);
+			positions[i].setText(pos);
+		}
 	}
 }

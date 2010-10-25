@@ -1,5 +1,7 @@
 package com.pod2.elevator.view;
 
+import com.pod2.elevator.core.*;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -23,7 +25,7 @@ public class SimulationWindow extends JFrame implements Runnable{
 	private JMenuBar menubar;
 	private JToolBar toolbar;
 	private JTabbedPane tabPane;
-	private JComponent simulator;
+	private JComponent simulation;
 	
 	public SimulationWindow(int numFloor, int numElevator, int numComponent) {
 		this.numFloor = numFloor;
@@ -36,6 +38,7 @@ public class SimulationWindow extends JFrame implements Runnable{
 		
 		setSize(size);
 		setTitle("Simulator");
+		setLayout(new BorderLayout());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		//Center on screen
@@ -51,10 +54,10 @@ public class SimulationWindow extends JFrame implements Runnable{
 		
 		//Add tabs
 		tabPane = new JTabbedPane();
-		tabPane.setPreferredSize(new Dimension(800, 600));
-		simulator = new Simulation(numFloor, numElevator, numComponent);
+		tabPane.setPreferredSize(new Dimension(800,600));
+		simulation = new Simulation(numFloor, numElevator, numComponent);
 		JComponent test = new JPanel();
-		tabPane.addTab("Simulator", simulator);
+		tabPane.addTab("Simulator", simulation);
 		tabPane.addTab("Test", test);
 		add(tabPane, BorderLayout.CENTER);
 		
@@ -68,13 +71,31 @@ public class SimulationWindow extends JFrame implements Runnable{
 	}
 	
 	public void statusUpdate(SystemSnapShot s){
-		//TODO: Update simulator
+		((Simulation) simulation).statusUpdate(s);
 	}
 
 	public static void main(String[] args) {
 		SimulationWindow sim = new SimulationWindow(10, 10, 5);
         javax.swing.SwingUtilities.invokeLater(sim);
-        sim.statusUpdate(new SystemSnapShot());
+        SystemSnapShot test = new SystemSnapShot(10, 10, 5);
+        test.quantum = 10;
+
+        for(int i=0; i<10; i++){
+
+        	test.elevatorSnapShot[i].currentPosition = 4;
+        	test.elevatorSnapShot[i].requestCount = 5;
+        	test.elevatorSnapShot[i].motionStatus = MotionStatus.MovingUp;
+        	test.elevatorSnapShot[i].serviceStatus = ServiceStatus.InService;
+        	test.elevatorSnapShot[i].requestCapacity = 10;
+
+        	test.floorSnapShot.floorQueues[i] = 6;
+        	test.floorSnapShot.floorRequestButtons[i] = new FloorRequestButton(true, false, 5, 5);
+        }
+        
+        for(int i=0; i<5; i++){
+        	test.messages[i] = new LogMessage(2, "Test", "Test Log Message");
+        }
+        sim.statusUpdate(test);
     }
 	
 }

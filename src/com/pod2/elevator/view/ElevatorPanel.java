@@ -2,6 +2,8 @@ package com.pod2.elevator.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JPanel;
 
 public class ElevatorPanel extends JPanel{
@@ -11,11 +13,13 @@ public class ElevatorPanel extends JPanel{
 	 */
 	private static final long serialVersionUID = 6753321753497119457L;
 	
+	private int id;
 	private int numFloor;
 	private int numComponent;
 	private Elevator elevator;
 	
-	public ElevatorPanel(int numFloor, int numComponent) {
+	public ElevatorPanel(int id, int numFloor, int numComponent) {
+		this.id = id;
 		this.numFloor = numFloor;
 		this.numComponent = numComponent;
 		
@@ -27,6 +31,9 @@ public class ElevatorPanel extends JPanel{
 	
 	public void statusUpdate(SystemSnapShot s){
 		//TODO: Update elevator image and position (guarantee elevator cannot go out of bound)
+		elevator.setFloor(s.elevatorSnapShot[id].currentPosition);
+		Dimension size = this.getSize();
+		System.out.println("panel: " + size.height);
 	}
 
 }
