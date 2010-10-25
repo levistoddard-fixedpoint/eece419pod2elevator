@@ -8,6 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
+import com.pod2.elevator.core.MotionStatus;
+
 public class ElevatorStatus extends JFrame {
 
 		/**
@@ -30,7 +32,7 @@ public class ElevatorStatus extends JFrame {
 	
 	private JPanel componentPanel = new JPanel();
 	private JLabel componentStatus[];
-
+	
 		public ElevatorStatus(int id, int numComponent) {
 			
 			setSize(200, 100);
@@ -84,5 +86,6 @@ public class ElevatorStatus extends JFrame {
 		
 		public void statusUpdate(SystemSnapShot s){
 			//TODO: Update passenger number, motion status, component status
+			passengerNumber.setText(Integer.toString(s.elevatorSnapShot.requestCount));
 		}
 }
