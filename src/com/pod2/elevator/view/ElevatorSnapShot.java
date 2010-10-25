@@ -14,5 +14,4 @@ public class ElevatorSnapShot {
 	public ServiceStatus serviceStatus;
 	public int requestCapacity;
 	public AbstractMap<Class<Object>, Boolean> componentFailure;
-	public int numFloor;
 }
