@@ -15,6 +15,8 @@ public class FloorButtonPanel extends JPanel{
 	 * 
 	 */
 	private static final long serialVersionUID = -4656219862499667952L;
+	private int id;
+	private int type;
 	private FloorButton up;
 	private FloorButton down;
 	private FloorButton blank;
@@ -27,7 +29,9 @@ public class FloorButtonPanel extends JPanel{
 	private Image iconUpOn = toolkit.getImage("icons/floorupon.png");
 	private Image iconDownOn = toolkit.getImage("icons/floordownon.png");
 	
-	public FloorButtonPanel(int Type){
+	public FloorButtonPanel(int id, int type){
+		this.id = id;
+		this.type = type;
 		
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(2, 1, 0, 0));
@@ -36,7 +40,7 @@ public class FloorButtonPanel extends JPanel{
 		down = new FloorButton(iconDown);
 		blank = new FloorButton(iconBlank);
 		
-		switch(Type){
+		switch(type){
 		case 0:
 			add(blank);
 			add(down);
@@ -57,6 +61,16 @@ public class FloorButtonPanel extends JPanel{
 	
 	public void statusUpdate(SystemSnapShot s){
 		//TODO: Update up and down button
+		if(s.floorSnapShot.floorRequestButtons[id].isUpSelected){
+			up.setImage(iconUpOn);
+		}else{
+			up.setImage(iconUp);
+		}
+		if(s.floorSnapShot.floorRequestButtons[id].isDownSelected){
+			down.setImage(iconDownOn);
+		}else{
+			down.setImage(iconDown);
+		}
 	}
 	
 	public void paint (Graphics g)

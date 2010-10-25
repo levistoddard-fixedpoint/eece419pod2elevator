@@ -19,6 +19,8 @@ public class Elevator extends Canvas{
 	private int x = 0;
 	private int y = 0;
 	
+	private double floor = 0;
+	
 	private Image img;
 
 	public Elevator(int numFloor, int numComponent) {
@@ -28,12 +30,17 @@ public class Elevator extends Canvas{
 		this.numFloor = numFloor;
 		this.numComponent = numComponent;
 		img = elevator;
+		
+		Dimension size = this.getSize();
+		x = 0;
+		y = size.height-size.height/numFloor;
 	}
 	
 	public void paint (Graphics g)
 	{
 		if(img != null){
 			Dimension size = this.getSize();
+			y = (int) (size.height-size.height/numFloor - floor * size.height/numFloor);
 			g.drawImage(img, x, y, size.width, size.height/numFloor, this);
 		}
 	}
@@ -42,7 +49,7 @@ public class Elevator extends Canvas{
 		this.img = img;
 	}
 	
-	public void setHeight(int y){
-		this.y = y;
+	public void setFloor(double currentPosition){
+		floor = currentPosition;
 	}
 }

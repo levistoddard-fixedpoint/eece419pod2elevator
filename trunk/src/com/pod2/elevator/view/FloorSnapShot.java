@@ -6,7 +6,8 @@ public class FloorSnapShot {
 	public FloorRequestButton floorRequestButtons[];
 	public int floorQueues[];
 	
-	public FloorSnapShot() {
-		
+	public FloorSnapShot(int numFloors) {
+		floorQueues = new int[numFloors];
+		floorRequestButtons = new FloorRequestButton[numFloors];
 	}
 }
