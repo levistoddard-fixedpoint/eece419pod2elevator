@@ -1,5 +1,5 @@
-package data;
+package com.pod2.elevator.data;
 
-public class TemplateElevatorEvent extends TemplateEvent {
+abstract class TemplateElevatorEvent extends TemplateEvent {
 	public int elevatorNumber;
 }

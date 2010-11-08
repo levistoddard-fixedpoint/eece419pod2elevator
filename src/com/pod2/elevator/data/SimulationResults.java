@@ -1,10 +1,10 @@
-package data;
+package com.pod2.elevator.data;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 public class SimulationResults {
-	public String uuid;
+	public int uuid;
 	public String name;
 	public int templateId;
 	public Date startTime;

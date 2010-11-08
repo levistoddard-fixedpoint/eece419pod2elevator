@@ -1,6 +1,6 @@
-package data;
+package com.pod2.elevator.data;
 
-import core.DeliveryStatus;
+import com.pod2.elevator.core.DeliveryStatus;
 
 public class CompletedRequest {
 	public int elevatorNumber;

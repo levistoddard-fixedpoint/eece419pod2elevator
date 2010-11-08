@@ -1,4 +1,4 @@
-package data;
+package com.pod2.elevator.data;
 
 import java.sql.*;
 
@@ -16,6 +16,7 @@ public class DataDriver {
 		SimulationTemplateRepository test = new SimulationTemplateRepository();
 		
 		test.getTemplate(1);
+		test.getAllTemplates();
 
 		System.out.println("Done!");
 		

@@ -1,6 +1,6 @@
-package data;
+package com.pod2.elevator.data;
 
-import core.ServiceStatus;
+import com.pod2.elevator.core.ServiceStatus;
 
 public class ElevatorState {
 	public double position;
