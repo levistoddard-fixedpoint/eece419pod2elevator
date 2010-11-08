@@ -1,4 +1,4 @@
-package data;
+package com.pod2.elevator.data;
 
 import java.sql.Date;
 
