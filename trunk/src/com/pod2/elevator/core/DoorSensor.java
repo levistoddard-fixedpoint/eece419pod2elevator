@@ -8,11 +8,11 @@ public class DoorSensor extends ElevatorComponent {
 	}
 	
 	public boolean isObstacleInWay() {
-		
+		return true;
 	}
 	
 	public double getDistanceToClosed() {
-
+		return 0.0;
 	}
 	
 	public void operation() {

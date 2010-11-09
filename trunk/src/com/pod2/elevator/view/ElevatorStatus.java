@@ -93,9 +93,9 @@ public class ElevatorStatus extends JFrame {
 			
 			motionStatus.setText(s.elevatorSnapShot[id].motionStatus.toString());
 			
-			componentStatus[0].setText(s.elevatorSnapShot[id].componentFailure.get(new DoorSensor()).toString());
-			componentStatus[1].setText(s.elevatorSnapShot[id].componentFailure.get(new DoorDriverMechanism()).toString());
-			componentStatus[2].setText(s.elevatorSnapShot[id].componentFailure.get(new PositionSensor()).toString());
-			componentStatus[3].setText(s.elevatorSnapShot[id].componentFailure.get(new DriverMechanism()).toString());
+//			componentStatus[0].setText(s.elevatorSnapShot[id].componentFailure.get(new DoorSensor()).toString());
+//			componentStatus[1].setText(s.elevatorSnapShot[id].componentFailure.get(new DoorDriverMechanism()).toString());
+//			componentStatus[2].setText(s.elevatorSnapShot[id].componentFailure.get(new PositionSensor()).toString());
+//			componentStatus[3].setText(s.elevatorSnapShot[id].componentFailure.get(new DriverMechanism()).toString());
 		}
 }

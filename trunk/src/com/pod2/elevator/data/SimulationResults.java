@@ -12,7 +12,7 @@ public class SimulationResults {
 	public long startQuantum;
 	public long stopQuantum;
 	public List<ElevatorState[]> elevatorStates;
-	public List<> passengersWaiting;
+	public List<Integer[]> passengersWaiting;
 	public List<CompletedRequest> passengerDeliveries;
 	public List<LoggedEvent> events;
 }

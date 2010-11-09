@@ -3,12 +3,14 @@ package com.pod2.elevator.core;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.pod2.elevator.data.SimulationResultsBuilder;
 
 public class Elevator {
 	private Set<Integer> requestedFloors;
 	private Set<Integer> floorsOffLimit;
-	private Multimap<RequestInTransit> requests;
+	Multimap<Integer, RequestInTransit> requests;
 	private int elevatorCapacity;
 	private DriverMechanism driverMechanism;
 	private EmergencyBrake emergencyBrake;

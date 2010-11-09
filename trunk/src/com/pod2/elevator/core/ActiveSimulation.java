@@ -16,7 +16,7 @@ public class ActiveSimulation {
 	private Queue<RequestInTransit>[] floorRequestQueues;
 	private int numberFloors;
 	private int numberElevators;
-	private Multimap<Event> globalEventQueue;
+	//private Multimap<Event> globalEventQueue;
 	private ElevatorScheduler scheduler;
 	private SimulationThread simulationThread;
 	private SimulationView simulationView;
