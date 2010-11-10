@@ -61,12 +61,13 @@ public class FloorButtonPanel extends JPanel{
 	
 	public void statusUpdate(SystemSnapShot s){
 		//TODO: Update up and down button
-		if(s.floorSnapShot.floorRequestButtons[id].isUpSelected){
+		FloorSnapShot floor = s.getFloorSnapShot(id);
+		if(floor.getFloorRequestButton().isUpSelected()){
 			up.setImage(iconUpOn);
 		}else{
 			up.setImage(iconUp);
 		}
-		if(s.floorSnapShot.floorRequestButtons[id].isDownSelected){
+		if(floor.getFloorRequestButton().isDownSelected()){
 			down.setImage(iconDownOn);
 		}else{
 			down.setImage(iconDown);

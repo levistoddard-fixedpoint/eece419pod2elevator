@@ -29,7 +29,7 @@ public class MainPanel extends JPanel{
 	static private ElevatorStatus elevatorStatus[];
 	
 	private JPanel logPanel = new JPanel();
-	private JTextArea log = new JTextArea("Logging goes here");
+	private JTextArea log = new JTextArea("Logging goes here\n");
 	
 	public MainPanel(int numFloor, int numElevator, int numComponent) {
 		
@@ -87,7 +87,7 @@ public class MainPanel extends JPanel{
 	
 	public void statusUpdate(SystemSnapShot s){
 		//TODO: Update log, elevator status, elevator, position
-		for(LogMessage m : s.messages){
+		for(LogMessage m : s.getMessages()){
 			log.append(m.toString() + "\n");
 		}
 		for(ElevatorStatus e : elevatorStatus){
@@ -98,8 +98,9 @@ public class MainPanel extends JPanel{
 		for(ElevatorPanel p : elevators){
 			p.statusUpdate(s);
 		}
-		for(int i=0; i<positions.length; i++){
-			String pos = Double.toString(s.elevatorSnapShot[i].currentPosition);
+		for(int i=0; i<numElevator; i++){
+			ElevatorSnapShot elevator = s.getElevatorSnapShot(i);
+			String pos = Double.toString(elevator.getCurrentPosition());
 			positions[i].setText(pos);
 		}
 	}

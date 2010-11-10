@@ -1,11 +1,11 @@
 package com.pod2.elevator.view;
 
 public class LogMessage {
-	public int quantum;
+	public long quantum;
 	public String type;
 	public String description;
 	
-	public LogMessage(int q, String t, String d){
+	public LogMessage(long q, String t, String d){
 		quantum = q;
 		type = t;
 		description = d;

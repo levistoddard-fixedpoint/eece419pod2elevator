@@ -94,10 +94,11 @@ public class SystemStatus extends JPanel{
 	
 	public void statusUpdate(SystemSnapShot s){
 		//TODO: Update Time, Passenger Queue, Floor Button Panel
-		time.setText(Integer.toString(s.quantum));
+		time.setText(Long.toString(s.getQuantum()));
 		
 		for(int i=0; i<floorQueues.length; i++){
-			floorQueues[i].setText(Integer.toString(s.floorSnapShot.floorQueues[i]));
+			FloorSnapShot floor = s.getFloorSnapShot(i);
+			floorQueues[i].setText(Integer.toString(floor.getPassengersWaiting()));
 			floorButtons[i].statusUpdate(s);
 		}
 		

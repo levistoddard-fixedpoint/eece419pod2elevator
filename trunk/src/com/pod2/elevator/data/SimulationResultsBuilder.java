@@ -1,9 +1,12 @@
 package com.pod2.elevator.data;
 
+import java.util.Date;
+
 import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.RequestInTransit;
 
 public class SimulationResultsBuilder {
+	
 	public void addResults(ActiveSimulation activeSimulation) {
 		
 	}
@@ -20,11 +23,11 @@ public class SimulationResultsBuilder {
 		
 	}
 	
-	public void setStartTime(long timeQuantum, long systemTime) {
+	public void setStartTime(long timeQuantum, Date systemTime) {
 		
 	}
 	
-	public void setEndTime(long timeQuantum, long systemTime) {
+	public void setEndTime(long timeQuantum, Date systemTime) {
 		
 	}
 }
