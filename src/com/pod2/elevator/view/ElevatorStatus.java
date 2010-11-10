@@ -8,10 +8,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-import com.pod2.elevator.core.DoorDriverMechanism;
-import com.pod2.elevator.core.DoorSensor;
-import com.pod2.elevator.core.DriverMechanism;
-import com.pod2.elevator.core.PositionSensor;
+import com.pod2.elevator.core.component.DoorDriverMechanism;
+import com.pod2.elevator.core.component.DoorSensor;
+import com.pod2.elevator.core.component.DriverMechanism;
+import com.pod2.elevator.core.component.PositionSensor;
 
 public class ElevatorStatus extends JFrame {
 
@@ -89,13 +89,12 @@ public class ElevatorStatus extends JFrame {
 		
 		public void statusUpdate(SystemSnapShot s){
 			//TODO: Update passenger number, motion status, component status
-			passengerNumber.setText(Integer.toString(s.elevatorSnapShot[id].requestCount));
-			
-			motionStatus.setText(s.elevatorSnapShot[id].motionStatus.toString());
-			
-//			componentStatus[0].setText(s.elevatorSnapShot[id].componentFailure.get(new DoorSensor()).toString());
-//			componentStatus[1].setText(s.elevatorSnapShot[id].componentFailure.get(new DoorDriverMechanism()).toString());
-//			componentStatus[2].setText(s.elevatorSnapShot[id].componentFailure.get(new PositionSensor()).toString());
-//			componentStatus[3].setText(s.elevatorSnapShot[id].componentFailure.get(new DriverMechanism()).toString());
+			ElevatorSnapShot elevator = s.getElevatorSnapShot(id);
+			passengerNumber.setText(Integer.toString(elevator.getNumberRequests()));
+			motionStatus.setText(elevator.getMotionStatus().toString());
+			componentStatus[0].setText(elevator.getFailureStatus(DoorSensor.class).toString());
+			componentStatus[0].setText(elevator.getFailureStatus(DoorDriverMechanism.class).toString());
+			componentStatus[0].setText(elevator.getFailureStatus(PositionSensor.class).toString());
+			componentStatus[0].setText(elevator.getFailureStatus(DriverMechanism.class).toString());
 		}
 }
