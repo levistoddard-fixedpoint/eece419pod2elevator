@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
-public class Toolbar extends JToolBar{
+public class Toolbar extends JToolBar {
 
 	/**
 	 * 
@@ -13,11 +13,11 @@ public class Toolbar extends JToolBar{
 
 	public Toolbar() {
 		ImageIcon iconExit = new ImageIcon("icons/exit.png");
-		
+
 		JButton exit = new JButton(iconExit);
-		
+
 		add(exit);
-		
+
 		exit.addActionListener(new ExitAction());
 	}
 }

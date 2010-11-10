@@ -10,7 +10,7 @@ public class SystemSnapShot {
 	// floorSnapShot = new FloorSnapShot(numFloors);
 	// messages = new LogMessage[numMessages];
 	// }
-	
+
 	private long quantum;
 	private ElevatorSnapShot elevatorSnapShot[];
 	private FloorSnapShot floorSnapShots[];
