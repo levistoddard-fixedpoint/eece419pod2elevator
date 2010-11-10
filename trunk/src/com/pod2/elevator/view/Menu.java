@@ -10,7 +10,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class Menu extends JMenuBar{
+public class Menu extends JMenuBar {
 
 	/**
 	 * 
@@ -19,24 +19,24 @@ public class Menu extends JMenuBar{
 
 	public Menu() {
 		setBorder(BorderFactory.createEtchedBorder());
-		
+
 		ImageIcon iconExit = new ImageIcon("icons/exit.png");
-		
+
 		JMenu file = new JMenu("File");
 		file.setMnemonic(KeyEvent.VK_F);
-		
-		JMenuItem fileClose = new JMenuItem("Close",iconExit);
+
+		JMenuItem fileClose = new JMenuItem("Close", iconExit);
 		fileClose.setMnemonic(KeyEvent.VK_C);
 		fileClose.setToolTipText("Exit application");
 		fileClose.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event){
+			public void actionPerformed(ActionEvent event) {
 				System.exit(0);
 			}
 		});
-		
+
 		file.add(fileClose);
-		
+
 		add(file);
-		
+
 	}
 }
