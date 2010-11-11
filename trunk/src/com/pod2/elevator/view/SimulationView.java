@@ -8,7 +8,7 @@ public class SimulationView {
 
 	}
 
-	public void displaySnapShot(ElevatorSnapShot snapshot) {
+	public void displaySnapShot(SystemSnapShot snapshot) {
 
 	}
 

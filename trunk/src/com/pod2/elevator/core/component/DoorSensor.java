@@ -10,9 +10,12 @@ public class DoorSensor extends ElevatorComponent {
 		this.doorWidth = doorWidth;
 	}
 
-	public boolean isObstacleInWay() throws ComponentFailedException {
-		/* TODO not implemented this release */
-		return false;
+	public boolean areDoorsClosed() throws ComponentFailedException {
+		return checkPositionEquals(0.0);
+	}
+
+	public boolean areDoorsOpen() throws ComponentFailedException {
+		return checkPositionEquals(doorWidth);
 	}
 
 	private boolean checkPositionEquals(double position)
@@ -21,14 +24,6 @@ public class DoorSensor extends ElevatorComponent {
 			throw new ComponentFailedException("door sensor failed");
 		}
 		return doorPositionContext.getDistanceUntilClosed() == position;
-	}
-
-	public boolean areDoorsClosed() throws ComponentFailedException {
-		return checkPositionEquals(0.0);
-	}
-
-	public boolean areDoorsOpen() throws ComponentFailedException {
-		return checkPositionEquals(doorWidth);
 	}
 
 }

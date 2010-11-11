@@ -8,6 +8,7 @@ public class FirstComeFirstServe implements ElevatorScheduler{
 	private int nextElevator;
 	
 	public void schedule(ActiveSimulation activeSimulation) {
+		
 //		//Search all floors from bottom to top for requests
 //		for (int i = 0; i < activeSimulation.numberFloors; i++) {
 //			// check if button is pressed

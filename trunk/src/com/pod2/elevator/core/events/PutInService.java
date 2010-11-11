@@ -1,6 +1,7 @@
 package com.pod2.elevator.core.events;
 
 import com.pod2.elevator.core.ActiveSimulation;
+import com.pod2.elevator.core.Elevator;
 
 public class PutInService extends ElevatorEvent {
 
@@ -10,14 +11,14 @@ public class PutInService extends ElevatorEvent {
 	}
 
 	@Override
-	public void apply(ActiveSimulation activeSimulation) {
-		// TODO Auto-generated method stub
-		
+	public void apply(ActiveSimulation simulation) {
+		Elevator elevator = simulation.getElevators()[getElevatorNumber()];
+		elevator.putInService();
 	}
 
 	@Override
-	public boolean canApplyNow(ActiveSimulation activeSimulation) {
+	public boolean canApplyNow(ActiveSimulation simulation) {
 		return true;
 	}
-	
+
 }

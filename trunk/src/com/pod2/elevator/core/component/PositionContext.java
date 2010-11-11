@@ -2,10 +2,10 @@ package com.pod2.elevator.core.component;
 
 public class PositionContext {
 
-	public double currentPosition;
+	private double currentPosition;
 
-	public PositionContext() {
-		currentPosition = 0.0;
+	public PositionContext(double currentPosition) {
+		this.currentPosition = currentPosition;
 	}
 
 	public double getCurrentPosition() {

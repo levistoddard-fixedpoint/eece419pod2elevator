@@ -11,20 +11,19 @@ public class DoorDriverMechanism extends ElevatorComponent {
 		this.doorWidth = doorWidth;
 	}
 
-	public void moveClosed(double distance) throws ComponentFailedException {
-		if (isFailed()) {
-			throw new ComponentFailedException("door driver failed");
-		}
-		double newPos = doorPositionContext.getDistanceUntilClosed() - distance;
-		doorPositionContext.setDistanceUntilClosed(Math.max(0.0, newPos));
-	}
-
-	public void moveOpen(double distance) throws ComponentFailedException {
+	public void move(double distance) throws ComponentFailedException {
 		if (isFailed()) {
 			throw new ComponentFailedException("door driver failed");
 		}
 		double newPos = doorPositionContext.getDistanceUntilClosed() + distance;
-		doorPositionContext.setDistanceUntilClosed(Math.min(doorWidth, newPos));
+		if (newPos > doorWidth) {
+			throw new ComponentFailedException(
+					"door driver attempted to open door too wide");
+		} else if (newPos < 0.0) {
+			throw new ComponentFailedException(
+					"door driver attempted to keep closing a closed door");
+		}
+		doorPositionContext.setDistanceUntilClosed(newPos);
 	}
 
 }

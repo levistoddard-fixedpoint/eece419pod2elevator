@@ -13,10 +13,9 @@ public class RequestGenerator {
 		this.isEnabled = isEnabled;
 	}
 
-	public Collection<PassengerRequest> nextRequests() {
+	public Collection<PassengerRequest> nextRequests(long currentQuantum) {
 		if (isEnabled) {
-			/* TODO Implement passenger generation. */
-			return Collections.emptySet();
+			/* TODO Implement generation. */
 		}
 		return Collections.emptySet();
 	}

@@ -12,7 +12,7 @@ public class PositionSensor extends ElevatorComponent {
 		if (isFailed()) {
 			throw new ComponentFailedException("position sensor failed");
 		}
-		return positionContext.currentPosition;
+		return positionContext.getCurrentPosition();
 	}
 
 }
