@@ -1,6 +1,8 @@
 package com.pod2.elevator.core.events;
 
 import com.pod2.elevator.core.ActiveSimulation;
+import com.pod2.elevator.core.Elevator;
+import com.pod2.elevator.core.MotionStatus;
 
 public class PutOutOfService extends ElevatorEvent {
 
@@ -10,14 +12,16 @@ public class PutOutOfService extends ElevatorEvent {
 	}
 
 	@Override
-	public void apply(ActiveSimulation activeSimulation) {
-		// TODO Auto-generated method stub
-
+	public void apply(ActiveSimulation simulation) {
+		Elevator elevator = simulation.getElevators()[getElevatorNumber()];
+		elevator.putOutOfService();
 	}
 
 	@Override
-	public boolean canApplyNow(ActiveSimulation activeSimulation) {
-		return true;
+	public boolean canApplyNow(ActiveSimulation simulation) {
+		Elevator elevator = simulation.getElevators()[getElevatorNumber()];
+		return MotionStatus.DoorsOpen.equals(elevator.getMotionStatus())
+				&& !elevator.getRequestPanel().areRequests();
 	}
 
 }

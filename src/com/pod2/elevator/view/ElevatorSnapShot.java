@@ -10,23 +10,6 @@ import com.pod2.elevator.core.component.ElevatorComponent;
 
 public class ElevatorSnapShot {
 
-	// public ElevatorSnapShot(double currentPosition, int[] floorsOffLimit, int
-	// requestCount,
-	// MotionStatus, motionStatus, ServiceStatus serviceStatus, int
-	// requestCapacity) {
-	//
-	// }
-
-	// public ElevatorSnapShot() {
-	// currentPosition = 0;
-	// floorsOffLimit = new HashSet<Integer>();
-	// numberRequests = 0;
-	// motionStatus = MotionStatus.DoorsOpen;
-	// serviceStatus = ServiceStatus.InService;
-	// requestCapacity = 10;
-	// componentFailure = new TreeMap<Class<Object>, Boolean>();
-	// }
-
 	private double currentPosition;
 	private Set<Integer> floorsOffLimit;
 	private int numberRequests;
@@ -39,7 +22,7 @@ public class ElevatorSnapShot {
 			Set<Integer> floorsOffLimit, int numberRequests,
 			int requestCapacity, MotionStatus motionStatus,
 			ServiceStatus serviceStatus,
-			Collection<? extends ElevatorComponent> components) {
+			Collection<ElevatorComponent> components) {
 		super();
 		this.currentPosition = currentPosition;
 		this.floorsOffLimit = floorsOffLimit;

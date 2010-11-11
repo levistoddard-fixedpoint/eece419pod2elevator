@@ -1,7 +1,5 @@
 package com.pod2.elevator.core.events;
 
-import com.pod2.elevator.core.component.ElevatorComponent;
-
 public class EventFactory {
 
 	public static Event createPassengerRequest(EventSource eventSource,
@@ -12,10 +10,9 @@ public class EventFactory {
 	}
 
 	public static Event createComponentFailureEvent(EventSource eventSource,
-			long timeQuantum, int elevatorNumber,
-			Class<? extends ElevatorComponent> component) {
+			long timeQuantum, int elevatorNumber, String componentKey) {
 		return new ComponentFailure(eventSource, timeQuantum, elevatorNumber,
-				component);
+				componentKey);
 	}
 
 	public static Event createServiceEvent(EventSource eventSource,

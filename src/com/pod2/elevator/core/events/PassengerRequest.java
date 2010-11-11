@@ -17,19 +17,18 @@ public class PassengerRequest extends Event {
 	}
 
 	public PassengerRequest(PassengerRequest otherRequest) {
-		this(otherRequest.eventSource, otherRequest.timeQuantum,
+		this(otherRequest.getEventSource(), otherRequest.getTimeQuantum(),
 				otherRequest.onloadFloor, otherRequest.offloadFloor,
 				otherRequest.timeConstraint);
 	}
 
 	@Override
-	public void apply(ActiveSimulation activeSimulation) {
-		// TODO Auto-generated method stub
-
+	public void apply(ActiveSimulation simulation) {
+		simulation.enqueuePassenger(this);
 	}
 
 	@Override
-	public boolean canApplyNow(ActiveSimulation activeSimulation) {
+	public boolean canApplyNow(ActiveSimulation simulation) {
 		return true;
 	}
 

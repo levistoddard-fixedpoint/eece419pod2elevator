@@ -1,10 +1,13 @@
 package com.pod2.elevator.data;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import com.pod2.elevator.core.events.Event;
+import com.pod2.elevator.core.events.EventFactory;
+import com.pod2.elevator.core.events.EventSource;
 import com.pod2.elevator.scheduling.ElevatorScheduler;
 
 public class SimulationTemplate {
@@ -22,10 +25,25 @@ public class SimulationTemplate {
 	public List<TemplateServiceEvent> serviceEvents;
 	public Date created;
 	public Date lastEdit;
+	public double speed; /* floors/second */
 
 	public List<Event> getEvents() {
-		/* TODO implement this */
-		return null;
+		List<Event> eventList = new LinkedList<Event>();
+		for (TemplatePassengerRequest events : passengerRequests) {
+			eventList.add(EventFactory.createPassengerRequest(
+					EventSource.Template, events.quantum, events.onloadFloor,
+					events.offloadFloor, events.timeConstraint));
+		}
+		for (TemplateFailureEvent event : failureEvents) {
+			eventList.add(EventFactory.createComponentFailureEvent(
+					EventSource.Template, event.quantum, event.elevatorNumber,
+					event.component.getName()));
+		}
+		for (TemplateServiceEvent event : serviceEvents) {
+			eventList.add(EventFactory.createServiceEvent(EventSource.Template,
+					event.quantum, event.elevatorNumber, event.putInService));
+		}
+		return eventList;
 	}
 
 	/*
@@ -134,6 +152,14 @@ public class SimulationTemplate {
 
 	public void setLastEdit(Date lastEdit) {
 		this.lastEdit = lastEdit;
+	}
+
+	public double getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(double speed) {
+		this.speed = speed;
 	}
 
 }

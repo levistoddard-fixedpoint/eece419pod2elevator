@@ -10,27 +10,19 @@ public class DriverMechanism extends ElevatorComponent {
 		this.maxHeight = maxHeight;
 	}
 
-	public void moveUp(double distance) throws ComponentFailedException {
+	public void move(double distance) throws ComponentFailedException {
 		if (isFailed()) {
 			throw new ComponentFailedException("elevator driver failed");
 		}
 		double newPos = positionContext.getCurrentPosition() + distance;
 		if (newPos > maxHeight) {
 			throw new ComponentFailedException(
-					"elevator driver reached height limit");
+					"attempted to drive elevator too high");
+		} else if (newPos < 0.0) {
+			throw new ComponentFailedException(
+					"attempted to drive elevator too low");
 		}
 		positionContext.setCurrentPosition(newPos);
 	}
 
-	public void moveDown(double distance) throws ComponentFailedException {
-		if (isFailed()) {
-			throw new ComponentFailedException("elevator driver failed");
-		}
-		double newPos = positionContext.getCurrentPosition() - distance;
-		if (newPos < 0.0) {
-			throw new ComponentFailedException(
-					"elevator driver reached ground level limit");
-		}
-		positionContext.setCurrentPosition(newPos);
-	}
 }

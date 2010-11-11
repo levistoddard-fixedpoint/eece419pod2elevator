@@ -1,11 +1,11 @@
 package com.pod2.elevator.core.component;
 
 public class DoorPositionContext {
-	
+
 	private double distanceUntilClosed;
 
-	public DoorPositionContext() {
-		distanceUntilClosed = 0.0;
+	public DoorPositionContext(double distanceUntilClosed) {
+		this.distanceUntilClosed = distanceUntilClosed;
 	}
 
 	public double getDistanceUntilClosed() {
@@ -15,5 +15,5 @@ public class DoorPositionContext {
 	public void setDistanceUntilClosed(double distanceUntilClosed) {
 		this.distanceUntilClosed = distanceUntilClosed;
 	}
-	
+
 }

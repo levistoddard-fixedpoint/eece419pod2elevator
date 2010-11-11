@@ -17,7 +17,7 @@ public class EmergencyBrake extends ElevatorComponent {
 	}
 	
 	public boolean isFailed() {
-		/* TODO can't fail */
+		/* failsafe component */
 		return false;
 	}
 	

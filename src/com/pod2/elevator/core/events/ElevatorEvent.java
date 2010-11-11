@@ -1,9 +1,8 @@
 package com.pod2.elevator.core.events;
 
-
 public abstract class ElevatorEvent extends Event {
 
-	protected int elevatorNumber;
+	private int elevatorNumber;
 
 	public ElevatorEvent(EventSource eventSource, long timeQuantum,
 			int elevatorNumber) {

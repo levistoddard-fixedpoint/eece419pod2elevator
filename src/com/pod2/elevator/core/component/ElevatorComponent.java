@@ -15,5 +15,5 @@ public abstract class ElevatorComponent {
 	public void setFailed(boolean isFailed) {
 		this.isFailed = isFailed;
 	}
-	
+		
 }

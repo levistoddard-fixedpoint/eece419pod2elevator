@@ -1,22 +1,22 @@
 package com.pod2.elevator.core.events;
 
 import com.pod2.elevator.core.ActiveSimulation;
-import com.pod2.elevator.core.component.ElevatorComponent;
+import com.pod2.elevator.core.Elevator;
 
 public class ComponentFailure extends ElevatorEvent {
 
-	private Class<? extends ElevatorComponent> component;
+	private String componentKey;
 
 	public ComponentFailure(EventSource eventSource, long timeQuantum,
-			int elevatorNumber, Class<? extends ElevatorComponent> component) {
+			int elevatorNumber, String componentKey) {
 		super(eventSource, timeQuantum, elevatorNumber);
-		this.component = component;
+		this.componentKey = componentKey;
 	}
 
 	@Override
-	public void apply(ActiveSimulation activeSimulation) {
-		// TODO Auto-generated method stub
-
+	public void apply(ActiveSimulation simulation) {
+		Elevator elevator = simulation.getElevators()[getElevatorNumber()];
+		elevator.failComponent(componentKey);
 	}
 
 	@Override

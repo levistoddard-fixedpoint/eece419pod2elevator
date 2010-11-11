@@ -1,7 +1,7 @@
 package com.pod2.elevator.core;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,38 +10,37 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.pod2.elevator.core.events.Event;
 import com.pod2.elevator.core.events.PassengerRequest;
-import com.pod2.elevator.data.SimulationResultsBuilder;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.scheduling.ElevatorScheduler;
 import com.pod2.elevator.view.ElevatorSnapShot;
-import com.pod2.elevator.view.SimulationView;
+import com.pod2.elevator.view.FloorSnapShot;
+import com.pod2.elevator.view.LogMessage;
+import com.pod2.elevator.view.SystemSnapShot;
 
 public class ActiveSimulation {
-
-	/* TODO move this into the template */
-	private static int CAPACITY = 10;
 
 	private long currentQuantum;
 	private Elevator[] elevators;
 	private FloorRequestButton[] floorRequestButtons;
 	private Multimap<Integer, RequestInTransit> floorQueues;
 	private Multimap<Long, Event> eventQueue;
+	private List<Event> delayedEventQueue;
+	private boolean isRunning;
+
+	private SimulationTemplate template;
+	private SimulationResultsSink results;
+	private SimulationDisplay display;
+	private Thread simulationThread;
+
 	private ElevatorScheduler scheduler;
 	private RequestGenerator requestGenerator;
-	private Thread simulationThread;
-	private SimulationView simulationView;
-	private boolean isRunning;
-	private SimulationResultsBuilder simulationResultsBuilder;
-	private List<Event> delayedEventQueue;
-	private SimulationTemplate template;
 
-	public ActiveSimulation(SimulationTemplate simulationTemplate,
-			SimulationResultsBuilder simulationResultsBuilder,
-			SimulationView simulationView) {
-		this.template = simulationTemplate;
-		this.simulationResultsBuilder = simulationResultsBuilder;
-		this.simulationView = simulationView;
-		initializeFromTemplate(simulationTemplate);
+	public ActiveSimulation(SimulationTemplate template,
+			SimulationResultsSink results, SimulationDisplay display) {
+		this.template = template;
+		this.results = results;
+		this.display = display;
+		initializeFromTemplate(template);
 
 		/* independent of input parameters. */
 		currentQuantum = 0;
@@ -50,12 +49,13 @@ public class ActiveSimulation {
 	}
 
 	private void initializeFromTemplate(SimulationTemplate template) {
-		this.scheduler = template.scheduler;
+		this.scheduler = template.getScheduler();
 
 		/* Create the elevators. */
 		elevators = new Elevator[template.getNumberElevators()];
 		for (int n = 0; n < elevators.length; n++) {
-			elevators[n] = new Elevator(n, CAPACITY,
+			elevators[n] = new Elevator(this, n, template.getNumberFloors(),
+					template.getElevatorCapacity(), template.getSpeed(),
 					template.getRestrictedFloors());
 		}
 
@@ -70,7 +70,7 @@ public class ActiveSimulation {
 		delayedEventQueue = new LinkedList<Event>();
 		eventQueue = HashMultimap.create();
 		for (Event event : template.getEvents()) {
-			eventQueue.put(event.getTimeQuantum(), event);
+			enqueueEvent(event);
 		}
 
 		/* Initialise passenger generation */
@@ -82,23 +82,34 @@ public class ActiveSimulation {
 	 * MANAGEMENT INTERFACE
 	 */
 	public void start() {
-		simulationView.startup(template);
-		simulationResultsBuilder.setStartTime(currentQuantum, new Date());
+		display.startup(template);
+		results.onStart();
 		simulationThread.start();
 		isRunning = true;
 	}
 
 	public void stop() throws InterruptedException {
 		simulationThread.interrupt();
-		try {
-			simulationThread.join();
-		} catch (InterruptedException e) {
-			/* TODO determine interaction with rest of system */
-		}
-		simulationView.teardown();
-		simulationResultsBuilder.setEndTime(currentQuantum, new Date());
-		simulationResultsBuilder.save();
+		simulationThread.join();
+		display.teardown();
+		results.onEnd(currentQuantum);
+		results.save();
 		isRunning = false;
+	}
+
+	/*
+	 * STATE INTERFACE
+	 */
+	public long getQuantum() {
+		return currentQuantum;
+	}
+
+	public Elevator[] getElevators() {
+		return Arrays.copyOf(elevators, elevators.length);
+	}
+
+	public FloorRequestButton[] getRequestButtons() {
+		return Arrays.copyOf(floorRequestButtons, floorRequestButtons.length);
 	}
 
 	public boolean getIsRunning() {
@@ -109,25 +120,43 @@ public class ActiveSimulation {
 		this.scheduler = scheduler;
 	}
 
+	public ElevatorScheduler getScheduler() {
+		return scheduler;
+	}
+
 	public void setRequestGenerationStatus(boolean enabled) {
 		requestGenerator.setEnabled(enabled);
 	}
 
-	public void enqueueEvent(Event event) {
-		eventQueue.put(currentQuantum + 1, event);
+	public boolean getRequestGenerationStatus() {
+		return requestGenerator.isEnabled();
 	}
 
-	public void enqueueEvent(long timeQuantum, Event event) {
-		assert (timeQuantum < currentQuantum);
-		eventQueue.put(timeQuantum, event);
+	public void enqueueEvent(Event event) {
+		eventQueue.put(event.getTimeQuantum(), event);
+	}
+
+	public void enqueuePassenger(PassengerRequest request) {
+		enqueuePassenger(new RequestInTransit(request));
+	}
+
+	private void enqueuePassenger(RequestInTransit request) {
+		int onload = request.getOnloadFloor();
+		int offload = request.getOffloadFloor();
+		floorQueues.put(onload, request);
+		floorRequestButtons[onload].click(currentQuantum, offload > onload);
+	}
+
+	public int getPassengersWaiting(int floorNumber) {
+		return floorQueues.get(floorNumber).size();
 	}
 
 	/*
 	 * SIMULATION FUNCTIONALITY
 	 */
-	protected void executeNextQuantum() {
+	void executeNextQuantum() {
 		/*
-		 * set-up the current cycle for execution.
+		 * set-up the current quantum for execution.
 		 */
 		applyEvents();
 		generateRequests();
@@ -141,20 +170,45 @@ public class ActiveSimulation {
 		executeQuantum();
 
 		/*
-		 * output state of simulation.
+		 * export state of simulation.
 		 */
-		simulationResultsBuilder.addResults(this);
-		simulationView.displaySnapShot(createSnapShot());
+		results.onQuantumComplete(this);
+		display.update(createSnapShot());
+
+		/*
+		 * move onto next quantum.
+		 */
+		incrementQuantum();
+	}
+
+	void onElevatorPutInService(Elevator elevator) {
+		/*
+		 * Rescue stranded passengers.
+		 */
+		offloadPassengers(elevator, DeliveryStatus.Rescued);
+	}
+
+	void onElevatorDoorsClosed(Elevator elevator) {
+		/*
+		 * Click the button for any passengers still waiting.
+		 */
+		int currFloor = (int) elevator.getPosition();
+		for (RequestInTransit request : floorQueues.get(currFloor)) {
+			int onload = request.getOnloadFloor();
+			int offload = request.getOffloadFloor();
+			FloorRequestButton button = floorRequestButtons[currFloor];
+			button.click(currentQuantum, offload > onload);
+		}
 	}
 
 	private void applyEvents() {
 		/* Apply events who couldn't apply at their appropriate time. */
-		Iterator<Event> eventsItr = delayedEventQueue.iterator();
-		while (eventsItr.hasNext()) {
-			Event event = eventsItr.next();
+		Iterator<Event> itr = delayedEventQueue.iterator();
+		while (itr.hasNext()) {
+			Event event = itr.next();
 			if (event.canApplyNow(this)) {
 				event.apply(this);
-				eventsItr.remove();
+				itr.remove();
 			}
 		}
 
@@ -169,33 +223,26 @@ public class ActiveSimulation {
 	}
 
 	private void generateRequests() {
-		for (PassengerRequest request : requestGenerator.nextRequests()) {
-			putPassengerIntoFloorQueue(request);
+		for (PassengerRequest request : requestGenerator
+				.nextRequests(currentQuantum)) {
+			enqueuePassenger(request);
 		}
-	}
-
-	private void putPassengerIntoFloorQueue(PassengerRequest request) {
-		int onload = request.getOnloadFloor();
-		int offload = request.getOffloadFloor();
-		floorQueues.put(onload, new RequestInTransit(request));
-		/* TODO account for doors being open for multiple cycles? */
-		floorRequestButtons[onload].click(currentQuantum, offload > onload);
 	}
 
 	private void handlePassengerOffloads() {
 		for (int n = 0; n < elevators.length; n++) {
 			Elevator elevator = elevators[n];
 			if (elevator.getMotionStatus().equals(MotionStatus.DoorsOpen)) {
-				offloadPassengers(elevator);
+				offloadPassengers(elevator, DeliveryStatus.Delivered);
 			}
 		}
 	}
 
-	private void offloadPassengers(Elevator elevator) {
+	private void offloadPassengers(Elevator elevator, DeliveryStatus status) {
 		for (RequestInTransit request : elevator.offloadPassengers()) {
-			request.setDeliveryStatus(DeliveryStatus.Delivered);
+			request.setDeliveryStatus(status);
 			request.setOffloadQuantum(currentQuantum);
-			simulationResultsBuilder.logFinishedRequest(request);
+			results.logFinishedRequest(request);
 		}
 	}
 
@@ -213,8 +260,9 @@ public class ActiveSimulation {
 
 	private void onloadPassengers(Elevator elevator) {
 		int currFloor = (int) elevator.getPosition();
-		Collection<RequestInTransit> requests = floorQueues.get(currFloor);
-		Iterator<RequestInTransit> itr = requests.iterator();
+		Collection<RequestInTransit> reqs = floorQueues.removeAll(currFloor);
+		reqs = new LinkedList<RequestInTransit>(reqs); // previously unmodifiable
+		Iterator<RequestInTransit> itr = reqs.iterator();
 		while (itr.hasNext()) {
 			RequestInTransit request = itr.next();
 			if (elevator.onloadPassenger(request)) {
@@ -222,10 +270,7 @@ public class ActiveSimulation {
 				request.setOnloadQuantum(currentQuantum);
 				itr.remove();
 			} else {
-				/*
-				 * TODO somehow click the request button again for passengers
-				 * who were left behind.
-				 */
+				/* elevator capacity filled up. */
 				break;
 			}
 		}
@@ -237,11 +282,29 @@ public class ActiveSimulation {
 		}
 	}
 
-	private ElevatorSnapShot createSnapShot() {
-		return null;
-//		ElevatorSnapShot snapshot = new ElevatorSnapShot();
-//		/* TODO implement this. */
-//		return snapshot;
+	private void incrementQuantum() {
+		currentQuantum++;
+	}
+
+	private SystemSnapShot createSnapShot() {
+
+		int numberFloors = template.getNumberFloors();
+		FloorSnapShot[] floorSnapshots = new FloorSnapShot[numberFloors];
+		for (int n = 0; n < numberFloors; n++) {
+			floorSnapshots[n] = new FloorSnapShot(floorRequestButtons[n],
+					getPassengersWaiting(n));
+		}
+
+		int numberElevators = template.getNumberElevators();
+		ElevatorSnapShot[] elevatorSnapshots = new ElevatorSnapShot[numberElevators];
+		for (int n = 0; n < numberElevators; n++) {
+			elevatorSnapshots[n] = elevators[n].createSnapshot();
+		}
+
+		LogMessage[] messages = results.getLoggedMessages(currentQuantum);
+
+		return new SystemSnapShot(currentQuantum, elevatorSnapshots,
+				floorSnapshots, messages);
 	}
 
 }
