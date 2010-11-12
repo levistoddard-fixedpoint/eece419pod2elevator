@@ -4,10 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
@@ -73,10 +74,11 @@ public class MainPanel extends JPanel {
 		logPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		logPanel.setLayout(new BorderLayout());
 		log.setBackground(Color.GREEN);
-		log.setPreferredSize(new Dimension(0, 100));
 		log.setAlignmentX(LEFT_ALIGNMENT);
 		log.setEditable(false);
-		logPanel.add(log, BorderLayout.CENTER);
+		JScrollPane logScrollPane = new JScrollPane(log);
+		logScrollPane.setPreferredSize(new Dimension(0, 100));
+		logPanel.add(logScrollPane, BorderLayout.CENTER);
 		this.add(logPanel, BorderLayout.SOUTH);
 	}
 

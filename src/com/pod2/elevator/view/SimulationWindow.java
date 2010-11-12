@@ -3,6 +3,7 @@ package com.pod2.elevator.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -109,11 +110,11 @@ public class SimulationWindow extends JFrame implements Runnable {
 
 		LogMessage[] messages = new LogMessage[5];
 		for (int n = 0; n < 5; n++) {
-			messages[n] = new LogMessage(n, "Test", "A test message");
+			messages[n] = new LogMessage("A test message");
 		}
 
 		SystemSnapShot snapshot = new SystemSnapShot(100, elevators, floors,
-				messages);
+				Arrays.asList(messages));
 		sim.statusUpdate(snapshot);
 
 	}

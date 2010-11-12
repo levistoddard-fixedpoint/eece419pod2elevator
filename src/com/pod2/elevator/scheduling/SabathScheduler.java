@@ -5,6 +5,11 @@ import com.pod2.elevator.core.Elevator;
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
 
+/**
+ * An ElevatorScheduler which makes each elevator continuously travel from the
+ * bottom to the top floor, then back to the bottom floor again.
+ * 
+ */
 public class SabathScheduler implements ElevatorScheduler {
 
 	int nextFloor = 1;

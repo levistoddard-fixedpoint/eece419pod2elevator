@@ -21,7 +21,7 @@ public class PutInService extends ElevatorEvent {
 
 	@Override
 	public String toString() {
-		return String.format("%s: Put in service.", super.toString());
+		return String.format("%s put in service.", super.toString());
 	}
 
 }

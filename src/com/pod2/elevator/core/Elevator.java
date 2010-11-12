@@ -1,5 +1,6 @@
 package com.pod2.elevator.core;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,10 @@ import com.pod2.elevator.core.component.PositionSensor;
 import com.pod2.elevator.scheduling.SchedulerData;
 import com.pod2.elevator.view.ElevatorSnapShot;
 
+/**
+ * Represents a single elevator within an ActiveSimulation.
+ * 
+ */
 public class Elevator {
 
 	private static final double DOOR_WIDTH = 1.0;
@@ -45,6 +50,11 @@ public class Elevator {
 	public Elevator(ActiveSimulation simulation, int elevatorNumber,
 			int numberFloors, int elevatorCapacity, double speed,
 			Set<Integer> restrictedFloors) {
+		assert (simulation != null);
+		assert (numberFloors > 0);
+		assert (speed > 0);
+		assert (restrictedFloors != null);
+
 		this.simulation = simulation;
 		this.elevatorNumber = elevatorNumber;
 		this.elevatorCapacity = elevatorCapacity;
@@ -54,18 +64,13 @@ public class Elevator {
 		/* initialise components */
 		components = new HashMap<String, ElevatorComponent>();
 		positionContext = new PositionContext(0.0);
-		double maxHeight = (double) numberFloors;
-		DriveMechanism driver = new DriveMechanism(positionContext, maxHeight);
-		PositionSensor position = new PositionSensor(positionContext);
-		components.put(DriveMechanism.class.getName(), driver);
-		components.put(PositionSensor.class.getName(), position);
 		doorPositionContext = new DoorPositionContext(DOOR_WIDTH);
-		DoorDriveMechanism doorDriver = new DoorDriveMechanism(
-				doorPositionContext, DOOR_WIDTH);
-		DoorSensor doorSensor = new DoorSensor(doorPositionContext, DOOR_WIDTH);
-		components.put(DoorDriveMechanism.class.getName(), doorDriver);
-		components.put(DoorSensor.class.getName(), doorSensor);
-		components.put(EmergencyBrake.class.getName(), new EmergencyBrake());
+		double maxHeight = (double) numberFloors;
+		Collection<ElevatorComponent> componentList = createComponents(
+				DOOR_WIDTH, maxHeight);
+		for (ElevatorComponent component : componentList) {
+			components.put(component.getKey(), component);
+		}
 
 		requestPanel = new FloorRequestPanel();
 		requests = HashMultimap.create();
@@ -74,50 +79,9 @@ public class Elevator {
 		targetPosition = 0.0;
 	}
 
-	public ElevatorComponent getComponent(String componentKey) {
-		return components.get(componentKey);
-	}
-
-	public void putInService() {
-		for (ElevatorComponent component : components.values()) {
-			component.setFailed(false);
-		}
-		getEmergencyBrake().setIsEnabled(false);
-		serviceStatus = ServiceStatus.InService;
-		simulation.onElevatorPutInService(this);
-	}
-
-	public void putOutOfService() {
-		getEmergencyBrake().setIsEnabled(true);
-		serviceStatus = ServiceStatus.OutOfService;
-	}
-
-	public int getElevatorNumber() {
-		return elevatorNumber;
-	}
-
-	public MotionStatus getMotionStatus() {
-		return motionStatus;
-	}
-
-	public ServiceStatus getServiceStatus() {
-		return serviceStatus;
-	}
-
-	public double getPosition() {
-		return positionContext.getCurrentPosition();
-	}
-
-	public FloorRequestPanel getRequestPanel() {
-		return requestPanel;
-	}
-
-	public void setSchedulerData(SchedulerData data) {
-		this.data = data;
-	}
-
-	public SchedulerData getSchedulerData() {
-		return data;
+	public void closeDoors() {
+		motionStatus = MotionStatus.DoorsClosing;
+		targetPosition = 0.0;
 	}
 
 	public void moveToFloor(int floor) {
@@ -134,37 +98,86 @@ public class Elevator {
 		targetPosition = DOOR_WIDTH;
 	}
 
-	public void closeDoors() {
-		motionStatus = MotionStatus.DoorsClosing;
-		targetPosition = 0.0;
+	public void putInService() {
+		for (ElevatorComponent component : components.values()) {
+			component.setFailed(false);
+		}
+		getEmergencyBrake().setIsEnabled(false);
+		serviceStatus = ServiceStatus.InService;
+		simulation.onElevatorPutInService(this);
+	}
+
+	public ElevatorComponent getComponent(String componentKey) {
+		return components.get(componentKey);
+	}
+
+	public void putOutOfService() {
+		getEmergencyBrake().setIsEnabled(true);
+		serviceStatus = ServiceStatus.OutOfService;
+	}
+
+	public void setSchedulerData(SchedulerData data) {
+		this.data = data;
+	}
+
+	public int getElevatorNumber() {
+		return elevatorNumber;
+	}
+
+	public MotionStatus getMotionStatus() {
+		return motionStatus;
+	}
+
+	public double getPosition() {
+		return positionContext.getCurrentPosition();
+	}
+
+	public FloorRequestPanel getRequestPanel() {
+		return requestPanel;
+	}
+
+	public SchedulerData getSchedulerData() {
+		return data;
+	}
+
+	public ServiceStatus getServiceStatus() {
+		return serviceStatus;
+	}
+
+	ElevatorSnapShot createSnapshot() {
+		double currentPosition = positionContext.getCurrentPosition();
+		int requestsInElevator = requests.values().size();
+		return new ElevatorSnapShot(currentPosition, floorsOffLimit,
+				requestsInElevator, elevatorCapacity, motionStatus,
+				serviceStatus, components.values());
 	}
 
 	void executeQuantum() {
 		if (!serviceStatus.equals(ServiceStatus.InService))
 			return;
 		try {
-			if (motionStatus.equals(MotionStatus.MovingDown)
-					|| motionStatus.equals(MotionStatus.MovingUp)) {
-				double currPos = getPositionSensor().getPosition();
-				double velocity = targetPosition < currPos ? -speed : speed;
-				if (currPos == targetPosition) {
+			double position = getPositionSensor().getPosition();
+			if (motionStatus == MotionStatus.MovingDown
+					|| motionStatus == MotionStatus.MovingUp) {
+				double velocity = targetPosition < position ? -speed : speed;
+				if (position == targetPosition) {
 					motionStatus = MotionStatus.ReachedDestinationFloor;
-				} else if (Math.abs(targetPosition - currPos) < speed) {
-					getDriveMechanism().move(targetPosition - currPos);
+				} else if (Math.abs(targetPosition - position) < speed) {
+					getDriveMechanism().move(targetPosition - position);
 				} else {
 					getDriveMechanism().move(velocity);
 				}
-			} else if (motionStatus.equals(MotionStatus.DoorsClosing)) {
+			} else if (motionStatus == MotionStatus.DoorsClosing) {
 				if (getDoorSensor().areDoorsClosed()) {
 					motionStatus = MotionStatus.DoorsClosed;
-					simulation.onElevatorDoorsClosed(this);
 				} else {
+					simulation.onElevatorDoorsClosing(this);
 					getDoorDriver().move(-DOOR_WIDTH);
 				}
-			} else if (motionStatus.equals(MotionStatus.DoorsOpening)) {
+			} else if (motionStatus == MotionStatus.DoorsOpening) {
 				if (getDoorSensor().areDoorsOpen()) {
-					motionStatus = MotionStatus.DoorsOpen;
 					requestPanel.clearRequest((int) getPosition());
+					motionStatus = MotionStatus.DoorsOpen;
 				} else {
 					getDoorDriver().move(DOOR_WIDTH);
 				}
@@ -189,33 +202,40 @@ public class Elevator {
 		return false;
 	}
 
-	ElevatorSnapShot createSnapshot() {
-		double currentPosition = positionContext.getCurrentPosition();
-		int requestsInElevator = requests.values().size();
-		return new ElevatorSnapShot(currentPosition, floorsOffLimit,
-				requestsInElevator, elevatorCapacity, motionStatus,
-				serviceStatus, components.values());
+	private Collection<ElevatorComponent> createComponents(double doorWidth,
+			double maxHeight) {
+		DriveMechanism drive = new DriveMechanism(positionContext, maxHeight);
+		PositionSensor sensor = new PositionSensor(positionContext);
+		DoorDriveMechanism doorDrive = new DoorDriveMechanism(
+				doorPositionContext, doorWidth);
+		DoorSensor doorSensor = new DoorSensor(doorPositionContext, doorWidth);
+		EmergencyBrake ebrake = new EmergencyBrake();
+		return Arrays.asList(drive, sensor, doorDrive, doorSensor, ebrake);
 	}
 
 	private DoorDriveMechanism getDoorDriver() {
-		return (DoorDriveMechanism) components.get(DoorDriveMechanism.class
-				.getName());
+		String key = DoorDriveMechanism.class.getName();
+		return (DoorDriveMechanism) components.get(key);
 	}
 
 	private DriveMechanism getDriveMechanism() {
-		return (DriveMechanism) components.get(DriveMechanism.class.getName());
+		String key = DriveMechanism.class.getName();
+		return (DriveMechanism) components.get(key);
 	}
 
 	private PositionSensor getPositionSensor() {
-		return (PositionSensor) components.get(PositionSensor.class.getName());
+		String key = PositionSensor.class.getName();
+		return (PositionSensor) components.get(key);
 	}
 
 	private DoorSensor getDoorSensor() {
-		return (DoorSensor) components.get(DoorSensor.class.getName());
+		String key = DoorSensor.class.getName();
+		return (DoorSensor) components.get(key);
 	}
 
 	private EmergencyBrake getEmergencyBrake() {
-		return (EmergencyBrake) components.get(EmergencyBrake.class.getName());
+		String key = EmergencyBrake.class.getName();
+		return (EmergencyBrake) components.get(key);
 	}
 
 }

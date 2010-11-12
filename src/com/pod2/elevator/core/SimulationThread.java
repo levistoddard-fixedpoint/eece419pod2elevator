@@ -1,19 +1,24 @@
 package com.pod2.elevator.core;
 
+/**
+ * A Thread which continually executes an ActiveSimulation.
+ * 
+ */
 public class SimulationThread implements Runnable {
 
 	public static long QUANTUM_MILLIS = 100;
 
-	private ActiveSimulation activeSimulation;
+	private ActiveSimulation simulation;
 
-	public SimulationThread(ActiveSimulation activeSimulation) {
-		this.activeSimulation = activeSimulation;
+	public SimulationThread(ActiveSimulation simulation) {
+		assert (simulation != null);
+		this.simulation = simulation;
 	}
 
 	public void run() {
 		while (true) {
 			try {
-				activeSimulation.executeNextQuantum();
+				simulation.executeNextQuantum();
 				Thread.sleep(QUANTUM_MILLIS);
 				if (Thread.interrupted()) {
 					break;

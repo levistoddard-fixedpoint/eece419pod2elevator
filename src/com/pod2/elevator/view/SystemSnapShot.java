@@ -1,14 +1,16 @@
 package com.pod2.elevator.view;
 
+import java.util.Collection;
+
 public class SystemSnapShot {
 
 	private long quantum;
 	private ElevatorSnapShot elevatorSnapShot[];
 	private FloorSnapShot floorSnapShots[];
-	private LogMessage messages[];
+	private Collection<LogMessage> messages;
 
 	public SystemSnapShot(long quantum, ElevatorSnapShot elevatorSnapShots[],
-			FloorSnapShot floorSnapShots[], LogMessage messages[]) {
+			FloorSnapShot floorSnapShots[], Collection<LogMessage> messages) {
 		this.quantum = quantum;
 		this.elevatorSnapShot = elevatorSnapShots;
 		this.floorSnapShots = floorSnapShots;
@@ -27,7 +29,7 @@ public class SystemSnapShot {
 		return elevatorSnapShot[elevatorNumber];
 	}
 
-	public LogMessage[] getMessages() {
+	public Collection<LogMessage> getMessages() {
 		return messages;
 	}
 

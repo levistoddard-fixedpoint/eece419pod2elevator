@@ -3,16 +3,17 @@ package com.pod2.elevator.core;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Represents the request panel within a single Elevator, indicating which
+ * destination floors have been selected.
+ * 
+ */
 public class FloorRequestPanel {
 
-	private Set<Integer> requestedFloors;
+	private final Set<Integer> requestedFloors;
 
 	public FloorRequestPanel() {
 		requestedFloors = new HashSet<Integer>();
-	}
-
-	public void request(int floorNumber) {
-		requestedFloors.add(floorNumber);
 	}
 
 	public void clearRequest(int floorNumber) {
@@ -23,16 +24,12 @@ public class FloorRequestPanel {
 		return requestedFloors;
 	}
 
-	public boolean areRequests() {
-		return !requestedFloors.isEmpty();
-	}
-
 	public boolean isRequested(int floorNumber) {
 		return requestedFloors.contains(floorNumber);
 	}
 
-	public void clearRequests() {
-		requestedFloors.clear();
+	public void request(int floorNumber) {
+		requestedFloors.add(floorNumber);
 	}
 
 }
