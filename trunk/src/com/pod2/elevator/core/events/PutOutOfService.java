@@ -23,13 +23,15 @@ public class PutOutOfService extends ElevatorEvent {
 	@Override
 	public boolean canApplyNow(ActiveSimulation simulation) {
 		Elevator elevator = simulation.getElevators()[getElevatorNumber()];
-		return MotionStatus.DoorsOpen.equals(elevator.getMotionStatus())
-				&& !elevator.getRequestPanel().areRequests();
+		boolean isOpen = MotionStatus.DoorsOpen == elevator.getMotionStatus();
+		boolean isEmpty = elevator.getRequestPanel().getRequestedFloors()
+				.isEmpty();
+		return isOpen && isEmpty;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s: Put out of service.", super.toString());
+		return String.format("%s put out of service.", super.toString());
 	}
 
 }

@@ -21,7 +21,7 @@ public abstract class ElevatorEvent extends Event {
 
 	@Override
 	public String toString() {
-		return String.format("%s E%d", super.toString(), elevatorNumber);
+		return String.format("%s: Elevator %d", super.toString(), elevatorNumber);
 	}
 
 }

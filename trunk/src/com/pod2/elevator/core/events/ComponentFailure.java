@@ -30,7 +30,7 @@ public class ComponentFailure extends ElevatorEvent {
 
 	@Override
 	public String toString() {
-		final String format = "%s: %s failed.";
+		final String format = "%s %s failed.";
 		return String.format(format, super.toString(), details.getName());
 	}
 

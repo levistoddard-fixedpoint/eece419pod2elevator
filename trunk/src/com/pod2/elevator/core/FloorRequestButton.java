@@ -1,5 +1,9 @@
 package com.pod2.elevator.core;
 
+/**
+ * Represents the up/down buttons used to request an Elevator to service a
+ * particular floor.
+ */
 public class FloorRequestButton {
 
 	private boolean isUpSelected;
