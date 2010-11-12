@@ -1,11 +1,20 @@
 package com.pod2.elevator.core.component;
 
-public class DriverMechanism extends ElevatorComponent {
+/**
+ * ElevatorComponent which moves an elevator up and down.
+ * 
+ */
+public class DriveMechanism extends ElevatorComponent {
 
-	private PositionContext positionContext;
-	private double maxHeight;
+	private static final ComponentDetails details = new ComponentDetails(
+			DriveMechanism.class.getName(), "Drive Mechanism", true);
 
-	public DriverMechanism(PositionContext positionContext, double maxHeight) {
+	private final PositionContext positionContext;
+	private final double maxHeight;
+
+	public DriveMechanism(PositionContext positionContext, double maxHeight) {
+		assert (positionContext != null);
+		assert (maxHeight > 0);
 		this.positionContext = positionContext;
 		this.maxHeight = maxHeight;
 	}
@@ -23,6 +32,15 @@ public class DriverMechanism extends ElevatorComponent {
 					"attempted to drive elevator too low");
 		}
 		positionContext.setCurrentPosition(newPos);
+	}
+
+	@Override
+	public String getKey() {
+		return details.getKey();
+	}
+
+	static ComponentDetails getDetails() {
+		return details;
 	}
 
 }

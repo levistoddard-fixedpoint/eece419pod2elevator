@@ -1,11 +1,20 @@
 package com.pod2.elevator.core.component;
 
+/**
+ * ElevatorComponent which measures the current position of an Elevator's doors.
+ * 
+ */
 public class DoorSensor extends ElevatorComponent {
 
-	private DoorPositionContext doorPositionContext;
-	private double doorWidth;
+	private static final ComponentDetails details = new ComponentDetails(
+			DoorSensor.class.getName(), "Door Sensor", true);
+
+	private final DoorPositionContext doorPositionContext;
+	private final double doorWidth;
 
 	public DoorSensor(DoorPositionContext doorPositionContext, double doorWidth) {
+		assert (doorPositionContext != null);
+		assert (doorWidth > 0);
 		this.doorPositionContext = doorPositionContext;
 		this.doorWidth = doorWidth;
 	}
@@ -24,6 +33,15 @@ public class DoorSensor extends ElevatorComponent {
 			throw new ComponentFailedException("door sensor failed");
 		}
 		return doorPositionContext.getDistanceUntilClosed() == position;
+	}
+
+	@Override
+	public String getKey() {
+		return details.getKey();
+	}
+
+	static ComponentDetails getDetails() {
+		return details;
 	}
 
 }

@@ -17,9 +17,9 @@ import javax.swing.JToolBar;
 import com.pod2.elevator.core.FloorRequestButton;
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
-import com.pod2.elevator.core.component.DoorDriverMechanism;
+import com.pod2.elevator.core.component.DoorDriveMechanism;
 import com.pod2.elevator.core.component.DoorSensor;
-import com.pod2.elevator.core.component.DriverMechanism;
+import com.pod2.elevator.core.component.DriveMechanism;
 import com.pod2.elevator.core.component.ElevatorComponent;
 import com.pod2.elevator.core.component.PositionSensor;
 
@@ -99,9 +99,9 @@ public class SimulationWindow extends JFrame implements Runnable {
 		for (int n = 0; n < 4; n++) {
 			List<ElevatorComponent> components = new LinkedList<ElevatorComponent>();
 			components.add(new DoorSensor(null, 4.0));
-			components.add(new DoorDriverMechanism(null, 4.0));
+			components.add(new DoorDriveMechanism(null, 4.0));
 			components.add(new PositionSensor(null));
-			components.add(new DriverMechanism(null, 4.0));
+			components.add(new DriveMechanism(null, 4.0));
 			elevators[n] = new ElevatorSnapShot((double) n,
 					new HashSet<Integer>(), n + 2, n + 4,
 					MotionStatus.DoorsOpen, ServiceStatus.InService, components);

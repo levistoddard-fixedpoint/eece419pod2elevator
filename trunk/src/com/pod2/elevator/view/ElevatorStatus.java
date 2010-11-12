@@ -8,9 +8,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-import com.pod2.elevator.core.component.DoorDriverMechanism;
+import com.pod2.elevator.core.component.DoorDriveMechanism;
 import com.pod2.elevator.core.component.DoorSensor;
-import com.pod2.elevator.core.component.DriverMechanism;
+import com.pod2.elevator.core.component.DriveMechanism;
 import com.pod2.elevator.core.component.PositionSensor;
 
 public class ElevatorStatus extends JFrame {
@@ -99,10 +99,10 @@ public class ElevatorStatus extends JFrame {
 		componentStatus[0].setText(elevator.getFailureStatus(DoorSensor.class)
 				.toString());
 		componentStatus[0].setText(elevator.getFailureStatus(
-				DoorDriverMechanism.class).toString());
+				DoorDriveMechanism.class).toString());
 		componentStatus[0].setText(elevator.getFailureStatus(
 				PositionSensor.class).toString());
 		componentStatus[0].setText(elevator.getFailureStatus(
-				DriverMechanism.class).toString());
+				DriveMechanism.class).toString());
 	}
 }
