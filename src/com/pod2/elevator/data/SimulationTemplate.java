@@ -17,6 +17,7 @@ public class SimulationTemplate {
 	public int numberFloors;
 	public int elevatorCapacity;
 	public int numberElevators;
+	public double speed; /* floors per second */
 	public Set<Integer> restrictedFloors;
 	public ElevatorScheduler scheduler;
 	public boolean requestGenerationOn;
@@ -25,7 +26,6 @@ public class SimulationTemplate {
 	public List<TemplateServiceEvent> serviceEvents;
 	public Date created;
 	public Date lastEdit;
-	public double speed; /* floors/second */
 
 	public List<Event> getEvents() {
 		List<Event> eventList = new LinkedList<Event>();

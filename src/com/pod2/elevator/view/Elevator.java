@@ -51,5 +51,6 @@ public class Elevator extends Canvas {
 
 	public void setFloor(double currentPosition) {
 		floor = currentPosition;
+		this.repaint();
 	}
 }

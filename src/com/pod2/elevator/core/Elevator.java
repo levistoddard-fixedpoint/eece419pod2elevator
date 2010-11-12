@@ -16,6 +16,7 @@ import com.pod2.elevator.core.component.ElevatorComponent;
 import com.pod2.elevator.core.component.EmergencyBrake;
 import com.pod2.elevator.core.component.PositionContext;
 import com.pod2.elevator.core.component.PositionSensor;
+import com.pod2.elevator.core.events.RequestInTransit;
 import com.pod2.elevator.scheduling.SchedulerData;
 import com.pod2.elevator.view.ElevatorSnapShot;
 
@@ -74,9 +75,8 @@ public class Elevator {
 		targetPosition = 0.0;
 	}
 
-	public void failComponent(String componentName) {
-		ElevatorComponent component = components.get(componentName);
-		component.setFailed(true);
+	public ElevatorComponent getComponent(String componentKey) {
+		return components.get(componentKey);
 	}
 
 	public void putInService() {
@@ -150,7 +150,7 @@ public class Elevator {
 				double velocity = targetPosition < currPos ? -speed : speed;
 				if (currPos == targetPosition) {
 					motionStatus = MotionStatus.ReachedDestinationFloor;
-				} else if (targetPosition - currPos < velocity) {
+				} else if (Math.abs(targetPosition - currPos) < speed) {
 					getDriveMechanism().move(targetPosition - currPos);
 				} else {
 					getDriveMechanism().move(velocity);

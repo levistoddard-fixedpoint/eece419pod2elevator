@@ -13,5 +13,10 @@ public abstract class ElevatorEvent extends Event {
 	public int getElevatorNumber() {
 		return elevatorNumber;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s E%d", super.toString(), elevatorNumber);
+	}
 
 }

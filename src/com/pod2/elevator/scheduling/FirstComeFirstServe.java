@@ -4,10 +4,12 @@ import com.pod2.elevator.core.ActiveSimulation;
 
 public class FirstComeFirstServe implements ElevatorScheduler{
 	
-	private static long requestNum = 0;
-	private int nextElevator;
+
+	// private static long requestNum = 0;
+	// private int nextElevator;
 	
 	public void schedule(ActiveSimulation activeSimulation) {
+		/* TODO update implementation*/
 		
 //		//Search all floors from bottom to top for requests
 //		for (int i = 0; i < activeSimulation.numberFloors; i++) {
