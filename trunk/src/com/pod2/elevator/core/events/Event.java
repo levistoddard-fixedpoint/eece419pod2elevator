@@ -16,12 +16,21 @@ public abstract class Event {
 
 	public abstract boolean canApplyNow(ActiveSimulation simulation);
 
+	public boolean isLoggable() {
+		return true;
+	}
+	
 	public long getTimeQuantum() {
 		return timeQuantum;
 	}
 
 	public EventSource getEventSource() {
 		return eventSource;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s", eventSource);
 	}
 
 }

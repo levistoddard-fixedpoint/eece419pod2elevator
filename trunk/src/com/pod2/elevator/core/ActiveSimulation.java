@@ -10,6 +10,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.pod2.elevator.core.events.Event;
 import com.pod2.elevator.core.events.PassengerRequest;
+import com.pod2.elevator.core.events.RequestInTransit;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.scheduling.ElevatorScheduler;
 import com.pod2.elevator.view.ElevatorSnapShot;
@@ -20,6 +21,7 @@ import com.pod2.elevator.view.SystemSnapShot;
 public class ActiveSimulation {
 
 	private long currentQuantum;
+	private long nextPassengerNumber;
 	private Elevator[] elevators;
 	private FloorRequestButton[] floorRequestButtons;
 	private Multimap<Integer, RequestInTransit> floorQueues;
@@ -28,7 +30,7 @@ public class ActiveSimulation {
 	private boolean isRunning;
 
 	private SimulationTemplate template;
-	private SimulationResultsSink results;
+	private ResultsBuilder results;
 	private SimulationDisplay display;
 	private Thread simulationThread;
 
@@ -36,7 +38,7 @@ public class ActiveSimulation {
 	private RequestGenerator requestGenerator;
 
 	public ActiveSimulation(SimulationTemplate template,
-			SimulationResultsSink results, SimulationDisplay display) {
+			ResultsBuilder results, SimulationDisplay display) {
 		this.template = template;
 		this.results = results;
 		this.display = display;
@@ -44,6 +46,7 @@ public class ActiveSimulation {
 
 		/* independent of input parameters. */
 		currentQuantum = 0;
+		nextPassengerNumber = 1;
 		simulationThread = new Thread(new SimulationThread(this));
 		isRunning = false;
 	}
@@ -112,6 +115,10 @@ public class ActiveSimulation {
 		return Arrays.copyOf(floorRequestButtons, floorRequestButtons.length);
 	}
 
+	public int getNumberFloors() {
+		return template.getNumberFloors();
+	}
+
 	public boolean getIsRunning() {
 		return isRunning;
 	}
@@ -137,14 +144,16 @@ public class ActiveSimulation {
 	}
 
 	public void enqueuePassenger(PassengerRequest request) {
-		enqueuePassenger(new RequestInTransit(request));
+		enqueuePassenger(new RequestInTransit(nextPassengerNumber++, request));
 	}
 
 	private void enqueuePassenger(RequestInTransit request) {
 		int onload = request.getOnloadFloor();
 		int offload = request.getOffloadFloor();
+		request.setDeliveryStatus(DeliveryStatus.Waiting);
 		floorQueues.put(onload, request);
 		floorRequestButtons[onload].click(currentQuantum, offload > onload);
+		results.logEvent(currentQuantum, request);
 	}
 
 	public int getPassengersWaiting(int floorNumber) {
@@ -208,6 +217,9 @@ public class ActiveSimulation {
 			Event event = itr.next();
 			if (event.canApplyNow(this)) {
 				event.apply(this);
+				if (event.isLoggable()) {
+					results.logEvent(currentQuantum, event);
+				}
 				itr.remove();
 			}
 		}
@@ -216,10 +228,14 @@ public class ActiveSimulation {
 		for (Event event : eventQueue.removeAll(currentQuantum)) {
 			if (event.canApplyNow(this)) {
 				event.apply(this);
+				if (event.isLoggable()) {
+					results.logEvent(currentQuantum, event);
+				}
 			} else {
 				delayedEventQueue.add(event);
 			}
 		}
+
 	}
 
 	private void generateRequests() {
@@ -242,7 +258,7 @@ public class ActiveSimulation {
 		for (RequestInTransit request : elevator.offloadPassengers()) {
 			request.setDeliveryStatus(status);
 			request.setOffloadQuantum(currentQuantum);
-			results.logFinishedRequest(request);
+			results.logEvent(currentQuantum, request);
 		}
 	}
 
@@ -261,13 +277,16 @@ public class ActiveSimulation {
 	private void onloadPassengers(Elevator elevator) {
 		int currFloor = (int) elevator.getPosition();
 		Collection<RequestInTransit> reqs = floorQueues.removeAll(currFloor);
-		reqs = new LinkedList<RequestInTransit>(reqs); // previously unmodifiable
+		reqs = new LinkedList<RequestInTransit>(reqs); // previously
+														// unmodifiable
 		Iterator<RequestInTransit> itr = reqs.iterator();
 		while (itr.hasNext()) {
 			RequestInTransit request = itr.next();
 			if (elevator.onloadPassenger(request)) {
+				request.setDeliveryStatus(DeliveryStatus.InElevator);
 				request.setElevatorNumber(elevator.getElevatorNumber());
 				request.setOnloadQuantum(currentQuantum);
+				results.logEvent(currentQuantum, request);
 				itr.remove();
 			} else {
 				/* elevator capacity filled up. */
@@ -301,7 +320,7 @@ public class ActiveSimulation {
 			elevatorSnapshots[n] = elevators[n].createSnapshot();
 		}
 
-		LogMessage[] messages = results.getLoggedMessages(currentQuantum);
+		LogMessage[] messages = results.getLoggedEvents(currentQuantum);
 
 		return new SystemSnapShot(currentQuantum, elevatorSnapshots,
 				floorSnapshots, messages);

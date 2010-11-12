@@ -3,7 +3,7 @@ package com.pod2.elevator.data;
 import java.util.Date;
 
 import com.pod2.elevator.core.ActiveSimulation;
-import com.pod2.elevator.core.RequestInTransit;
+import com.pod2.elevator.core.events.RequestInTransit;
 import com.pod2.elevator.view.LogMessage;
 
 public class SimulationResultsBuilder {

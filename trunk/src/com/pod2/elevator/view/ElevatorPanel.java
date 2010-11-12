@@ -33,8 +33,8 @@ public class ElevatorPanel extends JPanel {
 		// TODO: Update elevator image and position (guarantee elevator cannot
 		// go out of bound)
 		elevator.setFloor(s.getElevatorSnapShot(id).getCurrentPosition());
-		Dimension size = this.getSize();
-		System.out.println("panel: " + size.height);
+		//Dimension size = this.getSize();
+		//System.out.println("panel: " + size.height);
 	}
 
 }

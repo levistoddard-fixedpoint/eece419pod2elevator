@@ -20,5 +20,10 @@ public class PutInService extends ElevatorEvent {
 	public boolean canApplyNow(ActiveSimulation simulation) {
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s: Put in service.", super.toString());
+	}
 
 }

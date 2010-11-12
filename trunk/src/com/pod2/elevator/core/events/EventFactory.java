@@ -16,11 +16,11 @@ public class EventFactory {
 	}
 
 	public static Event createServiceEvent(EventSource eventSource,
-			long timeQuantum, int elevatorNumber, boolean shouldPutOutOfService) {
-		if (shouldPutOutOfService) {
-			return new PutOutOfService(eventSource, timeQuantum, elevatorNumber);
-		} else {
+			long timeQuantum, int elevatorNumber, boolean putInService) {
+		if (putInService) {
 			return new PutInService(eventSource, timeQuantum, elevatorNumber);
+		} else {
+			return new PutOutOfService(eventSource, timeQuantum, elevatorNumber);
 		}
 	}
 

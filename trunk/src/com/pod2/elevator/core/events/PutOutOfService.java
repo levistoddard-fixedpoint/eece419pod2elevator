@@ -24,4 +24,9 @@ public class PutOutOfService extends ElevatorEvent {
 				&& !elevator.getRequestPanel().areRequests();
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%s: Put out of service.", super.toString());
+	}
+
 }

@@ -31,6 +31,11 @@ public class PassengerRequest extends Event {
 	public boolean canApplyNow(ActiveSimulation simulation) {
 		return true;
 	}
+	
+	@Override
+	public boolean isLoggable() {
+		return false;
+	}
 
 	public int getOnloadFloor() {
 		return onloadFloor;
