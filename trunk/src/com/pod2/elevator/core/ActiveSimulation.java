@@ -10,7 +10,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.pod2.elevator.core.events.Event;
 import com.pod2.elevator.core.events.PassengerRequest;
-import com.pod2.elevator.core.events.RequestInTransit;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.scheduling.ElevatorScheduler;
 import com.pod2.elevator.view.ElevatorSnapShot;
@@ -140,7 +139,7 @@ public class ActiveSimulation {
 	}
 
 	public void enqueueEvent(Event event) {
-		eventQueue.put(event.getTimeQuantum(), event);
+		eventQueue.put(event.getQuantum(), event);
 	}
 
 	public void enqueuePassenger(PassengerRequest request) {
@@ -153,7 +152,7 @@ public class ActiveSimulation {
 		request.setDeliveryStatus(DeliveryStatus.Waiting);
 		floorQueues.put(onload, request);
 		floorRequestButtons[onload].click(currentQuantum, offload > onload);
-		results.logEvent(currentQuantum, request);
+		results.logRequestStateChange(currentQuantum, request);
 	}
 
 	public int getPassengersWaiting(int floorNumber) {
@@ -217,9 +216,7 @@ public class ActiveSimulation {
 			Event event = itr.next();
 			if (event.canApplyNow(this)) {
 				event.apply(this);
-				if (event.isLoggable()) {
-					results.logEvent(currentQuantum, event);
-				}
+				results.logEvent(currentQuantum, event);
 				itr.remove();
 			}
 		}
@@ -228,9 +225,7 @@ public class ActiveSimulation {
 		for (Event event : eventQueue.removeAll(currentQuantum)) {
 			if (event.canApplyNow(this)) {
 				event.apply(this);
-				if (event.isLoggable()) {
-					results.logEvent(currentQuantum, event);
-				}
+				results.logEvent(currentQuantum, event);
 			} else {
 				delayedEventQueue.add(event);
 			}
@@ -258,7 +253,7 @@ public class ActiveSimulation {
 		for (RequestInTransit request : elevator.offloadPassengers()) {
 			request.setDeliveryStatus(status);
 			request.setOffloadQuantum(currentQuantum);
-			results.logEvent(currentQuantum, request);
+			results.logRequestStateChange(currentQuantum, request);
 		}
 	}
 
@@ -286,7 +281,7 @@ public class ActiveSimulation {
 				request.setDeliveryStatus(DeliveryStatus.InElevator);
 				request.setElevatorNumber(elevator.getElevatorNumber());
 				request.setOnloadQuantum(currentQuantum);
-				results.logEvent(currentQuantum, request);
+				results.logRequestStateChange(currentQuantum, request);
 				itr.remove();
 			} else {
 				/* elevator capacity filled up. */

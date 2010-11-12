@@ -1,25 +1,29 @@
-package com.pod2.elevator.core.events;
+package com.pod2.elevator.core;
 
-import com.pod2.elevator.core.DeliveryStatus;
+import com.pod2.elevator.core.events.PassengerRequest;
 
-public class RequestInTransit extends PassengerRequest {
+public class RequestInTransit {
 
 	private final long requestNumber;
+	private final PassengerRequest request;
 
-	private int elevatorNumber = -1;
-	private long onloadQuantum = -1;
-	private long offloadQuantum = -1;
-	private DeliveryStatus deliveryStatus;
+	private int elevatorNumber;
+	private long onloadQuantum;
+	private long offloadQuantum;
+	private DeliveryStatus status;
 
-	public RequestInTransit(long requestNumber,
-			PassengerRequest passengerRequest) {
-		super(passengerRequest);
+	public RequestInTransit(long requestNumber, PassengerRequest request) {
+		assert (request != null);
 		this.requestNumber = requestNumber;
+		this.request = request;
 	}
 
-	@Override
-	public boolean isLoggable() {
-		return true;
+	public int getOnloadFloor() {
+		return request.getOnloadFloor();
+	}
+
+	public int getOffloadFloor() {
+		return request.getOffloadFloor();
 	}
 
 	public long getPassengerNumber() {
@@ -51,30 +55,30 @@ public class RequestInTransit extends PassengerRequest {
 	}
 
 	public DeliveryStatus getDeliveryStatus() {
-		return deliveryStatus;
+		return status;
 	}
 
 	public void setDeliveryStatus(DeliveryStatus deliveryStatus) {
-		this.deliveryStatus = deliveryStatus;
+		this.status = deliveryStatus;
 	}
 
 	@Override
 	public String toString() {
-		if (DeliveryStatus.Waiting.equals(deliveryStatus)) {
+		if (DeliveryStatus.Waiting.equals(status)) {
 			return String.format("%s: Passenger %d waiting on floor %d.",
-					super.toString(), requestNumber, getOnloadFloor());
-		} else if (DeliveryStatus.InElevator.equals(deliveryStatus)) {
+					super.toString(), requestNumber, request.getOnloadFloor());
+		} else if (DeliveryStatus.InElevator.equals(status)) {
 			return String.format("%s: Passenger %d entered elevator %d",
 					super.toString(), requestNumber, getElevatorNumber());
-		} else if (DeliveryStatus.Rescued.equals(deliveryStatus)) {
+		} else if (DeliveryStatus.Rescued.equals(status)) {
 			return String.format("%s: Passenger %d rescued from elevator %d.",
 					super.toString(), requestNumber, getElevatorNumber());
-		} else if (DeliveryStatus.Delivered.equals(deliveryStatus)) {
+		} else if (DeliveryStatus.Delivered.equals(status)) {
 			return String.format("%s: Passenger %d delivered to floor %d.",
-					super.toString(), requestNumber, getOffloadFloor());
+					super.toString(), requestNumber, request.getOffloadFloor());
 		} else {
 			throw new RuntimeException(String.format(
-					"unknown delivery status: %s", deliveryStatus));
+					"unknown delivery status: %s", status));
 		}
 	}
 

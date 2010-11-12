@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.pod2.elevator.core.component.ComponentRegistry;
 import com.pod2.elevator.core.events.Event;
 import com.pod2.elevator.core.events.EventFactory;
 import com.pod2.elevator.core.events.EventSource;
@@ -37,7 +38,7 @@ public class SimulationTemplate {
 		for (TemplateFailureEvent event : failureEvents) {
 			eventList.add(EventFactory.createComponentFailureEvent(
 					EventSource.Template, event.quantum, event.elevatorNumber,
-					event.component.getName()));
+					ComponentRegistry.getComponentByKey(event.componentKey)));
 		}
 		for (TemplateServiceEvent event : serviceEvents) {
 			eventList.add(EventFactory.createServiceEvent(EventSource.Template,

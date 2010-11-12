@@ -2,39 +2,30 @@ package com.pod2.elevator.core.events;
 
 import com.pod2.elevator.core.ActiveSimulation;
 
+/**
+ * An Event which inserts a passenger request into the ActiveSimulation.
+ * 
+ */
 public class PassengerRequest extends Event {
 
-	private int onloadFloor;
-	private int offloadFloor;
-	private long timeConstraint;
+	private final int onloadFloor;
+	private final int offloadFloor;
+	private final long timeConstraint;
 
-	public PassengerRequest(EventSource eventSource, long timeQuantum,
-			int onloadFloor, int offloadFloor, long timeConstraint) {
-		super(eventSource, timeQuantum);
+	PassengerRequest(EventSource source, long quantum, int onloadFloor,
+			int offloadFloor, long timeConstraint) {
+		super(source, quantum);
+		assert (onloadFloor >= 0);
+		assert (offloadFloor >= 0);
+		assert (timeConstraint >= 0);
 		this.onloadFloor = onloadFloor;
 		this.offloadFloor = offloadFloor;
 		this.timeConstraint = timeConstraint;
 	}
 
-	public PassengerRequest(PassengerRequest otherRequest) {
-		this(otherRequest.getEventSource(), otherRequest.getTimeQuantum(),
-				otherRequest.onloadFloor, otherRequest.offloadFloor,
-				otherRequest.timeConstraint);
-	}
-
 	@Override
 	public void apply(ActiveSimulation simulation) {
 		simulation.enqueuePassenger(this);
-	}
-
-	@Override
-	public boolean canApplyNow(ActiveSimulation simulation) {
-		return true;
-	}
-	
-	@Override
-	public boolean isLoggable() {
-		return false;
 	}
 
 	public int getOnloadFloor() {
@@ -47,6 +38,13 @@ public class PassengerRequest extends Event {
 
 	public long getTimeConstraint() {
 		return timeConstraint;
+	}
+
+	@Override
+	public String toString() {
+		final String format = "%s: Passenger entered floor %d. Wants to go to floor %d within %d quantum.";
+		return String.format(format, super.toString(), onloadFloor,
+				offloadFloor, timeConstraint);
 	}
 
 }
