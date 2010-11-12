@@ -1,5 +1,11 @@
 package com.pod2.elevator.core.component;
 
+/**
+ * Thrown by ElevatorComponent sub-class operations when the component has
+ * failed, or the operation will cause the component to operate outside it's
+ * physical boundaries.
+ * 
+ */
 public class ComponentFailedException extends Exception {
 
 	public ComponentFailedException() {

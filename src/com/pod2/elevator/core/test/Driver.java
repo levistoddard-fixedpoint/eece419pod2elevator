@@ -10,7 +10,7 @@ import javax.swing.SwingUtilities;
 import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.ResultsBuilder;
 import com.pod2.elevator.core.SimulationDisplay;
-import com.pod2.elevator.core.component.DriverMechanism;
+import com.pod2.elevator.core.component.DriveMechanism;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.data.TemplateFailureEvent;
 import com.pod2.elevator.data.TemplatePassengerRequest;
@@ -27,7 +27,7 @@ public class Driver {
 
 		TemplateFailureEvent e1 = new TemplateFailureEvent();
 		e1.quantum = 100;
-		e1.component = DriverMechanism.class;
+		e1.component = DriveMechanism.class;
 		e1.elevatorNumber = 1;
 		events.add(e1);
 

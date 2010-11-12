@@ -1,24 +1,32 @@
 package com.pod2.elevator.core.component;
 
+/**
+ * ElevatorComponent which stops an elevator from being able to move up or down.
+ * This component cannot fail.
+ * 
+ */
 public class EmergencyBrake extends ElevatorComponent {
 
-	private boolean brakeOn;
+	private static final ComponentDetails details = new ComponentDetails(
+			EmergencyBrake.class.getName(), "Emergency Brake", false);
 
-	public void brakeOn() {
-		brakeOn = true;
+	private boolean isEnabled = false;
+
+	public void setIsEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
 	}
 
-	public void brakeOff() {
-		brakeOn = false;
+	public boolean isEnabled() {
+		return isEnabled;
 	}
 
-	public boolean isBrakeOn() {
-		return brakeOn;
+	@Override
+	public String getKey() {
+		return details.getKey();
 	}
-	
-	public boolean isFailed() {
-		/* failsafe component */
-		return false;
+
+	static ComponentDetails getDetails() {
+		return details;
 	}
-	
+
 }

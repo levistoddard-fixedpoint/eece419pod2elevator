@@ -1,11 +1,15 @@
 package com.pod2.elevator.core.component;
 
+/**
+ * Stores the current position of an Elevator's doors.
+ * 
+ */
 public class DoorPositionContext {
 
 	private double distanceUntilClosed;
 
 	public DoorPositionContext(double distanceUntilClosed) {
-		this.distanceUntilClosed = distanceUntilClosed;
+		setDistanceUntilClosed(distanceUntilClosed);
 	}
 
 	public double getDistanceUntilClosed() {
@@ -13,6 +17,7 @@ public class DoorPositionContext {
 	}
 
 	public void setDistanceUntilClosed(double distanceUntilClosed) {
+		assert (distanceUntilClosed >= 0);
 		this.distanceUntilClosed = distanceUntilClosed;
 	}
 

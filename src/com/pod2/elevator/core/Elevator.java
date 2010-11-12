@@ -8,10 +8,10 @@ import java.util.Set;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.pod2.elevator.core.component.ComponentFailedException;
-import com.pod2.elevator.core.component.DoorDriverMechanism;
+import com.pod2.elevator.core.component.DoorDriveMechanism;
 import com.pod2.elevator.core.component.DoorPositionContext;
 import com.pod2.elevator.core.component.DoorSensor;
-import com.pod2.elevator.core.component.DriverMechanism;
+import com.pod2.elevator.core.component.DriveMechanism;
 import com.pod2.elevator.core.component.ElevatorComponent;
 import com.pod2.elevator.core.component.EmergencyBrake;
 import com.pod2.elevator.core.component.PositionContext;
@@ -56,15 +56,15 @@ public class Elevator {
 		components = new HashMap<String, ElevatorComponent>();
 		positionContext = new PositionContext(0.0);
 		double maxHeight = (double) numberFloors;
-		DriverMechanism driver = new DriverMechanism(positionContext, maxHeight);
+		DriveMechanism driver = new DriveMechanism(positionContext, maxHeight);
 		PositionSensor position = new PositionSensor(positionContext);
-		components.put(DriverMechanism.class.getName(), driver);
+		components.put(DriveMechanism.class.getName(), driver);
 		components.put(PositionSensor.class.getName(), position);
 		doorPositionContext = new DoorPositionContext(DOOR_WIDTH);
-		DoorDriverMechanism doorDriver = new DoorDriverMechanism(
+		DoorDriveMechanism doorDriver = new DoorDriveMechanism(
 				doorPositionContext, DOOR_WIDTH);
 		DoorSensor doorSensor = new DoorSensor(doorPositionContext, DOOR_WIDTH);
-		components.put(DoorDriverMechanism.class.getName(), doorDriver);
+		components.put(DoorDriveMechanism.class.getName(), doorDriver);
 		components.put(DoorSensor.class.getName(), doorSensor);
 		components.put(EmergencyBrake.class.getName(), new EmergencyBrake());
 
@@ -83,13 +83,13 @@ public class Elevator {
 		for (ElevatorComponent component : components.values()) {
 			component.setFailed(false);
 		}
-		getEmergencyBrake().brakeOff();
+		getEmergencyBrake().setIsEnabled(false);
 		serviceStatus = ServiceStatus.InService;
 		simulation.onElevatorPutInService(this);
 	}
 
 	public void putOutOfService() {
-		getEmergencyBrake().brakeOn();
+		getEmergencyBrake().setIsEnabled(true);
 		serviceStatus = ServiceStatus.OutOfService;
 	}
 
@@ -172,7 +172,7 @@ public class Elevator {
 			}
 		} catch (ComponentFailedException e) {
 			serviceStatus = ServiceStatus.Failed;
-			getEmergencyBrake().brakeOn();
+			getEmergencyBrake().setIsEnabled(true);
 		}
 	}
 
@@ -198,14 +198,13 @@ public class Elevator {
 				serviceStatus, components.values());
 	}
 
-	private DoorDriverMechanism getDoorDriver() {
-		return (DoorDriverMechanism) components.get(DoorDriverMechanism.class
+	private DoorDriveMechanism getDoorDriver() {
+		return (DoorDriveMechanism) components.get(DoorDriveMechanism.class
 				.getName());
 	}
 
-	private DriverMechanism getDriveMechanism() {
-		return (DriverMechanism) components
-				.get(DriverMechanism.class.getName());
+	private DriveMechanism getDriveMechanism() {
+		return (DriveMechanism) components.get(DriveMechanism.class.getName());
 	}
 
 	private PositionSensor getPositionSensor() {
