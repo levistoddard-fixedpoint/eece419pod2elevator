@@ -16,7 +16,6 @@ import com.pod2.elevator.core.component.ElevatorComponent;
 import com.pod2.elevator.core.component.EmergencyBrake;
 import com.pod2.elevator.core.component.PositionContext;
 import com.pod2.elevator.core.component.PositionSensor;
-import com.pod2.elevator.core.events.RequestInTransit;
 import com.pod2.elevator.scheduling.SchedulerData;
 import com.pod2.elevator.view.ElevatorSnapShot;
 

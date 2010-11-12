@@ -35,6 +35,15 @@ public class ComponentRegistry {
 				});
 	}
 
+	public static ComponentDetails getComponentByKey(String key) {
+		assert (key != null);
+		ComponentDetails details = components.get(key);
+		if (details == null) {
+			throw new RuntimeException("no component with key: " + key);
+		}
+		return details;
+	}
+
 	private static void register(ComponentDetails details) {
 		components.put(details.getKey(), details);
 	}

@@ -27,7 +27,7 @@ public class Driver {
 
 		TemplateFailureEvent e1 = new TemplateFailureEvent();
 		e1.quantum = 100;
-		e1.component = DriveMechanism.class;
+		e1.componentKey = DriveMechanism.class.getName();
 		e1.elevatorNumber = 1;
 		events.add(e1);
 

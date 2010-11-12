@@ -4,11 +4,14 @@ import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.Elevator;
 import com.pod2.elevator.core.MotionStatus;
 
+/**
+ * An ElevatorEvent which takes an Elevator out of service.
+ * 
+ */
 public class PutOutOfService extends ElevatorEvent {
 
-	public PutOutOfService(EventSource eventSource, long timeQuantum,
-			int elevatorNumber) {
-		super(eventSource, timeQuantum, elevatorNumber);
+	PutOutOfService(EventSource source, long quantum, int elevatorNumber) {
+		super(source, quantum, elevatorNumber);
 	}
 
 	@Override

@@ -3,11 +3,14 @@ package com.pod2.elevator.core.events;
 import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.Elevator;
 
+/**
+ * An ElevatorEvent which puts an elevator back into service.
+ * 
+ */
 public class PutInService extends ElevatorEvent {
 
-	public PutInService(EventSource eventSource, long timeQuantum,
-			int elevatorNumber) {
-		super(eventSource, timeQuantum, elevatorNumber);
+	PutInService(EventSource source, long quantum, int elevatorNumber) {
+		super(source, quantum, elevatorNumber);
 	}
 
 	@Override
@@ -16,11 +19,6 @@ public class PutInService extends ElevatorEvent {
 		elevator.putInService();
 	}
 
-	@Override
-	public boolean canApplyNow(ActiveSimulation simulation) {
-		return true;
-	}
-	
 	@Override
 	public String toString() {
 		return String.format("%s: Put in service.", super.toString());

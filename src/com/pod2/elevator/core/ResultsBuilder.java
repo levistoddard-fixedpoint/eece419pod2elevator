@@ -11,6 +11,8 @@ public interface ResultsBuilder {
 
 	public void logEvent(long quantum, Event event);
 
+	public void logRequestStateChange(long quantum, RequestInTransit request);
+
 	public LogMessage[] getLoggedEvents(long quantum);
 
 	public void onEnd(long quantum);
