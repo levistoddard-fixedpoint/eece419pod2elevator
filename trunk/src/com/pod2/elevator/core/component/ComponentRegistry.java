@@ -25,6 +25,10 @@ public class ComponentRegistry {
 		register(PositionSensor.getDetails());
 	}
 
+	private ComponentRegistry() {
+		/* Cannot create instance of this class. */
+	}
+
 	public static Collection<ComponentDetails> getFailableComponents() {
 		return Collections2.filter(components.values(),
 				new Predicate<ComponentDetails>() {

@@ -17,6 +17,9 @@ import com.pod2.elevator.core.component.ElevatorComponent;
 import com.pod2.elevator.core.component.EmergencyBrake;
 import com.pod2.elevator.core.component.PositionContext;
 import com.pod2.elevator.core.component.PositionSensor;
+import com.pod2.elevator.core.events.Event;
+import com.pod2.elevator.core.events.EventFactory;
+import com.pod2.elevator.core.events.EventSource;
 import com.pod2.elevator.scheduling.SchedulerData;
 import com.pod2.elevator.view.ElevatorSnapShot;
 
@@ -27,6 +30,8 @@ import com.pod2.elevator.view.ElevatorSnapShot;
 public class Elevator {
 
 	private static final double DOOR_WIDTH = 1.0;
+	private static final String SERVICE_DUE_TO_DISTANCE = "Maximum distance before servicing reached.";
+	private static final String SERVICE_DUE_TO_TIME = "Maximum operation time before servicing reached.";
 
 	private final ActiveSimulation simulation;
 
@@ -47,8 +52,15 @@ public class Elevator {
 	private double targetPosition;
 	private SchedulerData data = null;
 
+	private long quantumsBeforeService;
+	private long cumulativeQuantumsInService;
+	private double distanceBeforeService;
+	private double cumulativeDistanceInService;
+	private boolean isPuttingOutOfService = false;
+
 	public Elevator(ActiveSimulation simulation, int elevatorNumber,
 			int numberFloors, int elevatorCapacity, double speed,
+			long quantumsBeforeService, double distanceBeforeService,
 			Set<Integer> restrictedFloors) {
 		assert (simulation != null);
 		assert (numberFloors > 0);
@@ -59,6 +71,10 @@ public class Elevator {
 		this.elevatorNumber = elevatorNumber;
 		this.elevatorCapacity = elevatorCapacity;
 		this.floorsOffLimit = restrictedFloors;
+		this.quantumsBeforeService = quantumsBeforeService;
+		this.cumulativeQuantumsInService = 0;
+		this.distanceBeforeService = distanceBeforeService;
+		this.cumulativeDistanceInService = 0.0;
 		this.speed = ((double) SimulationThread.QUANTUM_MILLIS / 1000) * speed;
 
 		/* initialise components */
@@ -102,6 +118,8 @@ public class Elevator {
 		for (ElevatorComponent component : components.values()) {
 			component.setFailed(false);
 		}
+		cumulativeQuantumsInService = 0;
+		cumulativeDistanceInService = 0.0;
 		getEmergencyBrake().setIsEnabled(false);
 		serviceStatus = ServiceStatus.InService;
 		simulation.onElevatorPutInService(this);
@@ -114,6 +132,16 @@ public class Elevator {
 	public void putOutOfService() {
 		getEmergencyBrake().setIsEnabled(true);
 		serviceStatus = ServiceStatus.OutOfService;
+	}
+
+	public void setDistanceBeforeService(double distance) {
+		this.distanceBeforeService = distance;
+		checkServiceDistanceReached();
+	}
+
+	public void setQuantumsBeforeService(long quantums) {
+		this.quantumsBeforeService = quantums;
+		checkServiceQuantumsReached();
 	}
 
 	public void setSchedulerData(SchedulerData data) {
@@ -155,10 +183,17 @@ public class Elevator {
 	void executeQuantum() {
 		if (!serviceStatus.equals(ServiceStatus.InService))
 			return;
+
+		/* see if elevator has reached it's service time limit. */
+		cumulativeQuantumsInService += 1;
+		checkServiceQuantumsReached();
+
 		try {
-			double position = getPositionSensor().getPosition();
+			PositionSensor sensor = getPositionSensor();
+			double position = sensor.getPosition();
 			if (motionStatus == MotionStatus.MovingDown
 					|| motionStatus == MotionStatus.MovingUp) {
+				/* move elevator to it's next position. */
 				double velocity = targetPosition < position ? -speed : speed;
 				if (position == targetPosition) {
 					motionStatus = MotionStatus.ReachedDestinationFloor;
@@ -167,6 +202,12 @@ public class Elevator {
 				} else {
 					getDriveMechanism().move(velocity);
 				}
+
+				/* see if elevator has reached it's service distance limit. */
+				double newPosition = sensor.getPosition();
+				cumulativeDistanceInService += Math.abs(newPosition - position);
+				checkServiceDistanceReached();
+
 			} else if (motionStatus == MotionStatus.DoorsClosing) {
 				if (getDoorSensor().areDoorsClosed()) {
 					motionStatus = MotionStatus.DoorsClosed;
@@ -196,7 +237,7 @@ public class Elevator {
 		if (requests.values().size() < elevatorCapacity) {
 			int offloadFloor = request.getOffloadFloor();
 			requests.put(offloadFloor, request);
-			requestPanel.request(offloadFloor);
+			requestPanel.request(offloadFloor, simulation.getCurrentQuantum());
 			return true;
 		}
 		return false;
@@ -236,6 +277,29 @@ public class Elevator {
 	private EmergencyBrake getEmergencyBrake() {
 		String key = EmergencyBrake.class.getName();
 		return (EmergencyBrake) components.get(key);
+	}
+
+	private void checkServiceDistanceReached() {
+		checkPutOutOfService(distanceBeforeService >= 0
+				&& cumulativeDistanceInService >= distanceBeforeService,
+				SERVICE_DUE_TO_DISTANCE);
+	}
+
+	private void checkServiceQuantumsReached() {
+		checkPutOutOfService(quantumsBeforeService >= 0
+				&& cumulativeQuantumsInService >= quantumsBeforeService,
+				SERVICE_DUE_TO_TIME);
+	}
+
+	private void checkPutOutOfService(boolean condition, String reason) {
+		if (!isPuttingOutOfService && condition) {
+			long quantum = simulation.getCurrentQuantum() + 1;
+			Event serviceEvent = EventFactory.createServiceEvent(
+					EventSource.Generated, quantum, elevatorNumber, false,
+					reason);
+			simulation.enqueueEvent(serviceEvent);
+			isPuttingOutOfService = true;
+		}
 	}
 
 }

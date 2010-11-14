@@ -10,8 +10,13 @@ import com.pod2.elevator.core.MotionStatus;
  */
 public class PutOutOfService extends ElevatorEvent {
 
-	PutOutOfService(EventSource source, long quantum, int elevatorNumber) {
+	private final String reason;
+
+	PutOutOfService(EventSource source, long quantum, int elevatorNumber,
+			String reason) {
 		super(source, quantum, elevatorNumber);
+		assert (reason != null);
+		this.reason = reason;
 	}
 
 	@Override
@@ -29,9 +34,14 @@ public class PutOutOfService extends ElevatorEvent {
 		return isOpen && isEmpty;
 	}
 
+	public String getReason() {
+		return reason;
+	}
+
 	@Override
 	public String toString() {
-		return String.format("%s put out of service.", super.toString());
+		return String.format("%s put out of service. %s", super.toString(),
+				reason);
 	}
 
 }

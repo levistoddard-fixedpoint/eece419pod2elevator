@@ -21,12 +21,18 @@ public class EventFactory {
 	}
 
 	public static Event createServiceEvent(EventSource source, long quantum,
-			int elevatorNumber, boolean putInService) {
+			int elevatorNumber, boolean putInService, String reason) {
 		if (putInService) {
 			return new PutInService(source, quantum, elevatorNumber);
 		} else {
-			return new PutOutOfService(source, quantum, elevatorNumber);
+			return new PutOutOfService(source, quantum, elevatorNumber, reason);
 		}
+	}
+
+	public static Event createServiceEvent(EventSource source, long quantum,
+			int elevatorNumber, boolean putInService) {
+		return createServiceEvent(source, quantum, elevatorNumber,
+				putInService, "");
 	}
 
 }

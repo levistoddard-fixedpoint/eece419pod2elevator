@@ -5,6 +5,9 @@ import com.pod2.elevator.core.ActiveSimulation;
 /**
  * Used by the ActiveSimulation to make all Elevator scheduling policy
  * decisions.
+ * 
+ * Each available algorithm should be registered inside the SchedulerRegistry
+ * class.
  */
 public interface ElevatorScheduler {
 
