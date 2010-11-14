@@ -27,6 +27,8 @@ public class ActiveSimulation {
 	private long currentQuantum;
 	private long nextPassengerNumber;
 	private ElevatorScheduler scheduler;
+	private double distanceBeforeService;
+	private long quantumsBeforeService;
 	private boolean isRequestGenerationEnabled;
 	private boolean isRunning;
 
@@ -51,6 +53,8 @@ public class ActiveSimulation {
 		currentQuantum = 0;
 		nextPassengerNumber = 1;
 		this.scheduler = template.getScheduler();
+		this.distanceBeforeService = template.getDistanceBeforeService();
+		this.quantumsBeforeService = template.getQuantumsBeforeService();
 		isRunning = false;
 
 		this.template = template;
@@ -63,6 +67,7 @@ public class ActiveSimulation {
 		for (int n = 0; n < elevators.length; n++) {
 			elevators[n] = new Elevator(this, n, template.getNumberFloors(),
 					template.getElevatorCapacity(), template.getSpeed(),
+					quantumsBeforeService, distanceBeforeService,
 					template.getRestrictedFloors());
 		}
 
@@ -119,16 +124,38 @@ public class ActiveSimulation {
 		this.scheduler = scheduler;
 	}
 
+	public void setDistanceBeforeService(double distance) {
+		this.distanceBeforeService = distance;
+		for (Elevator elevator : elevators) {
+			elevator.setDistanceBeforeService(distance);
+		}
+	}
+
+	public void setQuantumsBeforeService(long quantums) {
+		this.quantumsBeforeService = quantums;
+		for (Elevator elevator : elevators) {
+			elevator.setQuantumsBeforeService(quantums);
+		}
+	}
+
 	public long getCurrentQuantum() {
 		return currentQuantum;
 	}
 
+	public boolean getIsRunning() {
+		return isRunning;
+	}
+	
 	public Elevator[] getElevators() {
 		return Arrays.copyOf(elevators, elevators.length);
 	}
 
-	public boolean getIsRunning() {
-		return isRunning;
+	public double getDistanceBeforeService() {
+		return distanceBeforeService;
+	}
+
+	public long getQuantumsBeforeService() {
+		return quantumsBeforeService;
 	}
 
 	public int getNumberFloors() {
@@ -258,10 +285,7 @@ public class ActiveSimulation {
 
 	private void generateRequests() {
 		if (isRequestGenerationEnabled) {
-			for (Event event : generator.nextRequests()) {
-				event.apply(this);
-				results.logEvent(currentQuantum, event);
-			}
+			eventQueue.putAll(currentQuantum, generator.nextRequests());
 		}
 	}
 

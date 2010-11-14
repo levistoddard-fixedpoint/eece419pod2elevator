@@ -10,7 +10,6 @@ import javax.swing.SwingUtilities;
 import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.ResultsBuilder;
 import com.pod2.elevator.core.SimulationDisplay;
-import com.pod2.elevator.core.component.DriveMechanism;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.data.TemplateFailureEvent;
 import com.pod2.elevator.data.TemplatePassengerRequest;
@@ -25,11 +24,11 @@ public class Driver {
 
 		LinkedList<TemplateFailureEvent> events = new LinkedList<TemplateFailureEvent>();
 
-		TemplateFailureEvent e1 = new TemplateFailureEvent();
-		e1.quantum = 100;
-		e1.componentKey = DriveMechanism.class.getName();
-		e1.elevatorNumber = 1;
-		events.add(e1);
+		// TemplateFailureEvent e1 = new TemplateFailureEvent();
+		// e1.quantum = 100;
+		// e1.componentKey = DriveMechanism.class.getName();
+		// e1.elevatorNumber = 1;
+		// events.add(e1);
 
 		return events;
 	}
@@ -37,36 +36,36 @@ public class Driver {
 	private static List<TemplateServiceEvent> getServiceEvents() {
 		LinkedList<TemplateServiceEvent> events = new LinkedList<TemplateServiceEvent>();
 
-		TemplateServiceEvent e2 = new TemplateServiceEvent();
-		e2.elevatorNumber = 1;
-		e2.putInService = true;
-		e2.quantum = 200;
-		events.add(e2);
-
-		TemplateServiceEvent e3 = new TemplateServiceEvent();
-		e3.elevatorNumber = 0;
-		e3.putInService = false;
-		e3.quantum = 200;
-		events.add(e3);
+		// TemplateServiceEvent e2 = new TemplateServiceEvent();
+		// e2.elevatorNumber = 1;
+		// e2.putInService = true;
+		// e2.quantum = 200;
+		// events.add(e2);
+		//
+		// TemplateServiceEvent e3 = new TemplateServiceEvent();
+		// e3.elevatorNumber = 0;
+		// e3.putInService = false;
+		// e3.quantum = 200;
+		// events.add(e3);
 
 		return events;
 	}
 
 	private static List<TemplatePassengerRequest> getPassengerRequests() {
 		LinkedList<TemplatePassengerRequest> requests = new LinkedList<TemplatePassengerRequest>();
-		TemplatePassengerRequest request = new TemplatePassengerRequest();
-		request.quantum = 5;
-		request.onloadFloor = 1;
-		request.offloadFloor = 3;
-		request.timeConstraint = 1000;
-		requests.add(request);
-
-		request = new TemplatePassengerRequest();
-		request.quantum = 100;
-		request.onloadFloor = 4;
-		request.offloadFloor = 2;
-		request.timeConstraint = 1000;
-		requests.add(request);
+		// TemplatePassengerRequest request = new TemplatePassengerRequest();
+		// request.quantum = 5;
+		// request.onloadFloor = 1;
+		// request.offloadFloor = 3;
+		// request.timeConstraint = 1000;
+		// requests.add(request);
+		//
+		// request = new TemplatePassengerRequest();
+		// request.quantum = 100;
+		// request.onloadFloor = 4;
+		// request.offloadFloor = 2;
+		// request.timeConstraint = 1000;
+		// requests.add(request);
 
 		return requests;
 	}
@@ -85,6 +84,9 @@ public class Driver {
 		template.setSpeed(1.0);
 		template.setRequestGenerationOn(true);
 		template.setRestrictedFloors(new HashSet<Integer>());
+
+		template.setQuantumsBeforeService(200);
+		template.setDistanceBeforeService(-1.0);
 
 		template.setFailureEvents(getFailureEvents());
 		template.setPassengerRequests(getPassengerRequests());

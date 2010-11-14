@@ -15,12 +15,16 @@ import com.pod2.elevator.core.events.EventSource;
 public class RequestGenerator {
 
 	private static double GENERATE_PROBABILITY = 0.01;
+	private static long REASONABLE_QUANTUMS_PER_FLOOR = 30;
 
 	private final ActiveSimulation simulation;
+	private final long maxConstraint;
 	private final Random random;
 
 	RequestGenerator(ActiveSimulation simulation) {
 		this.simulation = simulation;
+		this.maxConstraint = simulation.getNumberFloors()
+				* REASONABLE_QUANTUMS_PER_FLOOR;
 		this.random = new Random();
 	}
 
@@ -32,7 +36,7 @@ public class RequestGenerator {
 			while (onload == offload) {
 				offload = random.nextInt(max);
 			}
-			long constraint = random.nextLong();
+			long constraint = Math.abs(random.nextLong()) % maxConstraint;
 			Event request = EventFactory.createPassengerRequest(
 					EventSource.Generated, simulation.getCurrentQuantum(),
 					onload, offload, constraint);

@@ -27,6 +27,8 @@ public class SimulationTemplate {
 	public List<TemplateServiceEvent> serviceEvents;
 	public Date created;
 	public Date lastEdit;
+	public long quantumsBeforeService;
+	public double distanceBeforeService;
 
 	public List<Event> getEvents() {
 		List<Event> eventList = new LinkedList<Event>();
@@ -162,5 +164,23 @@ public class SimulationTemplate {
 	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
+
+	public long getQuantumsBeforeService() {
+		return quantumsBeforeService;
+	}
+
+	public void setQuantumsBeforeService(long quantumsBeforeService) {
+		this.quantumsBeforeService = quantumsBeforeService;
+	}
+
+	public double getDistanceBeforeService() {
+		return distanceBeforeService;
+	}
+
+	public void setDistanceBeforeService(double distanceBeforeService) {
+		this.distanceBeforeService = distanceBeforeService;
+	}
+
+	
 
 }

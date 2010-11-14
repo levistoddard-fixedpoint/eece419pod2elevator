@@ -1,6 +1,9 @@
 package com.pod2.elevator.core;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -11,25 +14,36 @@ import java.util.Set;
 public class FloorRequestPanel {
 
 	private final Set<Integer> requestedFloors;
+	private final Map<Integer, Long> requestedTimes;
 
-	public FloorRequestPanel() {
+	FloorRequestPanel() {
 		requestedFloors = new HashSet<Integer>();
+		requestedTimes = new HashMap<Integer, Long>();
 	}
 
-	public void clearRequest(int floorNumber) {
-		requestedFloors.remove(floorNumber);
+	public void clearRequest(int floor) {
+		requestedFloors.remove(floor);
+		requestedTimes.remove(floor);
 	}
 
 	public Set<Integer> getRequestedFloors() {
-		return requestedFloors;
+		return Collections.unmodifiableSet(requestedFloors);
 	}
 
-	public boolean isRequested(int floorNumber) {
-		return requestedFloors.contains(floorNumber);
+	public boolean isRequested(int floor) {
+		return requestedFloors.contains(floor);
 	}
 
-	public void request(int floorNumber) {
-		requestedFloors.add(floorNumber);
+	public long getRequestedTime(int floor) {
+		assert (requestedFloors.contains(floor));
+		return requestedTimes.get(floor);
+	}
+
+	public void request(int floor, long currentQuantum) {
+		if (!requestedFloors.contains(floor)) {
+			requestedFloors.add(floor);
+			requestedTimes.put(floor, currentQuantum);
+		}
 	}
 
 }
