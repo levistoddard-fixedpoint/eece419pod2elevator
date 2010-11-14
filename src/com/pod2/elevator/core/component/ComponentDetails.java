@@ -10,7 +10,7 @@ public class ComponentDetails {
 	private final String name;
 	private final boolean canFail;
 
-	public ComponentDetails(String key, String name, boolean canFail) {
+	ComponentDetails(String key, String name, boolean canFail) {
 		super();
 		assert (key != null);
 		assert (name != null);
