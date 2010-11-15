@@ -3,6 +3,21 @@ package com.pod2.elevator.data;
 import com.pod2.elevator.core.ServiceStatus;
 
 public class ElevatorState {
-	public double position;
-	public ServiceStatus status;
+	
+	private double position;
+	private ServiceStatus status;
+	
+	public double getPosition() {
+		return position;
+	}
+	public void setPosition(double position) {
+		this.position = position;
+	}
+	public ServiceStatus getStatus() {
+		return status;
+	}
+	public void setStatus(ServiceStatus status) {
+		this.status = status;
+	}
+	
 }
