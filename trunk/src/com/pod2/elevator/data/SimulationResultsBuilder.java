@@ -1,10 +1,14 @@
 package com.pod2.elevator.data;
 
+import java.util.Collection;
+
 import com.pod2.elevator.core.ActiveSimulation;
-import com.pod2.elevator.core.events.RequestInTransit;
+import com.pod2.elevator.core.ResultsBuilder;
+import com.pod2.elevator.core.events.Event;
+import com.pod2.elevator.core.RequestInTransit;
 import com.pod2.elevator.view.LogMessage;
 
-public class SimulationResultsBuilder {
+public class SimulationResultsBuilder implements ResultsBuilder {
 	public void addResults(ActiveSimulation activeSimulation) {
 		
 	}
@@ -26,6 +30,37 @@ public class SimulationResultsBuilder {
 	}
 	
 	public void setEndTime(long timeQuantum, long systemTime) {
+		
+	}
+
+	public Collection<LogMessage> getLogEntries(long quantum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void logCompletedQuantum(ActiveSimulation activeSimulation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void logEvent(long quantum, Event event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void logRequestStateChange(long quantum,
+			RequestInTransit request) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onEnd(long quantum) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onStart() {
+		// TODO Auto-generated method stub
 		
 	}
 }

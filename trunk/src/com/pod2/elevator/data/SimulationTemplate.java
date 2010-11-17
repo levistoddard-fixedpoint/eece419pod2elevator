@@ -1,9 +1,14 @@
 package com.pod2.elevator.data;
 
-import java.sql.Date;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.pod2.elevator.core.Event;
+import com.pod2.elevator.core.EventSource;
+import com.pod2.elevator.core.component.ComponentRegistry;
+import com.pod2.elevator.core.events.EventFactory;
 import com.pod2.elevator.scheduling.ElevatorScheduler;
 
 
@@ -25,6 +30,26 @@ public class SimulationTemplate {
 	private Date lastEdit;
 	private long quantumsBeforeService;
 	private double distanceBeforeService;
+	
+	public List<Event> getEvents() {
+		List<Event> eventList = new LinkedList<Event>();
+		for (TemplatePassengerRequest events : passengerRequests) {
+			eventList.add(EventFactory.createPassengerRequest(
+					EventSource.Template, events.quantum, events.onloadFloor,
+					events.offloadFloor, events.timeConstraint));
+		}
+		for (TemplateFailureEvent event : failureEvents) {
+			eventList.add(EventFactory.createComponentFailureEvent(
+					EventSource.Template, event.quantum, event.elevatorNumber,
+					ComponentRegistry.getComponentByKey(event.componentKey)));
+		}
+		for (TemplateServiceEvent event : serviceEvents) {
+			eventList.add(EventFactory.createServiceEvent(EventSource.Template,
+					event.quantum, event.elevatorNumber, event.putInService));
+		}
+		return eventList;
+	}
+
 	
 	public int getId() {
 		return id;
