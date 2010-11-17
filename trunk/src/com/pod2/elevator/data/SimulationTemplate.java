@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.pod2.elevator.core.Event;
-import com.pod2.elevator.core.EventSource;
+import com.pod2.elevator.core.events.Event;
+import com.pod2.elevator.core.events.EventSource;
 import com.pod2.elevator.core.component.ComponentRegistry;
 import com.pod2.elevator.core.events.EventFactory;
 import com.pod2.elevator.scheduling.ElevatorScheduler;
