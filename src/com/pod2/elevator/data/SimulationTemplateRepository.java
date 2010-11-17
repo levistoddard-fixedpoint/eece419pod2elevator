@@ -1,6 +1,7 @@
 package com.pod2.elevator.data;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,8 +41,8 @@ public class SimulationTemplateRepository {
 		preparedStmt.setInt(4, 1); // scheduler - modify this!!
 		preparedStmt.setBoolean(5, template.isRequestGenerationOn());
 		preparedStmt.setString(6, template.getName());
-		preparedStmt.setDate(7, template.getCreated());
-		preparedStmt.setDate(8, template.getLastEdit());
+		preparedStmt.setDate(7, new Date(template.getCreated().getTime()));
+		preparedStmt.setDate(8, new Date(template.getLastEdit().getTime()));
 		
 		preparedStmt.execute();
 		
@@ -161,8 +162,8 @@ public class SimulationTemplateRepository {
 		preparedStmt.setInt(4, 1); // scheduler - modify this!
 		preparedStmt.setBoolean(5, template.isRequestGenerationOn());
 		preparedStmt.setString(6, template.getName());
-		preparedStmt.setDate(7, template.getCreated());
-		preparedStmt.setDate(8, template.getLastEdit());
+		preparedStmt.setDate(7, new Date(template.getCreated().getTime()));
+		preparedStmt.setDate(8, new Date(template.getLastEdit().getTime()));
 		preparedStmt.setInt(9, template.getId());
 		
 		preparedStmt.executeUpdate();
