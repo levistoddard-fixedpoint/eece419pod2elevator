@@ -98,7 +98,7 @@ public class Driver {
 		// SimulationDisplay display = new DummyDisplay();
 
 		SimulationWindow window = new SimulationWindow(
-				template.getNumberFloors(), template.getNumberElevators(), 4);
+				template.getNumberFloors(), template.getNumberElevators());
 		SwingUtilities.invokeLater(window);
 		SimulationDisplay display = new SimulationView(window);
 		ResultsBuilder results = new DummyResultsBuilder();

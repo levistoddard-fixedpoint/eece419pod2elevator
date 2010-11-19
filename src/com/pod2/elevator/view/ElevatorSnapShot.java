@@ -62,8 +62,8 @@ public class ElevatorSnapShot {
 		return serviceStatus;
 	}
 
-	public Boolean getFailureStatus(Class<? extends ElevatorComponent> component) {
-		return componentFailure.get(component.getName());
+	public Boolean getFailureStatus(String component) {
+		return componentFailure.get(component);
 	}
 
 }
