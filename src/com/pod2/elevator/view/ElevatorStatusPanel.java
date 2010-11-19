@@ -58,7 +58,6 @@ public class ElevatorStatusPanel extends JPanel{
 		
 		this.setLayout(new VerticalLayout());
 		this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()));
-		//this.setPreferredSize(new Dimension(210,705));
 		this.setBackground(Color.LIGHT_GRAY);
 		
 		idLabel = createLabel(0, new String("Elevator " + id));
@@ -113,12 +112,12 @@ public class ElevatorStatusPanel extends JPanel{
 		if(type==0){
 			temp.setBorder(BorderFactory.createRaisedBevelBorder());
 			temp.setBackground(Color.WHITE);
-			temp.setFont(new Font("Dialog", Font.BOLD, 16));
+			temp.setFont(new Font("Dialog", Font.BOLD, 14));
 		}else {
 			temp.setBorder(BorderFactory.createLoweredBevelBorder());
 			temp.setForeground(Color.GREEN);
 			temp.setBackground(Color.BLACK);
-			temp.setFont(new Font("Dialog", Font.PLAIN, 16));
+			temp.setFont(new Font("Dialog", Font.PLAIN, 14));
 		}
 		temp.setHorizontalAlignment(JLabel.CENTER);
 		temp.setPreferredSize(new Dimension(160, 30));
@@ -130,7 +129,7 @@ public class ElevatorStatusPanel extends JPanel{
 	private JTextArea createTextArea(){
 		JTextArea temp = new JTextArea();
 		temp.setBorder(BorderFactory.createLoweredBevelBorder());
-		temp.setFont(new Font("Dialog", Font.PLAIN, 16));
+		temp.setFont(new Font("Dialog", Font.PLAIN, 14));
 		temp.setPreferredSize(new Dimension(160, 80));
 		temp.setBackground(Color.BLACK);
 		temp.setForeground(Color.GREEN);
@@ -185,7 +184,7 @@ public class ElevatorStatusPanel extends JPanel{
 		serviceStatusDisplay.setText(serviceStatus.toString());
 		
 		componentFailureDisplay.setText("");
-		componentFailureDisplay.setPreferredSize(new Dimension(160, componentFailure.size()*2*21+3));
+		componentFailureDisplay.setPreferredSize(new Dimension(142, componentFailure.size()*2*21+3));
 		componentFailureDisplay.setForeground(Color.GREEN);
 		for(Map.Entry<String, Boolean> entry : componentFailure.entrySet()){
 			String key = entry.getKey();

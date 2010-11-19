@@ -48,7 +48,7 @@ public class StatusView extends JPanel implements ActionListener{
 		
 		//ScrollPanel
 		scrollPane = new JScrollPane(rootPanel);
-		scrollPane.setPreferredSize(new Dimension(300, 720));
+		scrollPane.setPreferredSize(new Dimension(200, 720));
 		scrollPane.setAutoscrolls(false);
 		
 		//Elevator Status Panel
