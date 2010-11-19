@@ -185,16 +185,20 @@ public class ElevatorStatusPanel extends JPanel{
 		serviceStatusDisplay.setText(serviceStatus.toString());
 		
 		componentFailureDisplay.setText("");
-		componentFailureDisplay.setPreferredSize(new Dimension(160, componentFailure.size()*21+3));
+		componentFailureDisplay.setPreferredSize(new Dimension(160, componentFailure.size()*2*21+3));
 		componentFailureDisplay.setForeground(Color.GREEN);
 		for(Map.Entry<String, Boolean> entry : componentFailure.entrySet()){
 			String key = entry.getKey();
+			String[] keys = key.split("com.pod2.elevator.core.component.");
+			if(keys.length > 0){
+				key = keys[keys.length-1];
+			}
 			Boolean value = entry.getValue();
 			if(!value){
 				componentFailureDisplay.setForeground(Color.RED);
-				componentFailureDisplay.append(key.toString() + ": FAILED" + "\n");
+				componentFailureDisplay.append(key.toString() + "\nFAILED" + "\n");
 			}else {
-				componentFailureDisplay.append(key.toString() + ": OK" + "\n");
+				componentFailureDisplay.append(key.toString() + "\nOK" + "\n");
 			}
 		}
 	}
