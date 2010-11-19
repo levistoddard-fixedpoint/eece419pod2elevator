@@ -32,16 +32,14 @@ public class SimulationWindow extends JFrame implements Runnable {
 	private static final long serialVersionUID = 6664795648746130396L;
 	private int numFloors;
 	private int numElevators;
-	private int numComponents;
 	private JMenuBar menubar;
 	private JToolBar toolbar;
 	private JTabbedPane tabPane;
 	private ActiveView activeView;
 
-	public SimulationWindow(int numFloors, int numElevators, int numComponents) {
+	public SimulationWindow(int numFloors, int numElevators) {
 		this.numFloors = numFloors;
 		this.numElevators = numElevators;
-		this.numComponents = numComponents;
 
 		// Get screen size
 		Toolkit toolkit = getToolkit();
@@ -67,7 +65,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 		// Add tabs
 		tabPane = new JTabbedPane();
 		tabPane.setPreferredSize(new Dimension(800, 600));
-		ActiveView.init(numFloors, numElevators, numComponents);
+		ActiveView.init(numFloors, numElevators);
 		activeView = ActiveView.getActiveView();
 		JComponent test = new JPanel();
 		tabPane.addTab("Simulator", activeView);
@@ -88,7 +86,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		SimulationWindow sim = new SimulationWindow(5, 4, 4);
+		SimulationWindow sim = new SimulationWindow(5, 4);
 		javax.swing.SwingUtilities.invokeLater(sim);
 
 		FloorSnapShot[] floors = new FloorSnapShot[5];

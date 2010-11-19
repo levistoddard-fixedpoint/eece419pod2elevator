@@ -13,6 +13,8 @@ import javax.swing.JTextArea;
 
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
+import com.pod2.elevator.core.component.ComponentDetails;
+import com.pod2.elevator.core.component.ComponentRegistry;
 import com.pod2.elevator.core.component.DoorDriveMechanism;
 import com.pod2.elevator.core.component.DoorPositionContext;
 import com.pod2.elevator.core.component.DoorSensor;
@@ -26,41 +28,46 @@ public class ActiveView extends JPanel{
 	static private ElevatorView elevatorView;
 	static private StatusView statusView;
 	static private JTextArea log;
+	static private Collection<ComponentDetails> components;
 	
 	static private int numFloors=1;
 	static private int numElevators=1;
-	static private int numComponents=1;
 	
 	static private ActiveView activeView;
 	
 	static public ActiveView getActiveView(){
 		if (activeView == null){
-			activeView = new ActiveView(numFloors, numElevators, numComponents);
+			activeView = new ActiveView(numFloors, numElevators);
 		}
 		return activeView;
 	}
 	
-	private ActiveView(int numFloors, int numElevators, int numComponents){
+	private ActiveView(int numFloors, int numElevators){
+		//Initialize Variables
 		elevatorView = new ElevatorView(numFloors, numElevators);
 		statusView = new StatusView(numFloors, numElevators);
 		log = new JTextArea("Logging goes here\n");
+		components = ComponentRegistry.getFailableComponents();
+		
+		//Set log properties
 		log.setRows(5);
 		log.setEditable(false);
 		log.setBackground(Color.BLACK);
 		log.setForeground(Color.WHITE);
 		JScrollPane logScroll = new JScrollPane(log);
 		
+		//Set layout
 		this.setLayout(new BorderLayout());
 		
+		//Add components
 		this.add(elevatorView, BorderLayout.CENTER);
 		this.add(statusView, BorderLayout.EAST);
 		this.add(logScroll, BorderLayout.SOUTH);
 	}
 	
-	static public void init(int numFloors, int numElevators, int numComponents){
+	static public void init(int numFloors, int numElevators){
 		ActiveView.numFloors = numFloors;
-		ActiveView.numElevators = numElevators;
-		ActiveView.numComponents = numComponents;
+		ActiveView.numElevators = numElevators;;
 	}
 	
 	protected static void showElevatorStatus(int id){
@@ -68,7 +75,7 @@ public class ActiveView extends JPanel{
 	}
 
 	protected void statusUpdate(SystemSnapShot systemSnapShot){
-		int eid;
+		int eid = 0;
 		double position = 0;
 		Set<Integer> floorsOffLimit = null;
 		int numberRequests = 0;
@@ -76,16 +83,6 @@ public class ActiveView extends JPanel{
 		MotionStatus motionStatus = null; 
 		ServiceStatus serviceStatus = null;
 		TreeMap<String, Boolean> componentFailure = new TreeMap<String, Boolean>();
-		
-		PositionContext positionContext = new PositionContext(0.0);
-		DoorPositionContext doorPositionContext = new DoorPositionContext(0);
-		DriveMechanism drive = new DriveMechanism(positionContext, 0);
-		PositionSensor sensor = new PositionSensor(positionContext);
-		DoorDriveMechanism doorDrive = new DoorDriveMechanism(
-				doorPositionContext, 0);
-		DoorSensor doorSensor = new DoorSensor(doorPositionContext, 0);
-		EmergencyBrake ebrake = new EmergencyBrake();
-		Collection<ElevatorComponent> components = Arrays.asList(drive, sensor, doorDrive, doorSensor, ebrake);
 		String key;
 		Boolean value;
 		
@@ -105,9 +102,9 @@ public class ActiveView extends JPanel{
 			requestCapacity = systemSnapShot.getElevatorSnapShot(i).getRequestCapacity();
 			motionStatus = systemSnapShot.getElevatorSnapShot(i).getMotionStatus();
 			serviceStatus = systemSnapShot.getElevatorSnapShot(i).getServiceStatus();
-			for (ElevatorComponent component : components) {
-				key = component.getClass().getName();
-				value = systemSnapShot.getElevatorSnapShot(i).getFailureStatus(component.getClass());
+			for (ComponentDetails component : components) {
+				key = component.getKey();
+				value = systemSnapShot.getElevatorSnapShot(i).getFailureStatus(key);
 				componentFailure.put(key, value);
 			}
 			
@@ -122,8 +119,11 @@ public class ActiveView extends JPanel{
 			upSelectedQuantum = systemSnapShot.getFloorSnapShot(i).getFloorRequestButton().getUpSelectedQuantum();
 			downSelectedQuantum = systemSnapShot.getFloorSnapShot(i).getFloorRequestButton().getDownSelectedQuantum();
 			
-			statusView.statusUpdate(fid, position, floorsOffLimit, numberRequests, requestCapacity, motionStatus, serviceStatus, componentFailure, fid, quantum, passengersWaiting, isUpSelected, isDownSelected, upSelectedQuantum, downSelectedQuantum);
-				
+			statusView.statusUpdate(eid, position, floorsOffLimit, numberRequests, requestCapacity, motionStatus, serviceStatus, componentFailure, fid, quantum, passengersWaiting, isUpSelected, isDownSelected, upSelectedQuantum, downSelectedQuantum);
+		}
+		
+		for(LogMessage l : systemSnapShot.getMessages()){
+			log.append(l.toString()+"\n");
 		}
 		
 	}
