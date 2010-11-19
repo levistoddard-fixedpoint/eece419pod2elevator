@@ -109,6 +109,7 @@ public class ElevatorPanel extends JPanel implements ActionListener{
 		this.serviceStatus = serviceStatus;
 		//Update Elevator	
 		elevator.statusUpdate(position, floorsOffLimit, motionStatus, serviceStatus);
+		this.repaint();
 	}
 
 	public void actionPerformed(ActionEvent e) {
