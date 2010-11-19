@@ -112,7 +112,7 @@ public class ElevatorPanel extends JPanel implements ActionListener{
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		SimulationView.showElevatorStatus(id);
+		ActiveView.showElevatorStatus(id);
 	}
 
 }

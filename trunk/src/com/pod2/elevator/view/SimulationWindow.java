@@ -24,26 +24,24 @@ import com.pod2.elevator.core.component.DriveMechanism;
 import com.pod2.elevator.core.component.ElevatorComponent;
 import com.pod2.elevator.core.component.PositionSensor;
 
-import depricated.Simulation;
-
 public class SimulationWindow extends JFrame implements Runnable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6664795648746130396L;
-	private int numFloor;
-	private int numElevator;
-	private int numComponent;
+	private int numFloors;
+	private int numElevators;
+	private int numComponents;
 	private JMenuBar menubar;
 	private JToolBar toolbar;
 	private JTabbedPane tabPane;
-	private JComponent simulation;
+	private ActiveView activeView;
 
-	public SimulationWindow(int numFloor, int numElevator, int numComponent) {
-		this.numFloor = numFloor;
-		this.numElevator = numElevator;
-		this.numComponent = numComponent;
+	public SimulationWindow(int numFloors, int numElevators, int numComponents) {
+		this.numFloors = numFloors;
+		this.numElevators = numElevators;
+		this.numComponents = numComponents;
 
 		// Get screen size
 		Toolkit toolkit = getToolkit();
@@ -69,9 +67,10 @@ public class SimulationWindow extends JFrame implements Runnable {
 		// Add tabs
 		tabPane = new JTabbedPane();
 		tabPane.setPreferredSize(new Dimension(800, 600));
-		simulation = new Simulation(numFloor, numElevator, numComponent);
+		ActiveView.init(numFloors, numElevators, numComponents);
+		activeView = ActiveView.getActiveView();
 		JComponent test = new JPanel();
-		tabPane.addTab("Simulator", simulation);
+		tabPane.addTab("Simulator", activeView);
 		tabPane.addTab("Test", test);
 		add(tabPane, BorderLayout.CENTER);
 
@@ -85,7 +84,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 	}
 
 	public void statusUpdate(SystemSnapShot s) {
-		((Simulation) simulation).statusUpdate(s);
+		activeView.statusUpdate(s);
 	}
 
 	public static void main(String[] args) {

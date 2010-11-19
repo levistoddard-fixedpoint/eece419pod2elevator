@@ -93,7 +93,7 @@ public class Driver {
 		template.setPassengerRequests(getPassengerRequests());
 		template.setServiceEvents(getServiceEvents());
 
-		template.scheduler = new SabathScheduler();
+		template.setScheduler(new SabathScheduler());
 
 		// SimulationDisplay display = new DummyDisplay();
 
