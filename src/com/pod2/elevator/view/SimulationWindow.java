@@ -24,6 +24,8 @@ import com.pod2.elevator.core.component.DriveMechanism;
 import com.pod2.elevator.core.component.ElevatorComponent;
 import com.pod2.elevator.core.component.PositionSensor;
 
+import depricated.Simulation;
+
 public class SimulationWindow extends JFrame implements Runnable {
 
 	/**

@@ -15,8 +15,9 @@ import com.pod2.elevator.data.TemplateFailureEvent;
 import com.pod2.elevator.data.TemplatePassengerRequest;
 import com.pod2.elevator.data.TemplateServiceEvent;
 import com.pod2.elevator.scheduling.SabathScheduler;
-import com.pod2.elevator.view.SimulationView;
 import com.pod2.elevator.view.SimulationWindow;
+
+import depricated.SimulationView;
 
 public class Driver {
 
