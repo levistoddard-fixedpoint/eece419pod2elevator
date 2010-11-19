@@ -64,17 +64,18 @@ public class SimulationWindow extends JFrame implements Runnable {
 
 		// Add tabs
 		tabPane = new JTabbedPane();
-		tabPane.setPreferredSize(new Dimension(800, 600));
+		tabPane.setPreferredSize(new Dimension(640, 480));
 		ActiveView.init(numFloors, numElevators);
 		activeView = ActiveView.getActiveView();
-		JComponent test = new JPanel();
-		tabPane.addTab("Simulator", activeView);
-		tabPane.addTab("Test", test);
+		JComponent test1 = new JPanel();
+		JComponent test2 = new JPanel();
+		tabPane.addTab("Active Simulation", activeView);
+		tabPane.addTab("Analysis", test2);
+		tabPane.addTab("Configuration", test1);
 		add(tabPane, BorderLayout.CENTER);
 
 		pack();
 		setVisible(true);
-		setSize(size);
 	}
 
 	public void run() {
