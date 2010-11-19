@@ -5,14 +5,14 @@ import java.util.Collection;
 public class SystemSnapShot {
 
 	private long quantum;
-	private ElevatorSnapShot elevatorSnapShot[];
+	private ElevatorSnapShot elevatorSnapShots[];
 	private FloorSnapShot floorSnapShots[];
 	private Collection<LogMessage> messages;
 
 	public SystemSnapShot(long quantum, ElevatorSnapShot elevatorSnapShots[],
 			FloorSnapShot floorSnapShots[], Collection<LogMessage> messages) {
 		this.quantum = quantum;
-		this.elevatorSnapShot = elevatorSnapShots;
+		this.elevatorSnapShots = elevatorSnapShots;
 		this.floorSnapShots = floorSnapShots;
 		this.messages = messages;
 	}
@@ -26,7 +26,7 @@ public class SystemSnapShot {
 	}
 
 	public ElevatorSnapShot getElevatorSnapShot(int elevatorNumber) {
-		return elevatorSnapShot[elevatorNumber];
+		return elevatorSnapShots[elevatorNumber];
 	}
 
 	public Collection<LogMessage> getMessages() {
