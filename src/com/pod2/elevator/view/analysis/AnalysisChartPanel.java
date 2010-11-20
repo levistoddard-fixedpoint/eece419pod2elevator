@@ -140,7 +140,7 @@ public class AnalysisChartPanel extends JPanel implements ActionListener{
 		graphRight.setIcon(new ImageIcon(image[graphRightIndex]));
 	}
 	
-	public void statusUpdate(ArrayList<double[]> elevatorPosition, ArrayList<double[]> cumulativeDistance, ArrayList<long[]> cumulativeServiceTime, ArrayList<int[]> passengersWaiting){
+	protected void statusUpdate(ArrayList<double[]> elevatorPosition, ArrayList<double[]> cumulativeDistance, ArrayList<long[]> cumulativeServiceTime, ArrayList<int[]> passengersWaiting){
 		this.clear();	
 		
 		for(int i=0; i<elevatorPosition.size(); i++){

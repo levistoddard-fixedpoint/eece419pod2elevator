@@ -23,24 +23,13 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 public class AnalysisPanel extends JPanel{
-	static private JTextArea log;
-	static private AnalysisChartPanel analysisChartPanel;
-	static private AnalysisStatusPanel analysisStatusPanel;
-	static private int numFloors;
-	static private int numElevators;
-	static private boolean dirty = false;
+	private JTextArea log;
+	private AnalysisChartPanel analysisChartPanel;
+	private AnalysisStatusPanel analysisStatusPanel;
+	private int numFloors;
+	private int numElevators;
 	
-	static private AnalysisPanel analysisPanel;
-	
-	static public AnalysisPanel getAnalysisView(){
-		if (analysisPanel == null || dirty){
-			analysisPanel = new AnalysisPanel(numFloors, numElevators);
-			dirty = false;
-		}
-		return analysisPanel;
-	}
-	
-	private AnalysisPanel(int numFloors, int numElevators){
+	public AnalysisPanel(int numFloors, int numElevators){
 		//Initialize Variables
 		this.numFloors = numFloors;
 		this.numElevators = numElevators;
@@ -63,14 +52,8 @@ public class AnalysisPanel extends JPanel{
 		this.add(logScroll, BorderLayout.SOUTH);
 		this.add(analysisStatusPanel, BorderLayout.EAST);
 	}
-	
-	static public void init(int numFloors, int numElevators){
-		AnalysisPanel.numFloors = numFloors;
-		AnalysisPanel.numElevators = numElevators;
-		dirty = true;
-	}
 
-	public void statusUpdate(ArrayList<double[]> elevatorPosition, ArrayList<double[]> cumulativeDistance, ArrayList<long[]> cumulativeServiceTime, ArrayList<int[]> passengersWaiting, int numberPassengersDelivered, double meanTimeToFailure, double meanWaitTime){
+	protected void statusUpdate(ArrayList<double[]> elevatorPosition, ArrayList<double[]> cumulativeDistance, ArrayList<long[]> cumulativeServiceTime, ArrayList<int[]> passengersWaiting, int numberPassengersDelivered, double meanTimeToFailure, double meanWaitTime){
 		analysisChartPanel.statusUpdate(elevatorPosition, cumulativeDistance, cumulativeServiceTime, passengersWaiting);
 		analysisStatusPanel.statusUpdate(numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
 }

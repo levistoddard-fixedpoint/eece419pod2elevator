@@ -76,8 +76,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 		// Add tabs
 		tabPane = new JTabbedPane();
 		tabPane.setPreferredSize(new Dimension(640, 480));
-		ActiveView.init(numFloors, numElevators);
-		activeView = ActiveView.getActiveView();
+		activeView = new ActiveView(numFloors, numElevators);
 		analysisView = new AnalysisView();
 		configurationView = new ConfigurationView();
 		tabPane.addTab("Active Simulation", activeView);
@@ -93,8 +92,8 @@ public class SimulationWindow extends JFrame implements Runnable {
 
 	}
 
-	public void statusUpdate(SystemSnapShot s) {
-		activeView.statusUpdate(s);
+	public void statusUpdate(SystemSnapShot systemSnapShot) {
+		activeView.statusUpdate(systemSnapShot);
 	}
 
 	public static void main(String[] args) {

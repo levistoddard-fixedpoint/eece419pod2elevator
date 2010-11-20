@@ -27,6 +27,7 @@ import javax.swing.border.EmptyBorder;
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
 import com.pod2.elevator.view.active.ActiveView;
+import com.pod2.elevator.view.active.status.StatusView;
 import com.pod2.elevator.view.layout.VerticalLayout;
 
 public class ElevatorPanel extends JPanel implements ActionListener{
@@ -45,10 +46,13 @@ public class ElevatorPanel extends JPanel implements ActionListener{
 	private double position;
 	private ServiceStatus serviceStatus;
 	
-	public ElevatorPanel(int id, int numFloors){
+	private StatusView statusView;
+	
+	public ElevatorPanel(int id, int numFloors, StatusView statusView){
 		//Init variables
 		this.id = id;
 		this.numFloors = numFloors;
+		this.statusView = statusView;
 		Border compound = BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder());
 		
 		//Display elevator number
@@ -115,7 +119,7 @@ public class ElevatorPanel extends JPanel implements ActionListener{
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		ActiveView.showElevatorStatus(id);
+		statusView.showElevatorStatus(id);
 	}
 
 }
