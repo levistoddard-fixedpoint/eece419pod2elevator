@@ -1,4 +1,4 @@
-package com.pod2.elevator.view;
+package com.pod2.elevator.view.configuration;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

@@ -1,4 +1,4 @@
-package com.pod2.elevator.view;
+package com.pod2.elevator.view.analysis;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -16,7 +16,6 @@ import com.pod2.elevator.data.SimulationResults;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.data.SimulationTemplateRepository;
 import com.pod2.elevator.view.layout.VerticalLayout;
-import com.pod2.elevator.view.panel.AnalysisPanel;
 
 public class AnalysisView extends JPanel implements ActionListener{
 	private JTabbedPane tabPane;
