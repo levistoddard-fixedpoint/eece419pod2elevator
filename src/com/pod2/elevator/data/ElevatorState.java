@@ -6,6 +6,8 @@ public class ElevatorState {
 	
 	private double position;
 	private ServiceStatus status;
+	private double cumulativeDistanceTravelled;
+	private long cumulativeServiceTime;
 	
 	public double getPosition() {
 		return position;
@@ -18,6 +20,18 @@ public class ElevatorState {
 	}
 	public void setStatus(ServiceStatus status) {
 		this.status = status;
+	}
+	public void setCumulativeDistanceTravelled(double cumulativeDistanceTravelled) {
+		this.cumulativeDistanceTravelled = cumulativeDistanceTravelled;
+	}
+	public double getCumulativeDistanceTravelled() {
+		return cumulativeDistanceTravelled;
+	}
+	public void setCumulativeServiceTime(long cumulativeServiceTime) {
+		this.cumulativeServiceTime = cumulativeServiceTime;
+	}
+	public long getCumulativeServiceTime() {
+		return cumulativeServiceTime;
 	}
 	
 }

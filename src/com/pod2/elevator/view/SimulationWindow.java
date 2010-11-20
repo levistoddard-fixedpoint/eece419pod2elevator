@@ -36,6 +36,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 	private JToolBar toolbar;
 	private JTabbedPane tabPane;
 	private ActiveView activeView;
+	private AnalysisView analysisView;
 
 	public SimulationWindow(int numFloors, int numElevators) {
 		this.numFloors = numFloors;
@@ -67,11 +68,11 @@ public class SimulationWindow extends JFrame implements Runnable {
 		tabPane.setPreferredSize(new Dimension(640, 480));
 		ActiveView.init(numFloors, numElevators);
 		activeView = ActiveView.getActiveView();
-		JComponent test1 = new JPanel();
+		analysisView = new AnalysisView();
 		JComponent test2 = new JPanel();
 		tabPane.addTab("Active Simulation", activeView);
-		tabPane.addTab("Analysis", test2);
-		tabPane.addTab("Configuration", test1);
+		tabPane.addTab("Analysis", analysisView);
+		tabPane.addTab("Configuration", test2);
 		add(tabPane, BorderLayout.CENTER);
 
 		pack();

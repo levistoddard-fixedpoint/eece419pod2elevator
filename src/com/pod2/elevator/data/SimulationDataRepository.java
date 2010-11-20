@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Vector;
 
 public class SimulationDataRepository {
-	public List<SimulationDetail>getCompletedSimulations() throws SQLException {
+	static public List<SimulationDetail>getCompletedSimulations() throws SQLException {
 			
 		List<SimulationDetail> completedSimulations = new Vector<SimulationDetail>();
 		
@@ -36,12 +36,12 @@ public class SimulationDataRepository {
 		return completedSimulations;
 	}
 	
-	public SimulationResultsBuilder getSimulationResultsBuilder(String name,
+	static public SimulationResultsBuilder getSimulationResultsBuilder(String name,
 			SimulationTemplate template) {
 		return null;
 	}
 	
-	public SimulationResults getSimulationResults(int uuid) throws SQLException {
+	static public SimulationResults getSimulationResults(int uuid) throws SQLException {
 		SimulationResults results = new SimulationResults();
 		List<CompletedRequest> passengerDeliveries = new Vector<CompletedRequest>();
 		List<LoggedEvent> events = new Vector<LoggedEvent>();
@@ -106,7 +106,7 @@ public class SimulationDataRepository {
 		return results;
 	}
 	
-	public int getSimulationCountByTemplate(int templateId) throws SQLException {
+	static public int getSimulationCountByTemplate(int templateId) throws SQLException {
 		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root", "");
 		Statement s = conn.createStatement();
 		ResultSet rs = s.executeQuery("SELECT COUNT(*) FROM `SimulationResults` " +

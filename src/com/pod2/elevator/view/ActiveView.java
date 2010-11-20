@@ -108,18 +108,18 @@ public class ActiveView extends JPanel{
 				componentFailure.put(key, value);
 			}
 			
-			elevatorView.statusUpdate(eid, position, floorsOffLimit, motionStatus, serviceStatus);
-		}
-		
-		for(int i=0; i< numFloors; i++){
-			fid = i;
-			passengersWaiting = systemSnapShot.getFloorSnapShot(i).getPassengersWaiting();
-			isUpSelected = systemSnapShot.getFloorSnapShot(i).getFloorRequestButton().isUpSelected();
-			isDownSelected = systemSnapShot.getFloorSnapShot(i).getFloorRequestButton().isDownSelected();
-			upSelectedQuantum = systemSnapShot.getFloorSnapShot(i).getFloorRequestButton().getUpSelectedQuantum();
-			downSelectedQuantum = systemSnapShot.getFloorSnapShot(i).getFloorRequestButton().getDownSelectedQuantum();
+			for(int j=0; j< numFloors; j++){
+				fid = j;
+				passengersWaiting = systemSnapShot.getFloorSnapShot(j).getPassengersWaiting();
+				isUpSelected = systemSnapShot.getFloorSnapShot(j).getFloorRequestButton().isUpSelected();
+				isDownSelected = systemSnapShot.getFloorSnapShot(j).getFloorRequestButton().isDownSelected();
+				upSelectedQuantum = systemSnapShot.getFloorSnapShot(j).getFloorRequestButton().getUpSelectedQuantum();
+				downSelectedQuantum = systemSnapShot.getFloorSnapShot(j).getFloorRequestButton().getDownSelectedQuantum();
+				
+				statusView.statusUpdate(eid, position, floorsOffLimit, numberRequests, requestCapacity, motionStatus, serviceStatus, componentFailure, fid, quantum, passengersWaiting, isUpSelected, isDownSelected, upSelectedQuantum, downSelectedQuantum);
+			}
 			
-			statusView.statusUpdate(eid, position, floorsOffLimit, numberRequests, requestCapacity, motionStatus, serviceStatus, componentFailure, fid, quantum, passengersWaiting, isUpSelected, isDownSelected, upSelectedQuantum, downSelectedQuantum);
+			elevatorView.statusUpdate(eid, position, floorsOffLimit, motionStatus, serviceStatus);
 		}
 		
 		for(LogMessage l : systemSnapShot.getMessages()){

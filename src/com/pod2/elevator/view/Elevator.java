@@ -17,14 +17,9 @@ import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
 
 public class Elevator extends JPanel implements ActionListener{
-
-		/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6807421655052332523L;
 	
-	private int numFloor;
-	private int numComponent;
+	private int id;
+	private int numFloors;
 	
 	private int x = 0;
 	private int y = 0;
@@ -38,11 +33,11 @@ public class Elevator extends JPanel implements ActionListener{
 	
 	private Timer timer;
 
-	public Elevator(int numFloor, int numComponent) {
-		this.numFloor = numFloor;
-		this.numComponent = numComponent;
+	public Elevator(int id, int numFloors) {
+		this.id = id;
+		this.numFloors = numFloors;
 		openWidth=1;
-		timer = new Timer(20, this);
+		timer = new Timer(1, this);
 	}
 	
 	public void paint (Graphics g)
@@ -50,7 +45,7 @@ public class Elevator extends JPanel implements ActionListener{
 		super.paint(g);
 		Dimension size = this.getSize();
 		if(serviceStatus != ServiceStatus.Failed){
-			y = (int) (39*(numFloor - position - 1));
+			y = (int) (39*(numFloors - position - 1));
 		}
 		if(serviceStatus == ServiceStatus.InService){
 			g.setColor(Color.GREEN);
@@ -61,7 +56,7 @@ public class Elevator extends JPanel implements ActionListener{
 		g.fillRect(size.width/2+1+openWidth, y, size.width-1, 39);
 		for(Integer i : floorsOffLimit){
 			g.setColor(Color.RED);
-			int height = (39*(numFloor - i - 1));
+			int height = (39*(numFloors - i - 1));
 			g.fillRect(0, height, size.width, 39);
 		}
 	}
@@ -69,14 +64,10 @@ public class Elevator extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		switch(motionStatus){
 		case DoorsOpening:
-			if(openWidth <= (this.getSize().getWidth()/2)){
-				openWidth += 1;
-			}
+			openWidth = (int) (this.getSize().getWidth()/2 - 5);
 			break;
 		case DoorsClosing:
-			if(openWidth > 1){
-				openWidth -= 1;
-			}
+			openWidth = 1;
 			break;
 		}
 		
