@@ -23,10 +23,13 @@ import com.pod2.elevator.core.component.DoorSensor;
 import com.pod2.elevator.core.component.DriveMechanism;
 import com.pod2.elevator.core.component.ElevatorComponent;
 import com.pod2.elevator.core.component.PositionSensor;
+import com.pod2.elevator.view.active.ActiveView;
+import com.pod2.elevator.view.analysis.AnalysisView;
+import com.pod2.elevator.view.configuration.ConfigurationView;
 import com.pod2.elevator.view.data.ElevatorSnapShot;
 import com.pod2.elevator.view.data.FloorSnapShot;
+import com.pod2.elevator.view.data.LogMessage;
 import com.pod2.elevator.view.data.SystemSnapShot;
-import com.pod2.elevator.view.model.LogMessage;
 import com.pod2.elevator.view.model.Menu;
 import com.pod2.elevator.view.model.Toolbar;
 

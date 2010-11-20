@@ -1,4 +1,4 @@
-package com.pod2.elevator.view.panel;
+package com.pod2.elevator.view.analysis;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

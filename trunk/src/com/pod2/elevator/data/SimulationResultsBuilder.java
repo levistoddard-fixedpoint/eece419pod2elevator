@@ -6,7 +6,7 @@ import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.ResultsBuilder;
 import com.pod2.elevator.core.events.Event;
 import com.pod2.elevator.core.RequestInTransit;
-import com.pod2.elevator.view.model.LogMessage;
+import com.pod2.elevator.view.data.LogMessage;
 
 public class SimulationResultsBuilder implements ResultsBuilder {
 	public void addResults(ActiveSimulation activeSimulation) {

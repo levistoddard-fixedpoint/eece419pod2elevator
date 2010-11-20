@@ -1,4 +1,4 @@
-package com.pod2.elevator.view.panel;
+package com.pod2.elevator.view.active.status.elevator;
 
 import java.awt.Color;
 import java.awt.Dimension;

@@ -14,8 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
 import com.pod2.elevator.view.data.ElevatorSnapShot;
+import com.pod2.elevator.view.data.LogMessage;
 import com.pod2.elevator.view.data.SystemSnapShot;
-import com.pod2.elevator.view.model.LogMessage;
 
 
 public class MainPanel extends JPanel {

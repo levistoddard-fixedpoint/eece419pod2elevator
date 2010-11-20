@@ -1,4 +1,4 @@
-package com.pod2.elevator.view.panel;
+package com.pod2.elevator.view.active.status.floor;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.pod2.elevator.view.layout.VerticalLayout;
-import com.pod2.elevator.view.model.FloorStatus;
 
 public class FloorStatusPanel extends JPanel{	
 	private int numFloors;

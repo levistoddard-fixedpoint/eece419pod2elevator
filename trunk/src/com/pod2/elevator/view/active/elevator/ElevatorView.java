@@ -1,4 +1,4 @@
-package com.pod2.elevator.view;
+package com.pod2.elevator.view.active.elevator;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,7 +12,6 @@ import javax.swing.JScrollPane;
 
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
-import com.pod2.elevator.view.panel.ElevatorPanel;
 
 public class ElevatorView extends JPanel{
 	private JScrollPane scrollPane;
@@ -83,7 +82,7 @@ public class ElevatorView extends JPanel{
 		}
 	}
 	
-	protected void statusUpdate(int eid, double position, Set<Integer> floorsOffLimit, MotionStatus motionStatus, ServiceStatus serviceStatus){
+	public void statusUpdate(int eid, double position, Set<Integer> floorsOffLimit, MotionStatus motionStatus, ServiceStatus serviceStatus){
 		elevators[eid].statusUpdate(position, floorsOffLimit, motionStatus, serviceStatus);
 	}
 	

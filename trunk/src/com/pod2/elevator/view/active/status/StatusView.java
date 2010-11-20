@@ -1,4 +1,4 @@
-package com.pod2.elevator.view;
+package com.pod2.elevator.view.active.status;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -21,9 +21,9 @@ import javax.swing.border.BevelBorder;
 
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
+import com.pod2.elevator.view.active.status.elevator.ElevatorStatusPanel;
+import com.pod2.elevator.view.active.status.floor.FloorStatusPanel;
 import com.pod2.elevator.view.layout.VerticalLayout;
-import com.pod2.elevator.view.panel.ElevatorStatusPanel;
-import com.pod2.elevator.view.panel.FloorStatusPanel;
 
 public class StatusView extends JPanel implements ActionListener{
 	private ElevatorStatusPanel elevatorStatus[];
@@ -74,7 +74,7 @@ public class StatusView extends JPanel implements ActionListener{
 		this.setLayout(new VerticalLayout());
 	}
 	
-	protected void showElevatorStatus(int id){
+	public void showElevatorStatus(int id){
 		floorStatus.setVisible(false);
 		for(ElevatorStatusPanel s : elevatorStatus){
 			s.setVisible(false);
@@ -96,7 +96,7 @@ public class StatusView extends JPanel implements ActionListener{
 		super.paint(g);
 	}
 	
-	protected void statusUpdate(int eid, double position, Set<Integer> floorsOffLimit, int numberRequests, int requestCapacity, MotionStatus motionStatus, 
+	public void statusUpdate(int eid, double position, Set<Integer> floorsOffLimit, int numberRequests, int requestCapacity, MotionStatus motionStatus, 
 							 ServiceStatus serviceStatus, TreeMap<String, Boolean> componentFailure,
 							 int fid, long quantum, int passengersWaiting, boolean isUpSelected, boolean isDownSelected, long upSelectedQuantum, long downSelectedQuantum){
 		elevatorStatus[eid].statusUpdate(position, floorsOffLimit, numberRequests, requestCapacity, motionStatus, serviceStatus, componentFailure);

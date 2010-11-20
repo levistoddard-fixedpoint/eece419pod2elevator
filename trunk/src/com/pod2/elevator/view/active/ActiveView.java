@@ -1,4 +1,4 @@
-package com.pod2.elevator.view;
+package com.pod2.elevator.view.active;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,8 +23,10 @@ import com.pod2.elevator.core.component.ElevatorComponent;
 import com.pod2.elevator.core.component.EmergencyBrake;
 import com.pod2.elevator.core.component.PositionContext;
 import com.pod2.elevator.core.component.PositionSensor;
+import com.pod2.elevator.view.active.elevator.ElevatorView;
+import com.pod2.elevator.view.active.status.StatusView;
+import com.pod2.elevator.view.data.LogMessage;
 import com.pod2.elevator.view.data.SystemSnapShot;
-import com.pod2.elevator.view.model.LogMessage;
 
 public class ActiveView extends JPanel{
 	static private ElevatorView elevatorView;
@@ -76,7 +78,7 @@ public class ActiveView extends JPanel{
 		statusView.showElevatorStatus(id);
 	}
 
-	protected void statusUpdate(SystemSnapShot systemSnapShot){
+	public void statusUpdate(SystemSnapShot systemSnapShot){
 		int eid = 0;
 		double position = 0;
 		Set<Integer> floorsOffLimit = null;

@@ -1,4 +1,4 @@
-package com.pod2.elevator.view.panel;
+package com.pod2.elevator.view.active.elevator;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -26,9 +26,8 @@ import javax.swing.border.EmptyBorder;
 
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
-import com.pod2.elevator.view.ActiveView;
+import com.pod2.elevator.view.active.ActiveView;
 import com.pod2.elevator.view.layout.VerticalLayout;
-import com.pod2.elevator.view.model.Elevator;
 
 public class ElevatorPanel extends JPanel implements ActionListener{
 	private JScrollPane scrollPane;
@@ -107,7 +106,7 @@ public class ElevatorPanel extends JPanel implements ActionListener{
 		elevator.repaint();
 	}
 	
-	public void statusUpdate(double position, Set<Integer> floorsOffLimit, MotionStatus motionStatus, ServiceStatus serviceStatus){
+	protected void statusUpdate(double position, Set<Integer> floorsOffLimit, MotionStatus motionStatus, ServiceStatus serviceStatus){
 		this.position = position;
 		this.serviceStatus = serviceStatus;
 		//Update Elevator	
