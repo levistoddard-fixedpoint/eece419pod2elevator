@@ -11,8 +11,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
-import com.pod2.elevator.view.FloorSnapShot;
-import com.pod2.elevator.view.SystemSnapShot;
+import com.pod2.elevator.view.data.FloorSnapShot;
+import com.pod2.elevator.view.data.SystemSnapShot;
 
 
 public class SystemStatus extends JPanel {

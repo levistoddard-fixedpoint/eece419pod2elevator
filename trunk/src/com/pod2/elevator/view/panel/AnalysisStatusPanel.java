@@ -1,4 +1,4 @@
-package com.pod2.elevator.view;
+package com.pod2.elevator.view.panel;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 
 import com.pod2.elevator.data.SimulationDataRepository;
 import com.pod2.elevator.data.SimulationDetail;
+import com.pod2.elevator.view.layout.VerticalLayout;
 
 public class AnalysisStatusPanel extends JPanel{
 	

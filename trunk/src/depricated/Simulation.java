@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JPanel;
 
-import com.pod2.elevator.view.SystemSnapShot;
+import com.pod2.elevator.view.data.SystemSnapShot;
 
 public class Simulation extends JPanel {
 

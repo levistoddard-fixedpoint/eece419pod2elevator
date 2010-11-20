@@ -1,4 +1,4 @@
-package com.pod2.elevator.view;
+package com.pod2.elevator.view.data;
 
 import com.pod2.elevator.core.FloorRequestButton;
 

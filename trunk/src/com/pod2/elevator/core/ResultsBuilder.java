@@ -3,7 +3,7 @@ package com.pod2.elevator.core;
 import java.util.Collection;
 
 import com.pod2.elevator.core.events.Event;
-import com.pod2.elevator.view.LogMessage;
+import com.pod2.elevator.view.model.LogMessage;
 
 /**
  * Aggregates all data resulting from an ActiveSimulation.

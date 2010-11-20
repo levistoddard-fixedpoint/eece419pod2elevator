@@ -1,4 +1,4 @@
-package com.pod2.elevator.view;
+package com.pod2.elevator.view.panel;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -19,6 +19,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+
+import com.pod2.elevator.view.layout.VerticalLayout;
 
 public class AnalysisChartPanel extends JPanel implements ActionListener{
 	private JScrollPane scrollPane;

@@ -1,6 +1,8 @@
-package com.pod2.elevator.view;
+package com.pod2.elevator.view.data;
 
 import java.util.Collection;
+
+import com.pod2.elevator.view.model.LogMessage;
 
 public class SystemSnapShot {
 

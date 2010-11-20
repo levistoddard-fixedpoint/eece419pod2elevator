@@ -9,8 +9,8 @@ import java.awt.Toolkit;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import com.pod2.elevator.view.FloorSnapShot;
-import com.pod2.elevator.view.SystemSnapShot;
+import com.pod2.elevator.view.data.FloorSnapShot;
+import com.pod2.elevator.view.data.SystemSnapShot;
 
 public class FloorButtonPanel extends JPanel {
 

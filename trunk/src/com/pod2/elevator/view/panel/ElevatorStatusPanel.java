@@ -1,4 +1,4 @@
-package com.pod2.elevator.view;
+package com.pod2.elevator.view.panel;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,6 +17,7 @@ import javax.swing.JTextArea;
 
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
+import com.pod2.elevator.view.layout.VerticalLayout;
 
 public class ElevatorStatusPanel extends JPanel{
 	private int id;
@@ -139,7 +140,7 @@ public class ElevatorStatusPanel extends JPanel{
 		return temp;
 	}
 	
-	protected void statusUpdate(double position, Set<Integer> floorsOffLimit, int numberRequests, int requestCapacity, MotionStatus motionStatus, ServiceStatus serviceStatus, TreeMap<String, Boolean> componentFailure){
+	public void statusUpdate(double position, Set<Integer> floorsOffLimit, int numberRequests, int requestCapacity, MotionStatus motionStatus, ServiceStatus serviceStatus, TreeMap<String, Boolean> componentFailure){
 		this.currentPosition = position;
 		this.floorsOffLimit = floorsOffLimit;
 		this.numberRequests = numberRequests;

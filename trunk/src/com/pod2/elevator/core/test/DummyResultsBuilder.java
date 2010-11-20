@@ -8,7 +8,7 @@ import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.RequestInTransit;
 import com.pod2.elevator.core.ResultsBuilder;
 import com.pod2.elevator.core.events.Event;
-import com.pod2.elevator.view.LogMessage;
+import com.pod2.elevator.view.model.LogMessage;
 
 public class DummyResultsBuilder implements ResultsBuilder {
 

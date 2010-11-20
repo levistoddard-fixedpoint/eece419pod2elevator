@@ -21,6 +21,9 @@ import javax.swing.border.BevelBorder;
 
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
+import com.pod2.elevator.view.layout.VerticalLayout;
+import com.pod2.elevator.view.panel.ElevatorStatusPanel;
+import com.pod2.elevator.view.panel.FloorStatusPanel;
 
 public class StatusView extends JPanel implements ActionListener{
 	private ElevatorStatusPanel elevatorStatus[];

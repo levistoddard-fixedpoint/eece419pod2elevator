@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
+import com.pod2.elevator.view.panel.ElevatorPanel;
 
 public class ElevatorView extends JPanel{
 	private JScrollPane scrollPane;
