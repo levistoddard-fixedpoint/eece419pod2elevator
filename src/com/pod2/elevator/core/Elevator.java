@@ -21,7 +21,7 @@ import com.pod2.elevator.core.events.Event;
 import com.pod2.elevator.core.events.EventFactory;
 import com.pod2.elevator.core.events.EventSource;
 import com.pod2.elevator.scheduling.SchedulerData;
-import com.pod2.elevator.view.ElevatorSnapShot;
+import com.pod2.elevator.view.data.ElevatorSnapShot;
 
 /**
  * Represents a single elevator within an ActiveSimulation.

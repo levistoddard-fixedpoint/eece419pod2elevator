@@ -12,10 +12,10 @@ import com.pod2.elevator.core.events.Event;
 import com.pod2.elevator.core.events.PassengerRequest;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.scheduling.ElevatorScheduler;
-import com.pod2.elevator.view.ElevatorSnapShot;
-import com.pod2.elevator.view.FloorSnapShot;
-import com.pod2.elevator.view.LogMessage;
-import com.pod2.elevator.view.SystemSnapShot;
+import com.pod2.elevator.view.data.ElevatorSnapShot;
+import com.pod2.elevator.view.data.FloorSnapShot;
+import com.pod2.elevator.view.data.SystemSnapShot;
+import com.pod2.elevator.view.model.LogMessage;
 
 /**
  * A discrete simulation of a building's elevator system, which can be advanced

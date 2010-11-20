@@ -1,4 +1,4 @@
-package com.pod2.elevator.view;
+package com.pod2.elevator.view.panel;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -7,6 +7,9 @@ import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import com.pod2.elevator.view.layout.VerticalLayout;
+import com.pod2.elevator.view.model.FloorStatus;
 
 public class FloorStatusPanel extends JPanel{	
 	private int numFloors;
@@ -24,7 +27,7 @@ public class FloorStatusPanel extends JPanel{
 		this.setLayout(new VerticalLayout());
 	}
 	
-	protected void statusUpdate(int fid, long quantum, int passengersWaiting, boolean isUpSelected, boolean isDownSelected, long upSelectedQuantum, long downSelectedQuantum){
+	public void statusUpdate(int fid, long quantum, int passengersWaiting, boolean isUpSelected, boolean isDownSelected, long upSelectedQuantum, long downSelectedQuantum){
 		floorStatus[fid].statusUpdate(quantum, passengersWaiting, isUpSelected, isDownSelected, upSelectedQuantum, downSelectedQuantum);
 	}
 	

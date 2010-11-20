@@ -5,7 +5,7 @@ import javax.swing.SwingUtilities;
 import com.pod2.elevator.core.SimulationDisplay;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.view.SimulationWindow;
-import com.pod2.elevator.view.SystemSnapShot;
+import com.pod2.elevator.view.data.SystemSnapShot;
 
 public class SimulationView implements SimulationDisplay {
 

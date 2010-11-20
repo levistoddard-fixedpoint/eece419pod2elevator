@@ -6,7 +6,7 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
-import com.pod2.elevator.view.SystemSnapShot;
+import com.pod2.elevator.view.data.SystemSnapShot;
 
 public class ElevatorPanel extends JPanel {
 

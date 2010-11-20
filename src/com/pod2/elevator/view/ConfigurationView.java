@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.pod2.elevator.view.layout.VerticalLayout;
+
 public class ConfigurationView extends JPanel implements KeyListener, ActionListener{
 	private JButton update;
 	private JLabel oldPort;

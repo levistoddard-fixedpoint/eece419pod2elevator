@@ -12,8 +12,8 @@ import com.pod2.elevator.core.component.DoorDriveMechanism;
 import com.pod2.elevator.core.component.DoorSensor;
 import com.pod2.elevator.core.component.DriveMechanism;
 import com.pod2.elevator.core.component.PositionSensor;
-import com.pod2.elevator.view.ElevatorSnapShot;
-import com.pod2.elevator.view.SystemSnapShot;
+import com.pod2.elevator.view.data.ElevatorSnapShot;
+import com.pod2.elevator.view.data.SystemSnapShot;
 
 public class ElevatorStatus extends JFrame {
 

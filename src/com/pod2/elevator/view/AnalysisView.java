@@ -15,6 +15,8 @@ import com.pod2.elevator.data.SimulationDetail;
 import com.pod2.elevator.data.SimulationResults;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.data.SimulationTemplateRepository;
+import com.pod2.elevator.view.layout.VerticalLayout;
+import com.pod2.elevator.view.panel.AnalysisPanel;
 
 public class AnalysisView extends JPanel implements ActionListener{
 	private JTabbedPane tabPane;
