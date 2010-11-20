@@ -37,6 +37,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 	private JTabbedPane tabPane;
 	private ActiveView activeView;
 	private AnalysisView analysisView;
+	private ConfigurationView configurationView;
 
 	public SimulationWindow(int numFloors, int numElevators) {
 		this.numFloors = numFloors;
@@ -69,10 +70,10 @@ public class SimulationWindow extends JFrame implements Runnable {
 		ActiveView.init(numFloors, numElevators);
 		activeView = ActiveView.getActiveView();
 		analysisView = new AnalysisView();
-		JComponent test2 = new JPanel();
+		configurationView = new ConfigurationView();
 		tabPane.addTab("Active Simulation", activeView);
 		tabPane.addTab("Analysis", analysisView);
-		tabPane.addTab("Configuration", test2);
+		tabPane.addTab("Configuration", configurationView);
 		add(tabPane, BorderLayout.CENTER);
 
 		pack();
