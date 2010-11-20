@@ -94,6 +94,7 @@ public class ElevatorStatus extends JFrame {
 	}
 
 	public void statusUpdate(SystemSnapShot s) {
+		/*
 		// TODO: Update passenger number, motion status, component status
 		ElevatorSnapShot elevator = s.getElevatorSnapShot(id);
 		passengerNumber.setText(Integer.toString(elevator.getNumberRequests()));
@@ -106,5 +107,6 @@ public class ElevatorStatus extends JFrame {
 				PositionSensor.class).toString());
 		componentStatus[0].setText(elevator.getFailureStatus(
 				DriveMechanism.class).toString());
+		*/
 	}
 }
