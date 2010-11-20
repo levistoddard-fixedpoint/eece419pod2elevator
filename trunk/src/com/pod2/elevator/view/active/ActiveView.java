@@ -29,27 +29,20 @@ import com.pod2.elevator.view.data.LogMessage;
 import com.pod2.elevator.view.data.SystemSnapShot;
 
 public class ActiveView extends JPanel{
-	static private ElevatorView elevatorView;
-	static private StatusView statusView;
-	static private JTextArea log;
-	static private Collection<ComponentDetails> components;
+	private ElevatorView elevatorView;
+	private StatusView statusView;
+	private JTextArea log;
+	private Collection<ComponentDetails> components;
 	
-	static private int numFloors=1;
-	static private int numElevators=1;
+	private int numFloors=1;
+	private int numElevators=1;
 	
-	static private ActiveView activeView;
-	
-	static public ActiveView getActiveView(){
-		if (activeView == null){
-			activeView = new ActiveView(numFloors, numElevators);
-		}
-		return activeView;
-	}
-	
-	private ActiveView(int numFloors, int numElevators){
+	public ActiveView(int numFloors, int numElevators){
 		//Initialize Variables
-		elevatorView = new ElevatorView(numFloors, numElevators);
+		this.numFloors = numFloors;
+		this.numElevators = numElevators;
 		statusView = new StatusView(numFloors, numElevators);
+		elevatorView = new ElevatorView(numFloors, numElevators, statusView);
 		log = new JTextArea("Logging goes here\n");
 		components = ComponentRegistry.getFailableComponents();
 		
@@ -67,15 +60,6 @@ public class ActiveView extends JPanel{
 		this.add(elevatorView, BorderLayout.CENTER);
 		this.add(statusView, BorderLayout.EAST);
 		this.add(logScroll, BorderLayout.SOUTH);
-	}
-	
-	static public void init(int numFloors, int numElevators){
-		ActiveView.numFloors = numFloors;
-		ActiveView.numElevators = numElevators;;
-	}
-	
-	public static void showElevatorStatus(int id){
-		statusView.showElevatorStatus(id);
 	}
 
 	public void statusUpdate(SystemSnapShot systemSnapShot){

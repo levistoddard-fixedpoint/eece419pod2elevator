@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
+import com.pod2.elevator.view.active.status.StatusView;
 
 public class ElevatorView extends JPanel{
 	private JScrollPane scrollPane;
@@ -20,11 +21,12 @@ public class ElevatorView extends JPanel{
 	
 	private ElevatorPanel elevators[];
 	
-	private int i;
 	private int numElevators;
 	private int numFloors;
 	
-	public ElevatorView(int numFloors, int numElevators){
+	private StatusView statusView;
+	
+	public ElevatorView(int numFloors, int numElevators, StatusView statusView){
 		//Initialize variables
 		this.numFloors = numFloors;
 		this.numElevators = numElevators;
@@ -43,8 +45,8 @@ public class ElevatorView extends JPanel{
 		scrollPane.setPreferredSize(new Dimension(800,600));
 		
 		//Elevator Panels
-		for(i=0; i<numElevators; i++){
-			elevators[i] = new ElevatorPanel(i, numFloors);
+		for(int i=0; i<numElevators; i++){
+			elevators[i] = new ElevatorPanel(i, numFloors, statusView);
 			rootPanel.add(elevators[i]);
 		}
 		

@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -38,6 +40,7 @@ public class AnalysisView extends JPanel implements ActionListener{
 		//Add choice panel
 		choosePanel = new JPanel();
 		choosePanel.setLayout(new VerticalLayout());
+		choosePanel.add(Box.createRigidArea(new Dimension(0,5)));
 		choosePanel.add(refresh);
 		choosePanel.add(simulationComboBox);
 		
@@ -140,8 +143,7 @@ public class AnalysisView extends JPanel implements ActionListener{
 			try {
 				simulationResults = SimulationDataRepository.getSimulationResults(Uuid);
 				simulationTemplate = SimulationTemplateRepository.getTemplate(simulationResults.getTemplateId());
-				AnalysisPanel.init(simulationTemplate.getNumberFloors(), simulationTemplate.getNumberElevators());
-				analysisPanel = AnalysisPanel.getAnalysisView();
+				analysisPanel = new AnalysisPanel(simulationTemplate.getNumberFloors(), simulationTemplate.getNumberElevators());
 				tabPane.add("Analysis", analysisPanel);
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block

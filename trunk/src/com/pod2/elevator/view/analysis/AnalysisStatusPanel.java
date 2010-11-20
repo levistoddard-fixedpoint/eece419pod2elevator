@@ -77,7 +77,7 @@ public class AnalysisStatusPanel extends JPanel{
 		return temp;
 	}
 	
-	public void statusUpdate(int numberPassengersDelivered, double meanTimeToFailure, double meanWaitTime){
+	protected void statusUpdate(int numberPassengersDelivered, double meanTimeToFailure, double meanWaitTime){
 		numberPassengersDeliveredDisplay.setText(Integer.toString(numberPassengersDelivered));
 		meanTimeToFailureDisplay.setText(Double.toString(meanTimeToFailure));
 		meanWaitTimeDisplay.setText(Double.toString(meanWaitTime));
