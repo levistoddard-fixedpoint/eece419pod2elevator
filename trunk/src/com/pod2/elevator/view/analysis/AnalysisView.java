@@ -144,7 +144,7 @@ public class AnalysisView extends JPanel implements ActionListener{
 				simulationResults = SimulationDataRepository.getSimulationResults(Uuid);
 				simulationTemplate = SimulationTemplateRepository.getTemplate(simulationResults.getTemplateId());
 				analysisPanel = new AnalysisPanel(simulationTemplate.getNumberFloors(), simulationTemplate.getNumberElevators());
-				tabPane.add("Analysis", analysisPanel);
+				tabPane.add("Simulation Analysis", analysisPanel);
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
