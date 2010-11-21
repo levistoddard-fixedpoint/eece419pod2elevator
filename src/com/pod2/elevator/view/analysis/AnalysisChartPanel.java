@@ -175,5 +175,6 @@ public class AnalysisChartPanel extends JPanel implements ActionListener{
 		}else if (temp.equals(graphComboBoxRight)){
 			graphRightIndex = index;
 		}
+		this.repaint();
 	}
 }
