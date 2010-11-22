@@ -15,7 +15,7 @@ import java.util.HashSet;
 
 public class SimulationTemplateRepository {
 
-	public void createTemplate(SimulationTemplate template) throws SQLException {
+	static public void createTemplate(SimulationTemplate template) throws SQLException {
 		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root", "");
 		
 		//
@@ -38,7 +38,7 @@ public class SimulationTemplateRepository {
 		preparedStmt.setInt(1, template.getNumberFloors());
 		preparedStmt.setInt(2, template.getElevatorCapacity());
 		preparedStmt.setInt(3, template.getNumberElevators());
-		preparedStmt.setString(4, template.getScheduler().getKey()); // scheduler - modify this!!
+		preparedStmt.setString(4, template.getScheduler().getKey());
 		preparedStmt.setBoolean(5, template.isRequestGenerationOn());
 		preparedStmt.setString(6, template.getName());
 		preparedStmt.setDate(7, new Date(template.getCreated().getTime()));
@@ -138,7 +138,7 @@ public class SimulationTemplateRepository {
 		conn.close();		
 	}
 	
-	public void updateTemplate(SimulationTemplate template) throws SQLException {
+	static public void updateTemplate(SimulationTemplate template) throws SQLException {
 		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root", "");
 		
 		//
@@ -275,7 +275,7 @@ public class SimulationTemplateRepository {
 		conn.close();		
 	}
 	
-	public void deleteTemplate(int id) throws SQLException {
+	static public void deleteTemplate(int id) throws SQLException {
 		
 		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root", "");
 		
@@ -291,7 +291,7 @@ public class SimulationTemplateRepository {
 		
 	}
 	
-	public List<SimulationTemplateDetail> getAllTemplates() throws SQLException {
+	static public List<SimulationTemplateDetail> getAllTemplates() throws SQLException {
 		
 		List<SimulationTemplateDetail> allTemplates = new Vector<SimulationTemplateDetail>();
 		
@@ -322,7 +322,7 @@ public class SimulationTemplateRepository {
 		return allTemplates;
 	}
 	
-	public SimulationTemplate getTemplate(int id) throws SQLException {
+	static public SimulationTemplate getTemplate(int id) throws SQLException {
 		
 		SimulationTemplate template = new SimulationTemplate();
 		Set<Integer> restrictedFloors = new HashSet<Integer>();
