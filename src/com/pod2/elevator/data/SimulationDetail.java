@@ -3,7 +3,7 @@ package com.pod2.elevator.data;
 public class SimulationDetail {
 	private int id;
 	private String name;
-
+	
 	public int getId() {
 		return id;
 	}

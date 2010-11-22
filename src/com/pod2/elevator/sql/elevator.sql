@@ -51,7 +51,9 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `ElevatorDB`.`ElevatorState` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `resultId` INT NOT NULL ,
+  `elevatorNumber` INT NOT NULL ,
   `position` DOUBLE NOT NULL ,
+  `quantum` MEDIUMTEXT  NOT NULL ,
   `status` INT NOT NULL ,
   INDEX `es_resultId` (`resultId` ASC) ,
   PRIMARY KEY (`id`) ,

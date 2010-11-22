@@ -3,6 +3,7 @@ package com.pod2.elevator.data;
 import java.util.Date;
 import java.util.List;
 
+
 public class SimulationResults {
 	private int uuid;
 	private String name;
