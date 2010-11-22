@@ -78,5 +78,9 @@ public class SabathScheduler implements ElevatorScheduler {
 		}
 
 	}
+	
+	public String toString() {
+		return getName();
+	}
 
 }

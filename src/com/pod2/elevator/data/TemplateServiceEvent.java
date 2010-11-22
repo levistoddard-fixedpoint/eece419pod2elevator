@@ -2,6 +2,14 @@ package com.pod2.elevator.data;
 
 public class TemplateServiceEvent extends TemplateElevatorEvent {
 	
-	public boolean putInService;
+	private boolean putInService;
+
+	public boolean isPutInService() {
+		return putInService;
+	}
+
+	public void setPutInService(boolean putInService) {
+		this.putInService = putInService;
+	}
 	
 }

@@ -174,7 +174,7 @@ public class AnalysisView extends JPanel implements ActionListener{
 		if(simulationComboBox.equals(e.getSource())){
 			JComboBox temp = (JComboBox)e.getSource();
 			int index = (int)temp.getSelectedIndex();
-			int Uuid = simulationList.get(index).getUuid();
+			int Uuid = simulationList.get(index).getId();
 			try {
 				simulationResults = SimulationDataRepository.getSimulationResults(Uuid);
 				simulationTemplate = SimulationTemplateRepository.getTemplate(simulationResults.getTemplateId());
