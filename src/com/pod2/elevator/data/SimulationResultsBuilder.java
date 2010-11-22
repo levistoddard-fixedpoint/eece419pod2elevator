@@ -61,7 +61,7 @@ public class SimulationResultsBuilder implements ResultsBuilder {
 		// Get results uuid
 		//
 		Statement s = conn.createStatement();
-		s.executeQuery("SELECT * FROM `SimulationTemplate` ORDER BY `id` DESC");
+		s.executeQuery("SELECT * FROM `SimulationResults` ORDER BY `uuid` DESC");
 		ResultSet rs = s.getResultSet();
 		rs.next();
 		results.setUuid(rs.getInt("uuid"));
@@ -184,7 +184,7 @@ public class SimulationResultsBuilder implements ResultsBuilder {
 		return logEntries;
 	}
 
-	public void logCompletedQuantum(long quantum, ActiveSimulation activeSimulation) {
+	public void logCompletedQuantum(ActiveSimulation activeSimulation) {
 		//
 		// log elevator states
 		//
@@ -192,7 +192,7 @@ public class SimulationResultsBuilder implements ResultsBuilder {
 		ElevatorState[] states = new ElevatorState[elevators.length];
 		for (int i = 0; i < elevators.length; i++) {
 			states[i].setPosition(elevators[i].getPosition());
-			states[i].setQuantum(quantum);
+			states[i].setQuantum(activeSimulation.getCurrentQuantum());
 			states[i].setStatus(elevators[i].getServiceStatus());
 		}
 		results.getElevatorStates().add(states);

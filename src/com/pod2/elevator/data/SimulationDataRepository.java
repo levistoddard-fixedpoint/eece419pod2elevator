@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Vector;
 
+import com.pod2.elevator.core.DeliveryStatus;
+
 public class SimulationDataRepository {
 	static public List<SimulationDetail>getCompletedSimulations() throws SQLException {
 			
@@ -81,7 +83,7 @@ public class SimulationDataRepository {
 			rq.setOnloadQuantum(rs.getLong("onloadQuantum"));
 			rq.setOffloadQuantum(rs.getLong("offloadQuantum"));
 			rq.setTimeConstraint(rs.getLong("timeConstraint"));
-			//rq.setDeliveryStatus(rs.getInt("deliveryStatus"));
+			rq.setDeliveryStatus(DeliveryStatus.values()[rs.getInt("deliveryStatus")]);
 			passengerDeliveries.add(rq);
 		}
 		results.setPassengerDeliveries(passengerDeliveries);
