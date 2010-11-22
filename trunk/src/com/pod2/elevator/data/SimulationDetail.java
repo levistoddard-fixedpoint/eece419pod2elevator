@@ -1,15 +1,15 @@
 package com.pod2.elevator.data;
 
 public class SimulationDetail {
-	private int uuid;
+	private int id;
 	private String name;
-	
-	public int getUuid() {
-		return uuid;
+
+	public int getId() {
+		return id;
 	}
 
-	public void setUuid(int uuid) {
-		this.uuid = uuid;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -20,8 +20,8 @@ public class SimulationDetail {
 		this.name = name;
 	}
 
-	public SimulationDetail(int uuid, String name) {
-		this.uuid = uuid;
+	public SimulationDetail(int id, String name) {
+		this.id = id;
 		this.name = name;
 	}
 }

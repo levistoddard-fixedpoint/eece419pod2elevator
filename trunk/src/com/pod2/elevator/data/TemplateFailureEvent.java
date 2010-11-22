@@ -1,5 +1,15 @@
 package com.pod2.elevator.data;
 
 public class TemplateFailureEvent extends TemplateElevatorEvent {
-	public String componentKey;
+	
+	private String componentKey;
+
+	public String getComponentKey() {
+		return componentKey;
+	}
+
+	public void setComponentKey(String componentKey) {
+		this.componentKey = componentKey;
+	}
+	
 }
