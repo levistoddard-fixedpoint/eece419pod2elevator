@@ -18,6 +18,7 @@ public class DataDriver {
 	 * @throws SQLException 
 	 */
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+
 		SimulationTemplateRepository test = new SimulationTemplateRepository();
 		SimulationTemplate template = new SimulationTemplate();
 		SimulationTemplate fetchedTemplate = new SimulationTemplate();
@@ -104,7 +105,7 @@ public class DataDriver {
 		
 
 		System.out.println("Done!");
-		
+
 		
 	}
 
