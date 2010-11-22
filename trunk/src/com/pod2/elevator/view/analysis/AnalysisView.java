@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+
+import com.pod2.elevator.core.ServiceStatus;
 import com.pod2.elevator.data.SimulationDataRepository;
 import com.pod2.elevator.data.SimulationDetail;
 import com.pod2.elevator.data.SimulationResults;
@@ -78,56 +80,89 @@ public class AnalysisView extends JPanel implements ActionListener{
 		}
 	}
 	
-	public void statusUpdate(){
+	public void statusUpdate(int numFloors, int numElevators){
+		//Time vs Elevator Position
 		ArrayList<double[]> elevatorPosition = new ArrayList<double[]>();
 		double[] position = {0};
+		
+		//Time vs Cumulative Distance
 		ArrayList<double[]> cumulativeDistance = new ArrayList<double[]>();
-		double[] distance = {0};
+		double[] distance = new double[numElevators];
+		double deltaDistance = 0;
+		double prevDistance = 0;
+		
+		//Time vs Service Time
 		ArrayList<long[]> cumulativeServiceTime = new ArrayList<long[]>();
-		long[] service = {0};
+		long[] service = new long[numElevators];
+		
+		//Time vs Passengers Waiting
 		ArrayList<int[]> passengersWaiting = new ArrayList<int[]>();
 		int[] wait = {0};
-		int numberPassengersDelivered = 0;
+		
+		//Mean Time to Failure
 		double meanTimeToFailure = 0;
+		int numberFailures = 0;
+		
+		//Total Passengers Delivered
+		int numberPassengersDelivered = 0;
+		
+		//Mean Wait Time
 		double meanWaitTime = 0;
+		long totalQuantum = simulationResults.getElevatorStates().size();
 		
 		//i = time
 		//j = id
 		for(int i=0; i<simulationResults.getElevatorStates().size(); i++){
+			//Initialize arrays
+			position = new double[simulationResults.getElevatorStates().get(i).length];
+			
 			for(int j=0; j<simulationResults.getElevatorStates().get(i).length; j++){
-				position = new double[simulationResults.getElevatorStates().get(i).length];
+				//Get elevator position
 				position[j] = simulationResults.getElevatorStates().get(i)[j].getPosition();
+				
+				//Get cumulative distance
+				deltaDistance = position[j] - prevDistance;
+				prevDistance = position[j];
+				distance[j] += deltaDistance;
+				
+				//Get service time
+				if(simulationResults.getElevatorStates().get(i)[j].getStatus() == ServiceStatus.InService){
+					service[j]++;
+				}else {
+					numberFailures++;
+				}
+				
 			}
 			elevatorPosition.add(i, position);
-		}
-		
-		for(int i=0; i<simulationResults.getElevatorStates().size(); i++){
-			for(int j=0; j<simulationResults.getElevatorStates().get(i).length; j++){
-				distance = new double[simulationResults.getElevatorStates().get(i).length];
-				distance[j] = simulationResults.getElevatorStates().get(i)[j].getCumulativeDistanceTravelled();
-			}
 			cumulativeDistance.add(i, distance);
-		}
-		
-		for(int i=0; i<simulationResults.getElevatorStates().size(); i++){
-			for(int j=0; j<simulationResults.getElevatorStates().get(i).length; j++){
-				service = new long[simulationResults.getElevatorStates().get(i).length];
-				service[j] = simulationResults.getElevatorStates().get(i)[j].getCumulativeServiceTime();
-			}
 			cumulativeServiceTime.add(i, service);
 		}
 		
 		for(int i=0; i<simulationResults.getPassengersWaiting().size(); i++){
+			//Initialize arrays
+			wait = new int[simulationResults.getPassengersWaiting().get(i).length];
+			
 			for(int j=0; j<simulationResults.getPassengersWaiting().get(i).length; j++){
-				wait = new int[simulationResults.getPassengersWaiting().get(i).length];
+				//Get passengers waiting
 				wait[j] = simulationResults.getPassengersWaiting().get(i)[j];
 			}
 			passengersWaiting.add(i, wait);
 		}
 		
-		numberPassengersDelivered = simulationResults.getNumberPassengersDelivered();
-		meanTimeToFailure = simulationResults.getMeanTimeToFailure();
-		meanWaitTime = simulationResults.getMeanWaitTime();
+		for(int i=0; i<simulationResults.getPassengerDeliveries().size(); i++){
+			//Calculate mean wait time
+			meanWaitTime += simulationResults.getPassengerDeliveries().get(i).getOnloadQuantum() - simulationResults.getPassengerDeliveries().get(i).getEnterQuantum();
+		}
+		meanWaitTime /= simulationResults.getPassengerDeliveries().size();
+		
+		//Calculate mean time to failure
+		for(int i=0; i<service.length; i++){
+			meanTimeToFailure += service[i];
+		}
+		meanTimeToFailure /= numberFailures;
+		
+		//Calculate total passengers delivered
+		numberPassengersDelivered = simulationResults.getPassengerDeliveries().size();
 		
 		analysisPanel.statusUpdate(elevatorPosition, cumulativeDistance, cumulativeServiceTime, passengersWaiting, numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
 	}
@@ -144,6 +179,7 @@ public class AnalysisView extends JPanel implements ActionListener{
 				simulationResults = SimulationDataRepository.getSimulationResults(Uuid);
 				simulationTemplate = SimulationTemplateRepository.getTemplate(simulationResults.getTemplateId());
 				analysisPanel = new AnalysisPanel(simulationTemplate.getNumberFloors(), simulationTemplate.getNumberElevators());
+				this.statusUpdate(simulationTemplate.getNumberFloors(), simulationTemplate.getNumberElevators());
 				tabPane.add("Simulation Analysis", analysisPanel);
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block

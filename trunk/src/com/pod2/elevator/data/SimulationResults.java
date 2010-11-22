@@ -15,9 +15,6 @@ public class SimulationResults {
 	private List<Integer[]> passengersWaiting;
 	private List<CompletedRequest> passengerDeliveries;
 	private List<LoggedEvent> events;
-	private int numberPassengersDelivered;
-	private double meanTimeToFailure;
-	private double meanWaitTime;
 	
 	public int getUuid() {
 		return uuid;
@@ -84,24 +81,6 @@ public class SimulationResults {
 	}
 	public void setEvents(List<LoggedEvent> events) {
 		this.events = events;
-	}
-	public void setNumberPassengersDelivered(int numberPassengersDelivered) {
-		this.numberPassengersDelivered = numberPassengersDelivered;
-	}
-	public int getNumberPassengersDelivered() {
-		return numberPassengersDelivered;
-	}
-	public void setMeanTimeToFailure(double meanTimeToFailure) {
-		this.meanTimeToFailure = meanTimeToFailure;
-	}
-	public double getMeanTimeToFailure() {
-		return meanTimeToFailure;
-	}
-	public void setMeanWaitTime(double meanWaitTime) {
-		this.meanWaitTime = meanWaitTime;
-	}
-	public double getMeanWaitTime() {
-		return meanWaitTime;
 	}
 	
 }
