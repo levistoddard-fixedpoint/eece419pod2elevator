@@ -33,6 +33,10 @@ public class FloorRequestPanel {
 	public boolean isRequested(int floor) {
 		return requestedFloors.contains(floor);
 	}
+	
+	public int getRequestSize() {
+		return requestedFloors.size();
+	}
 
 	public long getRequestedTime(int floor) {
 		assert (requestedFloors.contains(floor));
