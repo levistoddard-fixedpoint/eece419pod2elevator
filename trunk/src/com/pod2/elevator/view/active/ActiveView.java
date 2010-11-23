@@ -27,10 +27,12 @@ import com.pod2.elevator.view.active.elevator.ElevatorView;
 import com.pod2.elevator.view.active.status.StatusView;
 import com.pod2.elevator.view.data.LogMessage;
 import com.pod2.elevator.view.data.SystemSnapShot;
+import com.pod2.elevator.view.model.TextArea;
 
 public class ActiveView extends JPanel{
 	private ElevatorView elevatorView;
 	private StatusView statusView;
+	private JScrollPane logScrollPane;
 	private JTextArea log;
 	private Collection<ComponentDetails> components;
 	
@@ -43,7 +45,7 @@ public class ActiveView extends JPanel{
 		this.numElevators = numElevators;
 		statusView = new StatusView(numFloors, numElevators);
 		elevatorView = new ElevatorView(numFloors, numElevators, statusView);
-		log = new JTextArea("Logging goes here\n");
+		log = new TextArea("Logging goes here\n");
 		components = ComponentRegistry.getFailableComponents();
 		
 		//Set log properties
@@ -51,7 +53,8 @@ public class ActiveView extends JPanel{
 		log.setEditable(false);
 		log.setBackground(Color.BLACK);
 		log.setForeground(Color.WHITE);
-		JScrollPane logScroll = new JScrollPane(log);
+		logScrollPane = new JScrollPane(log);
+		logScrollPane.setAutoscrolls(true);
 		
 		//Set layout
 		this.setLayout(new BorderLayout());
@@ -59,7 +62,7 @@ public class ActiveView extends JPanel{
 		//Add components
 		this.add(elevatorView, BorderLayout.CENTER);
 		this.add(statusView, BorderLayout.EAST);
-		this.add(logScroll, BorderLayout.SOUTH);
+		this.add(logScrollPane, BorderLayout.SOUTH);
 	}
 
 	public void statusUpdate(SystemSnapShot systemSnapShot){
@@ -115,5 +118,7 @@ public class ActiveView extends JPanel{
 		}
 		
 	}
+
+	
 
 }
