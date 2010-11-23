@@ -6,20 +6,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.pod2.elevator.core.component.ComponentRegistry;
 import com.pod2.elevator.core.events.Event;
 import com.pod2.elevator.core.events.EventFactory;
 import com.pod2.elevator.core.events.EventSource;
 import com.pod2.elevator.scheduling.ElevatorScheduler;
 
-public class SimulationTemplate {
+public class SimulationTemplate extends SimulationTemplateDetail {
 
 	private int id = -1;
 	private String name = "";
 	private int numberFloors = 5;
 	private int elevatorCapacity = 5;
 	private int numberElevators = 1;
-	private double speed = 1.0; /* floors per second */
+	private double speed = 0.01; /* floors per second */
 	private Set<Integer> restrictedFloors = new HashSet<Integer>();
 	private ElevatorScheduler scheduler = null;
 	private boolean requestGenerationOn = false;
@@ -28,8 +27,8 @@ public class SimulationTemplate {
 	private List<TemplateServiceEvent> serviceEvents = new LinkedList<TemplateServiceEvent>();
 	private Date created = new Date();
 	private Date lastEdit = new Date();
-	private long quantumsBeforeService = -1;
-	private double distanceBeforeService = -1;
+	private long quantumsBeforeService = 100000;
+	private double distanceBeforeService = 100000.00;
 
 	public List<Event> getEvents() {
 		List<Event> eventList = new LinkedList<Event>();
@@ -40,8 +39,7 @@ public class SimulationTemplate {
 		}
 		for (TemplateFailureEvent event : failureEvents) {
 			eventList.add(EventFactory.createComponentFailureEvent(EventSource.Template,
-					event.getQuantum(), event.getElevatorNumber(),
-					ComponentRegistry.getComponentByKey(event.getComponentKey())));
+					event.getQuantum(), event.getElevatorNumber(), event.getComponent()));
 		}
 		for (TemplateServiceEvent event : serviceEvents) {
 			eventList.add(EventFactory.createServiceEvent(EventSource.Template, event.getQuantum(),

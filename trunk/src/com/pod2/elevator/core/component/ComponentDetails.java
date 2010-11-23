@@ -33,8 +33,7 @@ public class ComponentDetails {
 
 	@Override
 	public String toString() {
-		return "ComponentDetails [key=" + key + ", name=" + name + ", canFail="
-				+ canFail + "]";
+		return getName();
 	}
 
 }

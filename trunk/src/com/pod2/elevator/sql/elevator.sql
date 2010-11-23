@@ -157,7 +157,7 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `ElevatorDB`.`TemplateFailureEvent` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `templateId` INT NOT NULL ,
-  `component` VARCHAR(45) NOT NULL ,
+  `component` VARCHAR(100) NOT NULL ,
   `elevatorNumber` INT NOT NULL ,
   `quantum` BIGINT NOT NULL ,
   INDEX `tfe_templateId` (`templateId` ASC) ,

@@ -5,15 +5,16 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 import com.pod2.elevator.core.DeliveryStatus;
 
 public class SimulationDataRepository {
-	static public List<SimulationDetail>getCompletedSimulations() throws SQLException {
+	static public List<SimulationDetail> getCompletedSimulations() throws SQLException {
 			
-		List<SimulationDetail> completedSimulations = new Vector<SimulationDetail>();
+		List<SimulationDetail> completedSimulations = new LinkedList<SimulationDetail>();
 		
 		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root", "");
 		
