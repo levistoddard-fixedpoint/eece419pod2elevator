@@ -11,5 +11,5 @@ public class LogMessage {
 	public String toString() {
 		return message;
 	}
-	
+
 }

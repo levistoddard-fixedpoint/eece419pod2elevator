@@ -47,6 +47,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 	private ActiveView activeView;
 	private AnalysisView analysisView;
 	private ConfigurationView configurationView;
+	private SystemSnapShot prevSystemSnapShot;
 
 	public SimulationWindow(int numFloors, int numElevators) {
 		this.numFloors = numFloors;
@@ -93,7 +94,10 @@ public class SimulationWindow extends JFrame implements Runnable {
 	}
 
 	public void statusUpdate(SystemSnapShot systemSnapShot) {
-		activeView.statusUpdate(systemSnapShot);
+		if(prevSystemSnapShot == null || !prevSystemSnapShot.equals(systemSnapShot)){
+			activeView.statusUpdate(systemSnapShot);
+		}
+		prevSystemSnapShot = systemSnapShot;
 	}
 
 	public static void main(String[] args) {
