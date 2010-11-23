@@ -20,7 +20,7 @@ public interface ResultsBuilder {
 
 	public void logRequestStateChange(long quantum, RequestInTransit request);
 
-	public Collection<com.pod2.elevator.view.data.LogMessage> getLogEntries(long quantum);
+	public Collection<LogMessage> getLogEntries(long quantum);
 
 	public void onEnd(long quantum);
 
