@@ -115,6 +115,7 @@ public class ActiveView extends JPanel{
 		
 		for(LogMessage l : systemSnapShot.getMessages()){
 			log.append(l.toString()+"\n");
+			//System.out.println(l.toString());
 		}
 		
 	}

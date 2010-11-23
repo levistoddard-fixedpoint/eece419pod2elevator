@@ -36,8 +36,9 @@ public class Elevator extends JPanel implements ActionListener{
 	public Elevator(int id, int numFloors) {
 		this.id = id;
 		this.numFloors = numFloors;
-		openWidth=1;
+		openWidth=35;
 		timer = new Timer(1, this);
+		timer.start();
 	}
 	
 	public void paint (Graphics g)

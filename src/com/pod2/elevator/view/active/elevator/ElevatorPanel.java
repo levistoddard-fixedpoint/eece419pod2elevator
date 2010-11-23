@@ -61,7 +61,7 @@ public class ElevatorPanel extends JPanel implements ActionListener{
 		status.addActionListener(this);
 		
 		//Display elevator
-		elevator = new Elevator(numFloors, 5);
+		elevator = new Elevator(id, numFloors);
 		elevator.setPreferredSize(new Dimension(100,0));
 		elevator.setBackground(Color.BLACK);
 		
