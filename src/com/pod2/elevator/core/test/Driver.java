@@ -14,7 +14,7 @@ import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.data.TemplateFailureEvent;
 import com.pod2.elevator.data.TemplatePassengerRequest;
 import com.pod2.elevator.data.TemplateServiceEvent;
-import com.pod2.elevator.scheduling.SabathScheduler;
+import com.pod2.elevator.scheduling.*;
 import com.pod2.elevator.view.SimulationWindow;
 
 import depricated.SimulationView;
@@ -54,20 +54,22 @@ public class Driver {
 
 	private static List<TemplatePassengerRequest> getPassengerRequests() {
 		LinkedList<TemplatePassengerRequest> requests = new LinkedList<TemplatePassengerRequest>();
-		// TemplatePassengerRequest request = new TemplatePassengerRequest();
-		// request.quantum = 5;
-		// request.onloadFloor = 1;
-		// request.offloadFloor = 3;
-		// request.timeConstraint = 1000;
-		// requests.add(request);
-		//
-		// request = new TemplatePassengerRequest();
-		// request.quantum = 100;
-		// request.onloadFloor = 4;
-		// request.offloadFloor = 2;
-		// request.timeConstraint = 1000;
-		// requests.add(request);
-
+		/*
+		TemplatePassengerRequest request = new TemplatePassengerRequest();
+		request.setQuantum(20);
+		request.setOnloadFloor(1);
+		request.setOffloadFloor(3);
+		request.setTimeConstraint(1000);
+		requests.add(request);
+		
+		
+		request = new TemplatePassengerRequest();
+		request.setQuantum(20);
+		request.setOnloadFloor(4);
+		request.setOffloadFloor(2);
+		request.setTimeConstraint(1000);
+		requests.add(request);
+		*/
 		return requests;
 	}
 
@@ -93,7 +95,7 @@ public class Driver {
 		template.setPassengerRequests(getPassengerRequests());
 		template.setServiceEvents(getServiceEvents());
 
-		template.setScheduler(new SabathScheduler());
+		template.setScheduler(new FCFSScheduler());
 
 		// SimulationDisplay display = new DummyDisplay();
 
