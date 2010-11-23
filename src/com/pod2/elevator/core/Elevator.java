@@ -37,7 +37,7 @@ public class Elevator {
 
 	private final int elevatorNumber;
 	private final int elevatorCapacity;
-	private final double speed;
+	private final double speed; /* floors per quantum */
 
 	private final FloorRequestPanel requestPanel;
 	private final Set<Integer> floorsOffLimit;
@@ -58,10 +58,9 @@ public class Elevator {
 	private double cumulativeDistanceInService;
 	private boolean isPuttingOutOfService = false;
 
-	public Elevator(ActiveSimulation simulation, int elevatorNumber,
-			int numberFloors, int elevatorCapacity, double speed,
-			long quantumsBeforeService, double distanceBeforeService,
-			Set<Integer> restrictedFloors) {
+	public Elevator(ActiveSimulation simulation, int elevatorNumber, int numberFloors,
+			int elevatorCapacity, double speed, long quantumsBeforeService,
+			double distanceBeforeService, Set<Integer> restrictedFloors) {
 		assert (simulation != null);
 		assert (numberFloors > 0);
 		assert (speed > 0);
@@ -75,15 +74,14 @@ public class Elevator {
 		this.cumulativeQuantumsInService = 0;
 		this.distanceBeforeService = distanceBeforeService;
 		this.cumulativeDistanceInService = 0.0;
-		this.speed = ((double) SimulationThread.QUANTUM_MILLIS / 1000) * speed;
+		this.speed = speed;
 
 		/* initialise components */
 		components = new HashMap<String, ElevatorComponent>();
 		positionContext = new PositionContext(0.0);
 		doorPositionContext = new DoorPositionContext(DOOR_WIDTH);
 		double maxHeight = (double) numberFloors;
-		Collection<ElevatorComponent> componentList = createComponents(
-				DOOR_WIDTH, maxHeight);
+		Collection<ElevatorComponent> componentList = createComponents(DOOR_WIDTH, maxHeight);
 		for (ElevatorComponent component : componentList) {
 			components.put(component.getKey(), component);
 		}
@@ -175,9 +173,8 @@ public class Elevator {
 	ElevatorSnapShot createSnapshot() {
 		double currentPosition = positionContext.getCurrentPosition();
 		int requestsInElevator = requests.values().size();
-		return new ElevatorSnapShot(currentPosition, floorsOffLimit,
-				requestsInElevator, elevatorCapacity, motionStatus,
-				serviceStatus, components.values());
+		return new ElevatorSnapShot(currentPosition, floorsOffLimit, requestsInElevator,
+				elevatorCapacity, motionStatus, serviceStatus, components.values());
 	}
 
 	void executeQuantum() {
@@ -191,8 +188,7 @@ public class Elevator {
 		try {
 			PositionSensor sensor = getPositionSensor();
 			double position = sensor.getPosition();
-			if (motionStatus == MotionStatus.MovingDown
-					|| motionStatus == MotionStatus.MovingUp) {
+			if (motionStatus == MotionStatus.MovingDown || motionStatus == MotionStatus.MovingUp) {
 				/* move elevator to it's next position. */
 				double velocity = targetPosition < position ? -speed : speed;
 				if (position == targetPosition) {
@@ -243,12 +239,10 @@ public class Elevator {
 		return false;
 	}
 
-	private Collection<ElevatorComponent> createComponents(double doorWidth,
-			double maxHeight) {
+	private Collection<ElevatorComponent> createComponents(double doorWidth, double maxHeight) {
 		DriveMechanism drive = new DriveMechanism(positionContext, maxHeight);
 		PositionSensor sensor = new PositionSensor(positionContext);
-		DoorDriveMechanism doorDrive = new DoorDriveMechanism(
-				doorPositionContext, doorWidth);
+		DoorDriveMechanism doorDrive = new DoorDriveMechanism(doorPositionContext, doorWidth);
 		DoorSensor doorSensor = new DoorSensor(doorPositionContext, doorWidth);
 		EmergencyBrake ebrake = new EmergencyBrake();
 		return Arrays.asList(drive, sensor, doorDrive, doorSensor, ebrake);
@@ -281,22 +275,19 @@ public class Elevator {
 
 	private void checkServiceDistanceReached() {
 		checkPutOutOfService(distanceBeforeService >= 0
-				&& cumulativeDistanceInService >= distanceBeforeService,
-				SERVICE_DUE_TO_DISTANCE);
+				&& cumulativeDistanceInService >= distanceBeforeService, SERVICE_DUE_TO_DISTANCE);
 	}
 
 	private void checkServiceQuantumsReached() {
 		checkPutOutOfService(quantumsBeforeService >= 0
-				&& cumulativeQuantumsInService >= quantumsBeforeService,
-				SERVICE_DUE_TO_TIME);
+				&& cumulativeQuantumsInService >= quantumsBeforeService, SERVICE_DUE_TO_TIME);
 	}
 
 	private void checkPutOutOfService(boolean condition, String reason) {
 		if (!isPuttingOutOfService && condition) {
 			long quantum = simulation.getCurrentQuantum() + 1;
-			Event serviceEvent = EventFactory.createServiceEvent(
-					EventSource.Generated, quantum, elevatorNumber, false,
-					reason);
+			Event serviceEvent = EventFactory.createServiceEvent(EventSource.Generated, quantum,
+					elevatorNumber, false, reason);
 			simulation.enqueueEvent(serviceEvent);
 			isPuttingOutOfService = true;
 		}

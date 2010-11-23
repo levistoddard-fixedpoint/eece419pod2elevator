@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -27,7 +28,7 @@ public class AnalysisView extends JPanel implements ActionListener{
 	
 	private JPanel choosePanel;
 	private JButton refresh;
-	private ArrayList<SimulationDetail> simulationList;
+	private LinkedList<SimulationDetail> simulationList;
 	private SimulationResults simulationResults;
 	private SimulationTemplate simulationTemplate;
 	private JComboBox simulationComboBox;
@@ -55,7 +56,7 @@ public class AnalysisView extends JPanel implements ActionListener{
 	
 	public void getSimulationList(){
 		try {
-			simulationList = (ArrayList<SimulationDetail>) SimulationDataRepository.getCompletedSimulations();
+			simulationList = (LinkedList<SimulationDetail>) SimulationDataRepository.getCompletedSimulations();
 			String [] temp = new String[simulationList.size()];
 			for(int i=0; i<simulationList.size(); i++){
 				temp[i] = simulationList.get(i).getName();

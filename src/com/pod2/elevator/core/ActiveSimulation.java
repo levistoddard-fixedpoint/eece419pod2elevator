@@ -1,5 +1,6 @@
 package com.pod2.elevator.core;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -44,8 +45,8 @@ public class ActiveSimulation {
 	private final Multimap<Long, Event> eventQueue;
 	private final RequestGenerator generator;
 
-	public ActiveSimulation(SimulationTemplate template,
-			ResultsBuilder results, SimulationDisplay display) {
+	public ActiveSimulation(SimulationTemplate template, ResultsBuilder results,
+			SimulationDisplay display) {
 		assert (template != null);
 		assert (results != null);
 		assert (display != null);
@@ -66,9 +67,8 @@ public class ActiveSimulation {
 		elevators = new Elevator[template.getNumberElevators()];
 		for (int n = 0; n < elevators.length; n++) {
 			elevators[n] = new Elevator(this, n, template.getNumberFloors(),
-					template.getElevatorCapacity(), template.getSpeed(),
-					quantumsBeforeService, distanceBeforeService,
-					template.getRestrictedFloors());
+					template.getElevatorCapacity(), template.getSpeed(), quantumsBeforeService,
+					distanceBeforeService, template.getRestrictedFloors());
 		}
 
 		/* Create floor-specific objects. */
@@ -97,7 +97,7 @@ public class ActiveSimulation {
 		isRunning = true;
 	}
 
-	public void stop() throws InterruptedException {
+	public void stop() throws InterruptedException, SQLException {
 		simulationThread.interrupt();
 		simulationThread.join();
 		display.teardown();
@@ -145,7 +145,7 @@ public class ActiveSimulation {
 	public boolean getIsRunning() {
 		return isRunning;
 	}
-	
+
 	public Elevator[] getElevators() {
 		return Arrays.copyOf(elevators, elevators.length);
 	}
@@ -197,7 +197,7 @@ public class ActiveSimulation {
 		 * export state of simulation.
 		 */
 		display.update(createSnapShot());
-		results.logCompletedQuantum(this);
+		results.logCompletedQuantum(currentQuantum, this);
 
 		/*
 		 * move onto next quantum.
@@ -248,8 +248,7 @@ public class ActiveSimulation {
 		int numberFloors = template.getNumberFloors();
 		FloorSnapShot[] floorSnapshots = new FloorSnapShot[numberFloors];
 		for (int n = 0; n < numberFloors; n++) {
-			floorSnapshots[n] = new FloorSnapShot(requestButtons[n],
-					getPassengersWaiting(n));
+			floorSnapshots[n] = new FloorSnapShot(requestButtons[n], getPassengersWaiting(n));
 		}
 
 		int numberElevators = template.getNumberElevators();
@@ -260,8 +259,7 @@ public class ActiveSimulation {
 
 		Collection<LogMessage> messages = results.getLogEntries(currentQuantum);
 
-		return new SystemSnapShot(currentQuantum, elevatorSnapshots,
-				floorSnapshots, messages);
+		return new SystemSnapShot(currentQuantum, elevatorSnapshots, floorSnapshots, messages);
 	}
 
 	private void requestElevator(RequestInTransit request) {
@@ -303,8 +301,7 @@ public class ActiveSimulation {
 			Elevator elevator = elevators[n];
 			MotionStatus motionStatus = elevator.getMotionStatus();
 			ServiceStatus serviceStatus = elevator.getServiceStatus();
-			if (MotionStatus.DoorsOpen == motionStatus
-					&& ServiceStatus.InService == serviceStatus) {
+			if (MotionStatus.DoorsOpen == motionStatus && ServiceStatus.InService == serviceStatus) {
 				onloadPassengers(elevator);
 			}
 		}

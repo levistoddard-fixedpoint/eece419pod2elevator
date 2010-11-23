@@ -1,4 +1,4 @@
-package com.pod2.elevator.web.views.templates;
+package com.pod2.elevator.web.views.tables;
 
 public enum PassengerFields {
 	Quantum("Time"), OnloadFloor("Onload Floor"), OffloadFloor("Offload Floor"), TimeConstraint(

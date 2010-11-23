@@ -3,14 +3,16 @@ package com.pod2.elevator.data;
 import java.util.Date;
 
 public class SimulationTemplateDetail {
-	
+
 	private int id;
 	private String name;
 	private Date created;
 	private Date lastEdit;
-	
-	public SimulationTemplateDetail(int id, String name, Date created,
-			Date lastEdit) {
+
+	public SimulationTemplateDetail() {
+	}
+
+	public SimulationTemplateDetail(int id, String name, Date created, Date lastEdit) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -49,5 +51,5 @@ public class SimulationTemplateDetail {
 	public void setLastEdit(Date lastEdit) {
 		this.lastEdit = lastEdit;
 	}
-	
+
 }

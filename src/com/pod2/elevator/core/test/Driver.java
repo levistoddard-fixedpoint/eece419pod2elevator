@@ -86,7 +86,7 @@ public class Driver {
 		template.setRequestGenerationOn(true);
 		template.setRestrictedFloors(new HashSet<Integer>());
 
-		template.setQuantumsBeforeService(200);
+		template.setQuantumsBeforeService(-1);
 		template.setDistanceBeforeService(-1.0);
 
 		template.setFailureEvents(getFailureEvents());

@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="libraries/jfreechart-1.0.13.jar"/>
 	<classpathentry kind="lib" path="libraries/servlet-api-2.5-20081211.jar"/>
 	<classpathentry kind="lib" path="libraries/vaadin-6.4.8.jar"/>
+	<classpathentry kind="lib" path="libraries/mysql-connector-java-5.1.13-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

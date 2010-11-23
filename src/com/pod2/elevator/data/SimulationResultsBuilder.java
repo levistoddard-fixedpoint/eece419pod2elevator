@@ -17,7 +17,7 @@ import com.pod2.elevator.core.Elevator;
 import com.pod2.elevator.core.ResultsBuilder;
 import com.pod2.elevator.core.events.Event;
 import com.pod2.elevator.core.RequestInTransit;
-import com.pod2.elevator.view.LogMessage;
+import com.pod2.elevator.view.data.LogMessage;
 
 public class SimulationResultsBuilder implements ResultsBuilder {
 	
@@ -156,7 +156,7 @@ public class SimulationResultsBuilder implements ResultsBuilder {
 		CompletedRequest compReq = new CompletedRequest();
 		compReq.setDeliveryStatus(finishedRequest.getDeliveryStatus());
 		compReq.setElevatorNumber(finishedRequest.getElevatorNumber());
-		compReq.setEnterQuantum(finishedRequest.getEnterQuantum());
+		//compReq.setEnterQuantum(finishedRequest.getEnterQuantum());
 		compReq.setOffloadFloor(finishedRequest.getOffloadFloor());
 		compReq.setOffloadQuantum(finishedRequest.getOffloadQuantum());
 		compReq.setOnloadFloor(finishedRequest.getOnloadFloor());
@@ -225,7 +225,7 @@ public class SimulationResultsBuilder implements ResultsBuilder {
 			
 			completedRequest.setDeliveryStatus(request.getDeliveryStatus());
 			completedRequest.setElevatorNumber(request.getElevatorNumber());
-			completedRequest.setEnterQuantum(request.getEnterQuantum());
+			//completedRequest.setEnterQuantum(request.getEnterQuantum());
 			completedRequest.setOnloadQuantum(request.getOnloadQuantum());
 			completedRequest.setOffloadQuantum(request.getOffloadQuantum());
 			completedRequest.setOnloadFloor(request.getOffloadFloor());
@@ -243,5 +243,11 @@ public class SimulationResultsBuilder implements ResultsBuilder {
 
 	public void onStart() {
 		results.setStartTime(new Date());
+	}
+
+	@Override
+	public void logCompletedQuantum(long quantum, ActiveSimulation activeSimulation) {
+		// TODO Auto-generated method stub
+		
 	}
 }

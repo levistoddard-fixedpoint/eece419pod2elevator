@@ -1,6 +1,6 @@
 package com.pod2.elevator.data;
 
-abstract class TemplateEvent {
+public abstract class TemplateEvent {
 
 	private long quantum;
 
@@ -11,5 +11,9 @@ abstract class TemplateEvent {
 	public void setQuantum(long quantum) {
 		this.quantum = quantum;
 	}
+
+	public abstract Object[] getFieldValues();
+	
+	public abstract Object[] getFields();
 
 }

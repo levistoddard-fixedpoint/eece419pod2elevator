@@ -5,6 +5,7 @@ import java.util.Date;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.data.SimulationTemplateDetail;
 import com.pod2.elevator.data.SimulationTemplateRepository;
+import com.pod2.elevator.web.views.tables.TemplateFields;
 import com.vaadin.data.Item;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
@@ -20,12 +21,6 @@ import com.vaadin.ui.Window.Notification;
 public class ManageTemplatesView extends CustomComponent {
 
 	private static final String CREATE_BUTTON_TEXT = "Create Template";
-
-	// private static final String COL_NAME = "Name";
-	// private static final String COL_CREATE_DATE = "Created";
-	// private static final String COL_EDIT_DATE = "Last Edit";
-	// private static final String COL_EDIT = "Edit";
-	// private static final String COL_DELETE = "Delete";
 
 	private final Window parent;
 	private final SimulationTemplateRepository repository;
@@ -62,7 +57,8 @@ public class ManageTemplatesView extends CustomComponent {
 		@Override
 		public void buttonClick(ClickEvent event) {
 			SimulationTemplate newTemplate = new SimulationTemplate();
-			Window createWindow = new CreateEditTemplateWindow(parent, repository, newTemplate);
+			Window createWindow = new CreateTemplateWindow(ManageTemplatesView.this, parent,
+					repository, newTemplate);
 			createWindow.setModal(true);
 			createWindow.center();
 			createWindow.setWidth(800, Sizeable.UNITS_PIXELS);
@@ -116,7 +112,7 @@ public class ManageTemplatesView extends CustomComponent {
 
 		try {
 			/* populate the table table */
-			for (SimulationTemplateDetail templ : repository.getAllTemplates()) {
+			for (SimulationTemplateDetail templ : SimulationTemplateRepository.getAllTemplates()) {
 				addTemplateToContainer(templ);
 			}
 		} catch (Exception e) {

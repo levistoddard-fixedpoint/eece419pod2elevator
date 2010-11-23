@@ -20,7 +20,7 @@ public class DummyResultsBuilder implements ResultsBuilder {
 	}
 
 	@Override
-	public void logCompletedQuantum(ActiveSimulation activeSimulation) {
+	public void logCompletedQuantum(long quantum, ActiveSimulation activeSimulation) {
 		// System.err.println("completed quantum...");
 	}
 
