@@ -51,7 +51,7 @@ public class ControlWindow extends Window implements SelectedTabChangeListener {
 	}
 
 	private Component getManageTemplatesView() {
-		return new ManageTemplatesView(this, controller.getTemplateRepository());
+		return new ManageTemplatesView(this);
 	}
 
 	@Override

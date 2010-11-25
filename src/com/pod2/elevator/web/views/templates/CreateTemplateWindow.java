@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,8 +21,10 @@ import com.pod2.elevator.web.validator.PositiveIntegerValidator;
 import com.pod2.elevator.web.validator.PositiveNumberValidator;
 import com.pod2.elevator.web.views.EditWindow;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
@@ -70,12 +73,13 @@ public class CreateTemplateWindow extends EditWindow {
 	private BeanItemContainer<ServiceEventAdapter> serviceEvents;
 	private BeanItemContainer<FailureEventAdapter> failureEvents;
 
+	private int previousNumElevators;
+	private int previousNumFloors;
+
 	/**
 	 * Restricted floors multiselect binds to this container to determine
 	 * presents which floors are selectable.
 	 */
-	private int previousNumElevators;
-	private int previousNumFloors;
 	private BeanItemContainer<Integer> availableFloors;
 
 	public CreateTemplateWindow(ManageTemplatesView manageView, Window parent,
@@ -95,6 +99,11 @@ public class CreateTemplateWindow extends EditWindow {
 
 		setCaption("Create Template");
 		super.render();
+	}
+
+	@SuppressWarnings("unchecked")
+	Set<Integer> getRestrictedFloors() {
+		return new HashSet<Integer>((Set<Integer>) restrictedFloors.getValue());
 	}
 
 	void insertEvent(TemplateEvent event) {
@@ -123,22 +132,21 @@ public class CreateTemplateWindow extends EditWindow {
 		layout.addComponent(createSpacer());
 		initRestrictedFloors();
 		layout.addComponent(createSpacer());
-		initRequestsTable();
+		initRequestEventsTable();
 		layout.addComponent(createSpacer());
-		initServiceRequestsTable();
+		initServiceEventsTable();
 		layout.addComponent(createSpacer());
-		initComponentFailuresTable();
+		initFailureEventsTable();
 		layout.addComponent(createSpacer());
 		return layout;
 	}
 
 	@Override
 	protected void onSave() {
-		basicInfo.commit();
-		if (basicInfo.isValid()) {
+		try {
+			basicInfo.commit();
 			template.setLastEdit(new Date());
 			template.setRestrictedFloors(getRestrictedFloors());
-
 			template.setPassengerRequests(getPassengerEvents());
 			template.setServiceEvents(getServiceEvents());
 			template.setFailureEvents(getFailureEvents());
@@ -147,187 +155,13 @@ public class CreateTemplateWindow extends EditWindow {
 				manageView.templateCreated(template);
 				close();
 			} catch (Exception e) {
-				Notification databaseError = new Notification("Error creating template.<br>",
+				Notification databaseError = new Notification("Unable to create template.<br>",
 						e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
 				parent.showNotification(databaseError);
 			}
+		} catch (InvalidValueException e) {
+			/* Allow user to correct their errors. */
 		}
-	}
-
-	private class NumberFloorsValueChanged implements ValueChangeListener {
-		@Override
-		public void valueChange(ValueChangeEvent event) {
-			if (passengerEvents == null) {
-				return;
-			}
-			Integer newNumFloors = (Integer) event.getProperty().getValue();
-			if (newNumFloors == null) {
-				newNumFloors = Integer.valueOf(0);
-			}
-			for (TemplatePassengerRequest request : getPassengerEvents()) {
-				boolean isOnloadHigher = request.getOnloadFloor() >= newNumFloors;
-				boolean isOffloadHigher = request.getOffloadFloor() >= newNumFloors;
-				if (isOnloadHigher || isOffloadHigher) {
-					Notification updateNotification = new Notification(
-							"Floor in use.<br>",
-							"There are passenger requests set to onload or offload "
-									+ "on the removed floors.<br> Please delete these requests before lowering the "
-									+ "number of floors.", Notification.TYPE_WARNING_MESSAGE);
-					updateNotification.setDelayMsec(-1);
-					parent.showNotification(updateNotification);
-					event.getProperty().setValue(previousNumFloors);
-					return;
-				}
-			}
-			updateAvailableFloors(newNumFloors);
-		}
-	}
-
-	private class NumberElevatorsValueChanged implements ValueChangeListener {
-		@Override
-		public void valueChange(ValueChangeEvent event) {
-			if (serviceEvents == null || failureEvents == null) {
-				return;
-			}
-			Integer newNumElevators = (Integer) event.getProperty().getValue();
-			if (newNumElevators == null) {
-				newNumElevators = Integer.valueOf(0);
-			}
-
-			boolean cantUpdate = false;
-			String cantUpdateMessage = "";
-			for (TemplateServiceEvent serviceEvent : getServiceEvents()) {
-				if (serviceEvent.getElevatorNumber() >= newNumElevators) {
-					cantUpdate = true;
-					cantUpdateMessage = "There are service requests set to act on the removed elevators.<br>"
-							+ " Please delete these requests before lowering the "
-							+ "number of elevators.";
-				}
-			}
-			for (TemplateFailureEvent failureEvent : getFailureEvents()) {
-				if (failureEvent.getElevatorNumber() >= newNumElevators) {
-					cantUpdate = true;
-					cantUpdateMessage = "There are failure requests set to act on the removed elevators.<br>"
-							+ " Please delete these requests before lowering the "
-							+ "number of elevators.";
-				}
-			}
-			if (cantUpdate) {
-				Notification updateNotification = new Notification("Elevator in use.<br>",
-						cantUpdateMessage, Notification.TYPE_WARNING_MESSAGE);
-				updateNotification.setDelayMsec(-1);
-				parent.showNotification(updateNotification);
-				event.getProperty().setValue(previousNumElevators);
-				return;
-			}
-			previousNumElevators = newNumElevators;
-		}
-	}
-
-	private class BasicInfoFieldFactory implements FormFieldFactory {
-
-		private static final int MAX_ELEVATORS = 10;
-		private static final int MAX_FLOORS = 50;
-		private static final int MAX_CAPACITY = 20;
-
-		@Override
-		public Field createField(Item item, Object propertyId, Component uiContext) {
-			String pid = (String) propertyId;
-			if (pid.equals("name")) {
-				final int MIN_LEN = 1;
-				final int MAX_LEN = 20;
-
-				TextField name = new TextField("Name:");
-				name.setWidth(FIELD_WIDTH);
-				name.setRequired(true);
-				name.setRequiredError("Please enter a template name.");
-				name.addValidator(new StringLengthValidator("Name must be between " + MIN_LEN
-						+ " and " + MAX_LEN + " characters.", MIN_LEN, MAX_LEN, false));
-				return name;
-			} else if (pid.equals("numberFloors")) {
-				Select numberFloors = createIntegerSelect("Number of Floors:",
-						"Number floors must be a positive integer.", MAX_FLOORS);
-				numberFloors.addListener(new NumberFloorsValueChanged());
-				return numberFloors;
-			} else if (pid.equals("numberElevators")) {
-				Select numberElevators = createIntegerSelect("Number of Elevators:",
-						"Number elevators must be a positive integer.", MAX_ELEVATORS);
-				numberElevators.addListener(new NumberElevatorsValueChanged());
-				return numberElevators;
-			} else if (pid.equals("scheduler")) {
-				Select schedulers = new Select("Scheduling Algorithm:");
-				schedulers.setWidth(FIELD_WIDTH);
-				schedulers.setRequired(true);
-				schedulers.setRequiredError("Please select a scheduler.");
-				for (ElevatorScheduler scheduler : SchedulerRegistry.getAvailableSchedulers()) {
-					schedulers.addItem(scheduler);
-				}
-				return schedulers;
-			} else if (pid.equals("requestGenerationOn")) {
-				return new CheckBox("Random request generation enabled");
-			} else if (pid.equals("speed")) {
-				TextField speed = new TextField("Speed (floors / quantum):");
-				speed.setWidth(FIELD_WIDTH);
-				speed.setRequired(true);
-				speed.setRequiredError("Please enter an elevator speed.");
-				speed.addValidator(new PositiveNumberValidator(
-						"Elevator speed must be a positive number."));
-				return speed;
-			} else if (pid.equals("elevatorCapacity")) {
-				return createIntegerSelect("Elevator Passenger Capacity:",
-						"Capacity must be a positive integer", MAX_CAPACITY);
-			} else if (pid.equals("quantumsBeforeService")) {
-				TextField quantums = new TextField("Time Before Service (quantums):");
-				quantums.setWidth(FIELD_WIDTH);
-				quantums.setRequired(true);
-				quantums.setRequiredError("Please enter quantums before required service.");
-				quantums.addValidator(new PositiveIntegerValidator(
-						"Time must be a positive integer."));
-				return quantums;
-			} else if (pid.equals("distanceBeforeService")) {
-				TextField distance = new TextField("Distance Before Service (floors):");
-				distance.setWidth(FIELD_WIDTH);
-				distance.setRequired(true);
-				distance.setRequiredError("Please enter distance before required service.");
-				distance.addValidator(new PositiveNumberValidator(
-						"Distance must be a positive number."));
-				return distance;
-			}
-			throw new RuntimeException("unknown property: " + pid);
-		}
-
-		private Select createIntegerSelect(String label, String failureMessage, int maxNumber) {
-			Select selectInput = new Select(label);
-			selectInput.setWidth(FIELD_WIDTH);
-			selectInput.setRequired(true);
-			selectInput.setRequiredError(failureMessage);
-			selectInput.setWriteThrough(true);
-			selectInput.setReadThrough(true);
-			selectInput.setImmediate(true);
-			selectInput.addValidator(new PositiveIntegerValidator(failureMessage));
-			for (int n = 1; n <= maxNumber; n++) {
-				selectInput.addItem(n);
-			}
-			return selectInput;
-		}
-
-	}
-
-	private class AddEventListener implements ClickListener {
-
-		private final EventType type;
-		private final String caption;
-
-		public AddEventListener(EventType type, String caption) {
-			this.type = type;
-			this.caption = caption;
-		}
-
-		@Override
-		public void buttonClick(ClickEvent event) {
-			showWindow(caption, windowFactory.createWindow(type, template));
-		}
-
 	}
 
 	private void initBasicInfo() {
@@ -357,10 +191,11 @@ public class CreateTemplateWindow extends EditWindow {
 		restrictedFloors.setWriteThrough(true);
 		restrictedFloors.setImmediate(true);
 		restrictedFloors.setContainerDataSource(availableFloors);
+		restrictedFloors.addListener(new RestrictedFloorsChangeListener());
 		layout.addComponent(restrictedFloors);
 	}
 
-	private void initRequestsTable() {
+	private void initRequestEventsTable() {
 		passengerEvents = new BeanItemContainer<PassengerEventAdapter>(PassengerEventAdapter.class);
 		insertEvents(template.getPassengerRequests());
 
@@ -376,7 +211,7 @@ public class CreateTemplateWindow extends EditWindow {
 		layout.addComponent(requestTable);
 	}
 
-	private void initServiceRequestsTable() {
+	private void initServiceEventsTable() {
 		serviceEvents = new BeanItemContainer<ServiceEventAdapter>(ServiceEventAdapter.class);
 		insertEvents(template.getServiceEvents());
 
@@ -391,7 +226,7 @@ public class CreateTemplateWindow extends EditWindow {
 		layout.addComponent(serviceTable);
 	}
 
-	private void initComponentFailuresTable() {
+	private void initFailureEventsTable() {
 		failureEvents = new BeanItemContainer<FailureEventAdapter>(FailureEventAdapter.class);
 		insertEvents(template.getFailureEvents());
 
@@ -440,11 +275,6 @@ public class CreateTemplateWindow extends EditWindow {
 		previousNumFloors = newNumFloors;
 	}
 
-	@SuppressWarnings("unchecked")
-	private Set<Integer> getRestrictedFloors() {
-		return (Set<Integer>) restrictedFloors.getValue();
-	}
-
 	private Table createTable() {
 		Table table = new EventTable();
 		table.setWidth(100, Sizeable.UNITS_PERCENTAGE);
@@ -482,6 +312,236 @@ public class CreateTemplateWindow extends EditWindow {
 				container.removeItem(item);
 			}
 		});
+	}
+
+	private class AddEventListener implements ClickListener {
+
+		private final EventType type;
+		private final String caption;
+
+		public AddEventListener(EventType type, String caption) {
+			this.type = type;
+			this.caption = caption;
+		}
+
+		@Override
+		public void buttonClick(ClickEvent event) {
+			showWindow(caption, windowFactory.createWindow(type, template));
+		}
+
+	}
+
+	private class BasicInfoFieldFactory implements FormFieldFactory {
+
+		private static final int MIN_ELEVATORS = 1;
+		private static final int MAX_ELEVATORS = 10;
+
+		private static final int MIN_FLOORS = 2;
+		private static final int MAX_FLOORS = 50;
+
+		private static final int MIN_CAPACITY = 1;
+		private static final int MAX_CAPACITY = 20;
+
+		@Override
+		public Field createField(Item item, Object propertyId, Component uiContext) {
+			String pid = (String) propertyId;
+			if (pid.equals("name")) {
+				final int MIN_LEN = 1;
+				final int MAX_LEN = 20;
+
+				TextField name = new TextField("Name:");
+				name.setWidth(FIELD_WIDTH);
+				name.setRequired(true);
+				name.setRequiredError("Please enter a template name.");
+				name.addValidator(new StringLengthValidator("Name must be between " + MIN_LEN
+						+ " and " + MAX_LEN + " characters.", MIN_LEN, MAX_LEN, false));
+				return name;
+			} else if (pid.equals("numberFloors")) {
+				Select numberFloors = createIntegerSelect("Number of Floors:",
+						"Number floors must be a positive integer.", MIN_FLOORS, MAX_FLOORS);
+				numberFloors.setNullSelectionAllowed(false);
+				numberFloors.addListener(new NumberFloorsValueChanged());
+				return numberFloors;
+			} else if (pid.equals("numberElevators")) {
+				Select numberElevators = createIntegerSelect("Number of Elevators:",
+						"Number elevators must be a positive integer.", MIN_ELEVATORS,
+						MAX_ELEVATORS);
+				numberElevators.setNullSelectionAllowed(false);
+				numberElevators.addListener(new NumberElevatorsValueChanged());
+				return numberElevators;
+			} else if (pid.equals("scheduler")) {
+				Select schedulers = new Select("Scheduling Algorithm:");
+				schedulers.setWidth(FIELD_WIDTH);
+				schedulers.setRequired(true);
+				schedulers.setRequiredError("Please select a scheduler.");
+				schedulers.setNullSelectionAllowed(false);
+				for (ElevatorScheduler scheduler : SchedulerRegistry.getAvailableSchedulers()) {
+					schedulers.addItem(scheduler);
+				}
+				return schedulers;
+			} else if (pid.equals("requestGenerationOn")) {
+				return new CheckBox("Random request generation enabled");
+			} else if (pid.equals("speed")) {
+				TextField speed = new TextField("Speed (floors / quantum):");
+				speed.setWidth(FIELD_WIDTH);
+				speed.setRequired(true);
+				speed.setRequiredError("Please enter an elevator speed.");
+				speed.addValidator(new PositiveNumberValidator(
+						"Elevator speed must be a positive number."));
+				return speed;
+			} else if (pid.equals("elevatorCapacity")) {
+				return createIntegerSelect("Elevator Passenger Capacity:",
+						"Capacity must be a positive integer", MIN_CAPACITY, MAX_CAPACITY);
+			} else if (pid.equals("quantumsBeforeService")) {
+				TextField quantums = new TextField("Time Before Service (quantums):");
+				quantums.setWidth(FIELD_WIDTH);
+				quantums.setRequired(true);
+				quantums.setRequiredError("Please enter quantums before required service.");
+				quantums.addValidator(new PositiveIntegerValidator(
+						"Time must be a positive integer."));
+				return quantums;
+			} else if (pid.equals("distanceBeforeService")) {
+				TextField distance = new TextField("Distance Before Service (floors):");
+				distance.setWidth(FIELD_WIDTH);
+				distance.setRequired(true);
+				distance.setRequiredError("Please enter distance before required service.");
+				distance.addValidator(new PositiveNumberValidator(
+						"Distance must be a positive number."));
+				return distance;
+			}
+			throw new RuntimeException("unknown property: " + pid);
+		}
+
+		private Select createIntegerSelect(String label, String failureMessage, int min, int max) {
+			Select selectInput = new Select(label);
+			selectInput.setWidth(FIELD_WIDTH);
+			selectInput.setRequired(true);
+			selectInput.setRequiredError(failureMessage);
+			selectInput.setNullSelectionAllowed(false);
+			selectInput.setWriteThrough(true);
+			selectInput.setReadThrough(true);
+			selectInput.setImmediate(true);
+			selectInput.addValidator(new PositiveIntegerValidator(failureMessage));
+			for (int n = min; n <= max; n++) {
+				selectInput.addItem(n);
+			}
+			return selectInput;
+		}
+
+	}
+
+	public class EventTable extends Table {
+
+		@Override
+		protected String formatPropertyValue(Object rowId, Object colId, Property property) {
+			if (property.getValue() != null && colId.equals("putInService")) {
+				boolean isPutInService = ((Boolean) property.getValue()).booleanValue();
+				if (isPutInService) {
+					return "Put elevator in service";
+				} else {
+					return "Take elevator out of service";
+				}
+			}
+			return super.formatPropertyValue(rowId, colId, property);
+		}
+
+	}
+
+	private class NumberElevatorsValueChanged implements ValueChangeListener {
+		@Override
+		public void valueChange(ValueChangeEvent event) {
+			if (serviceEvents == null || failureEvents == null) {
+				return;
+			}
+			Integer newNumElevators = (Integer) event.getProperty().getValue();
+			if (newNumElevators == null) {
+				newNumElevators = Integer.valueOf(0);
+			}
+
+			boolean cantUpdate = false;
+			String cantUpdateMessage = "";
+			for (TemplateServiceEvent serviceEvent : getServiceEvents()) {
+				if (serviceEvent.getElevatorNumber() >= newNumElevators) {
+					cantUpdate = true;
+					cantUpdateMessage = "There are service requests set to act on the removed elevators.<br>"
+							+ " Please delete these requests before lowering the "
+							+ "number of elevators.";
+				}
+			}
+			for (TemplateFailureEvent failureEvent : getFailureEvents()) {
+				if (failureEvent.getElevatorNumber() >= newNumElevators) {
+					cantUpdate = true;
+					cantUpdateMessage = "There are failure requests set to act on the removed elevators.<br>"
+							+ " Please delete these requests before lowering the "
+							+ "number of elevators.";
+				}
+			}
+			if (cantUpdate) {
+				Notification updateNotification = new Notification("Elevator in use.<br>",
+						cantUpdateMessage, Notification.TYPE_WARNING_MESSAGE);
+				updateNotification.setDelayMsec(-1);
+				parent.showNotification(updateNotification);
+				event.getProperty().setValue(previousNumElevators);
+				return;
+			}
+			previousNumElevators = newNumElevators;
+		}
+	}
+
+	private class NumberFloorsValueChanged implements ValueChangeListener {
+		@Override
+		public void valueChange(ValueChangeEvent event) {
+			if (passengerEvents == null) {
+				return;
+			}
+			Integer newNumFloors = (Integer) event.getProperty().getValue();
+			if (newNumFloors == null) {
+				newNumFloors = Integer.valueOf(0);
+			}
+			for (TemplatePassengerRequest request : getPassengerEvents()) {
+				boolean isOnloadHigher = request.getOnloadFloor() >= newNumFloors;
+				boolean isOffloadHigher = request.getOffloadFloor() >= newNumFloors;
+				if (isOnloadHigher || isOffloadHigher) {
+					Notification updateNotification = new Notification(
+							"Floor in use.<br>",
+							"There are passenger requests set to onload or offload "
+									+ "on the removed floors.<br> Please delete these requests before lowering the "
+									+ "number of floors.", Notification.TYPE_WARNING_MESSAGE);
+					updateNotification.setDelayMsec(-1);
+					parent.showNotification(updateNotification);
+					event.getProperty().setValue(previousNumFloors);
+					return;
+				}
+			}
+			updateAvailableFloors(newNumFloors);
+		}
+	}
+
+	private class RestrictedFloorsChangeListener implements ValueChangeListener {
+
+		@Override
+		public void valueChange(ValueChangeEvent event) {
+			boolean inUse = false;
+			@SuppressWarnings("unchecked")
+			Set<Integer> restrictedSet = (Set<Integer>) event.getProperty().getValue();
+
+			for (TemplatePassengerRequest request : getPassengerEvents()) {
+				if (restrictedSet.contains(request.getOffloadFloor())) {
+					inUse = true;
+					restrictedFloors.unselect(request.getOffloadFloor());
+				}
+			}
+			if (inUse) {
+				Notification updateNotification = new Notification("Floor in use.<br>",
+						"There are passenger requests set to offload "
+								+ "on the restricted floor(s).<br> Please delete these "
+								+ "requests before restricting floors.",
+						Notification.TYPE_WARNING_MESSAGE);
+				updateNotification.setDelayMsec(-1);
+				parent.showNotification(updateNotification);
+			}
+
+		}
 	}
 
 }
