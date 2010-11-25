@@ -191,6 +191,9 @@ public class CreateTemplateWindow extends EditWindow {
 		restrictedFloors.setWriteThrough(true);
 		restrictedFloors.setImmediate(true);
 		restrictedFloors.setContainerDataSource(availableFloors);
+		for(Integer floor: template.getRestrictedFloors()) {
+			restrictedFloors.select(floor);
+		}
 		restrictedFloors.addListener(new RestrictedFloorsChangeListener());
 		layout.addComponent(restrictedFloors);
 	}

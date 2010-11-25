@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import com.pod2.elevator.core.component.ComponentRegistry;
+import com.pod2.elevator.scheduling.SchedulerRegistry;
 
 public class SimulationTemplateRepository {
 
@@ -328,7 +329,7 @@ public class SimulationTemplateRepository {
 		template.setNumberFloors(rs.getInt("numberFloors"));
 		template.setElevatorCapacity(rs.getInt("elevatorCapacity"));
 		template.setNumberElevators(rs.getInt("numberElevators"));
-		// template.setElevatorScheduler(); fix this
+		template.setScheduler(SchedulerRegistry.getSchedulerByKey(rs.getString("scheduler")));
 		template.setRequestGenerationOn(rs.getBoolean("requestGenerationOn"));
 		template.setCreated(rs.getDate("created"));
 		template.setLastEdit(rs.getDate("lastEdit"));

@@ -29,7 +29,7 @@ public class SimulationTemplate extends SimulationTemplateDetail {
 	private Date lastEdit = new Date();
 	private long quantumsBeforeService = 100000;
 	private double distanceBeforeService = 100000.00;
-
+	
 	public List<Event> getEvents() {
 		List<Event> eventList = new LinkedList<Event>();
 		for (TemplatePassengerRequest events : passengerRequests) {
