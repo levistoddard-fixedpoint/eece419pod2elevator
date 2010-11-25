@@ -1,5 +1,6 @@
 package com.pod2.elevator.core.test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -85,14 +86,26 @@ public class Driver {
 		template.setNumberElevators(5);
 		template.setNumberFloors(5);
 		template.setSpeed(1.0);
-		template.setRequestGenerationOn(true);
+		template.setRequestGenerationOn(false);
 		template.setRestrictedFloors(new HashSet<Integer>());
 
 		template.setQuantumsBeforeService(-1);
 		template.setDistanceBeforeService(-1.0);
 
 		template.setFailureEvents(getFailureEvents());
-		template.setPassengerRequests(getPassengerRequests());
+		
+		TemplatePassengerRequest t = new TemplatePassengerRequest();
+		ArrayList<TemplatePassengerRequest> tl = new ArrayList<TemplatePassengerRequest>();
+		for(int i=0; i<1; i++){
+			t.setOffloadFloor(4);
+			t.setOnloadFloor(0);
+			t.setQuantum(50);
+			t.setTimeConstraint(150);
+			tl.add(t);
+		}
+		
+		template.setPassengerRequests(tl);
+		//template.setPassengerRequests(getPassengerRequests());
 		template.setServiceEvents(getServiceEvents());
 
 		template.setScheduler(new FCFSScheduler());
