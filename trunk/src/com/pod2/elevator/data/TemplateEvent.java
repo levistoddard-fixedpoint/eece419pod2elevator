@@ -12,8 +12,4 @@ public abstract class TemplateEvent {
 		this.quantum = quantum;
 	}
 
-	public abstract Object[] getFieldValues();
-	
-	public abstract Object[] getFields();
-
 }

@@ -12,14 +12,4 @@ public class TemplateServiceEvent extends TemplateElevatorEvent {
 		this.putInService = putInService;
 	}
 
-	@Override
-	public Object[] getFields() {
-		return new Object[] { "quantum", "elevatorNumber", "putInService" };
-	}
-
-	@Override
-	public Object[] getFieldValues() {
-		return new Object[] { getQuantum(), getElevatorNumber(), isPutInService() };
-	}
-
 }
