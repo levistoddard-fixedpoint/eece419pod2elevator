@@ -21,6 +21,15 @@ import com.pod2.elevator.view.layout.VerticalLayout;
 
 public class AnalysisStatusPanel extends JPanel{
 	
+	private JLabel simulationLabel;
+	private JLabel simulationDisplay;
+	
+	private JLabel startLabel;
+	private JLabel startDisplay;
+	
+	private JLabel stopLabel;
+	private JLabel stopDisplay;
+	
 	private int numberPassengersDelivered;
 	private JLabel numberPassengersDeliveredLabel;
 	private JLabel numberPassengersDeliveredDisplay;
@@ -38,15 +47,30 @@ public class AnalysisStatusPanel extends JPanel{
 		this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()));
 		this.setBackground(Color.LIGHT_GRAY);
 		
+		simulationLabel = createLabel(0, "Simulation");
+		startLabel = createLabel(0, "Start Quantum");
+		stopLabel = createLabel(0, "Stop Quantum");
 		numberPassengersDeliveredLabel = createLabel(0, "Passengers Delivered");
 		meanTimeToFailureLabel = createLabel(0, "Mean Time to Failure");
 		meanWaitTimeLabel = createLabel(0, "Average Wait Time");
 		
+		simulationDisplay = createLabel(1, "");
+		startDisplay = createLabel(1, "");
+		stopDisplay = createLabel(1, "");
 		numberPassengersDeliveredDisplay = createLabel(1, "");
 		meanTimeToFailureDisplay = createLabel(1, "");
 		meanWaitTimeDisplay = createLabel(1, "");
 		
 		this.add(Box.createRigidArea(new Dimension(0,5)));
+		
+		this.add(simulationLabel);
+		this.add(simulationDisplay);
+		
+		this.add(startLabel);
+		this.add(startDisplay);
+		
+		this.add(stopLabel);
+		this.add(stopDisplay);
 		
 		this.add(numberPassengersDeliveredLabel);
 		this.add(numberPassengersDeliveredDisplay);
@@ -77,7 +101,10 @@ public class AnalysisStatusPanel extends JPanel{
 		return temp;
 	}
 	
-	protected void statusUpdate(int numberPassengersDelivered, double meanTimeToFailure, double meanWaitTime){
+	protected void statusUpdate(String simulationName, long startQuantum, long stopQuantum, int numberPassengersDelivered, double meanTimeToFailure, double meanWaitTime){
+		simulationDisplay.setText(simulationName);
+		startDisplay.setText(Long.toString(startQuantum));
+		stopDisplay.setText(Long.toString(stopQuantum));
 		numberPassengersDeliveredDisplay.setText(Integer.toString(numberPassengersDelivered));
 		meanTimeToFailureDisplay.setText(Double.toString(meanTimeToFailure));
 		meanWaitTimeDisplay.setText(Double.toString(meanWaitTime));

@@ -165,7 +165,14 @@ public class AnalysisView extends JPanel implements ActionListener{
 		//Calculate total passengers delivered
 		numberPassengersDelivered = simulationResults.getPassengerDeliveries().size();
 		
-		analysisPanel.statusUpdate(elevatorPosition, cumulativeDistance, cumulativeServiceTime, passengersWaiting, numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
+		//Simulation Name
+		String simulationName = simulationResults.getName();
+		//Start Quantum
+		long startQuantum = simulationResults.getStartQuantum();
+		//Stop Quantum
+		long stopQuantum = simulationResults.getStopQuantum();
+		
+		analysisPanel.statusUpdate(elevatorPosition, cumulativeDistance, cumulativeServiceTime, passengersWaiting, simulationName, startQuantum, stopQuantum, numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
 	}
 
 	public void actionPerformed(ActionEvent e) {
