@@ -36,19 +36,31 @@ public class FCFSScheduler implements ElevatorScheduler{
 		// retrieve all requests
 		FloorRequestButton[] requests = simulation.getRequestButtons();
 		Elevator[] elevators = simulation.getElevators();
-/*
-		for (Elevator elevator : simulation.getElevators()) {
-			if(!elevator.getRequestPanel().getRequestedFloors().isEmpty()){
-				System.out.println("Elevator " + elevator.getElevatorNumber() + " has requests: " + elevator.getRequestPanel().getRequestedFloors().toString());
+		
+		for (int floor = 0; floor < requests.length; floor++) {
+			if ((requests[floor].isUpSelected()
+					|| requests[floor].isDownSelected()) && !assignedFloor.contains((double)floor)) {
+				// assign floors to elevators without passengers
+				for (int j = 0; j < elevators.length; j++) {
+					if (elevators[j].getServiceStatus().equals(
+							ServiceStatus.InService)) {
+						if (elevators[j].getRequestPanel().getRequestedFloors().isEmpty() && !assignedElevator.contains(j)){
+							assignedElevator.add(j);
+							assignedFloor.add((double)floor);
+							elevators[j].moveToFloor(floor);
+							break;
+						}
+					}
+				}
+
 			}
 		}
-*/
 		
 		for (Elevator elevator : simulation.getElevators()) {
 			if (MotionStatus.DoorsOpen.equals(elevator.getMotionStatus())) {
+				assignedFloor.remove(elevator.getPosition());
 				elevator.closeDoors();
 			} else if (MotionStatus.DoorsClosed.equals(elevator.getMotionStatus())){
-				assignedFloor.remove(elevator.getPosition());
 				assignedElevator.remove(elevator.getElevatorNumber());
 				for (int i = 0; i < requests.length; i++){
 					if (elevator.getRequestPanel().isRequested(i)){
@@ -61,25 +73,6 @@ public class FCFSScheduler implements ElevatorScheduler{
 			} else if (MotionStatus.ReachedDestinationFloor.equals(elevator
 					.getMotionStatus())) {
 				elevator.openDoors();
-			}
-		}
-
-		for (int floor = 0; floor < requests.length; floor++) {
-			if ((requests[floor].isUpSelected()
-					|| requests[floor].isDownSelected()) && !assignedFloor.contains((double)floor)) {
-				// assign floors to elevators without passengers
-				for (int j = 0; j < elevators.length; j++) {
-					if (elevators[j].getServiceStatus().equals(
-							ServiceStatus.InService)) {
-						if (elevators[j].getRequestPanel().getRequestedFloors().isEmpty() && !assignedElevator.contains(j)){
-							assignedElevator.add(j);
-							assignedFloor.add((double)floor);
-							elevators[j].moveToFloor(floor);
-							return;
-						}
-					}
-				}
-
 			}
 		}
 	}
