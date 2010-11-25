@@ -14,14 +14,4 @@ public class TemplateFailureEvent extends TemplateElevatorEvent {
 		this.component = component;
 	}
 
-	@Override
-	public Object[] getFields() {
-		return new Object[] { "quantum", "elevatorNumber", "component" };
-	}
-
-	@Override
-	public Object[] getFieldValues() {
-		return new Object[] { getQuantum(), getElevatorNumber(), getComponent() };
-	}
-
 }

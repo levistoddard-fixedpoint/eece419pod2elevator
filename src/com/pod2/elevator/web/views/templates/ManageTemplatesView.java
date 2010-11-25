@@ -5,7 +5,6 @@ import java.util.Date;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.data.SimulationTemplateDetail;
 import com.pod2.elevator.data.SimulationTemplateRepository;
-import com.pod2.elevator.web.views.tables.TemplateFields;
 import com.vaadin.data.Item;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
@@ -27,6 +26,23 @@ public class ManageTemplatesView extends CustomComponent {
 
 	private VerticalLayout layout;
 	private Table templates;
+
+	public enum TemplateFields {
+
+		Name("Name"), CreatedDate("Created Date"), EditDate("Last Edit Date"), Edit("Edit"), Delete(
+				"Delete");
+
+		private String title;
+
+		private TemplateFields(String title) {
+			this.title = title;
+		}
+
+		public String toString() {
+			return title;
+		}
+
+	}
 
 	public ManageTemplatesView(Window parent, SimulationTemplateRepository repository) {
 		super();
@@ -58,7 +74,7 @@ public class ManageTemplatesView extends CustomComponent {
 		public void buttonClick(ClickEvent event) {
 			SimulationTemplate newTemplate = new SimulationTemplate();
 			Window createWindow = new CreateTemplateWindow(ManageTemplatesView.this, parent,
-					repository, newTemplate);
+					newTemplate);
 			createWindow.setModal(true);
 			createWindow.center();
 			createWindow.setWidth(800, Sizeable.UNITS_PIXELS);

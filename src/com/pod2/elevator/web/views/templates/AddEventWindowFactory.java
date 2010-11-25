@@ -165,7 +165,8 @@ public class AddEventWindowFactory {
 		request.setOffloadFloor(DEFAULT_OFFLOAD_FLOOR);
 		request.setTimeConstraint(DEFAULT_CONSTRAINT);
 		FormFieldFactory fieldFactory = new PassengerRequestFieldFactory(template, request);
-		return new AddEventWindow<TemplatePassengerRequest>(templateWindow, fieldFactory, request);
+		return new AddEventWindow<TemplatePassengerRequest>(templateWindow, fieldFactory,
+				PassengerEventAdapter.getEditableFields(), request);
 	}
 
 	private class ServiceEventFieldFactory extends EventFormFieldFactory {
@@ -194,7 +195,8 @@ public class AddEventWindowFactory {
 		service.setElevatorNumber(DEFAULT_ELEVATOR);
 		service.setPutInService(DEFAULT_PUT_IN_SERVICE);
 		FormFieldFactory fieldFactory = new ServiceEventFieldFactory(template.getNumberElevators());
-		return new AddEventWindow<TemplateEvent>(templateWindow, fieldFactory, service);
+		return new AddEventWindow<TemplateEvent>(templateWindow, fieldFactory,
+				ServiceEventAdapter.getEditableFields(), service);
 	}
 
 	private class FailureRequestFieldFactory extends EventFormFieldFactory {
@@ -231,7 +233,8 @@ public class AddEventWindowFactory {
 		failure.setComponent(DEFAULT_COMPONENT);
 		FormFieldFactory fieldFactory = new FailureRequestFieldFactory(
 				template.getNumberElevators());
-		return new AddEventWindow<TemplateFailureEvent>(templateWindow, fieldFactory, failure);
+		return new AddEventWindow<TemplateFailureEvent>(templateWindow, fieldFactory,
+				FailureEventAdapter.getEditableFields(), failure);
 	}
 
 }

@@ -17,15 +17,17 @@ public class AddEventWindow<T extends TemplateEvent> extends EditWindow {
 
 	private final CreateTemplateWindow templateWindow;
 	private final FormFieldFactory fieldFactory;
+	private final String[] editFields;
 	private final T event;
 
 	private Form editForm;
 
 	public AddEventWindow(CreateTemplateWindow templateWindow, FormFieldFactory fieldFactory,
-			T event) {
+			String[] editFields, T event) {
 		super();
 		this.templateWindow = templateWindow;
 		this.fieldFactory = fieldFactory;
+		this.editFields = editFields;
 		this.event = event;
 		super.render();
 	}
@@ -51,7 +53,7 @@ public class AddEventWindow<T extends TemplateEvent> extends EditWindow {
 		Form form = new Form();
 		form.setItemDataSource(new BeanItem<T>(event));
 		form.setFormFieldFactory(fieldFactory);
-		form.setVisibleItemProperties(event.getFields());
+		form.setVisibleItemProperties(editFields);
 		form.setWriteThrough(true);
 		return form;
 	}

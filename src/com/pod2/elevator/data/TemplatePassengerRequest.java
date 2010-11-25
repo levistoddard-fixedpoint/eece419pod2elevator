@@ -30,15 +30,4 @@ public class TemplatePassengerRequest extends TemplateEvent {
 		this.timeConstraint = timeConstraint;
 	}
 
-	@Override
-	public Object[] getFields() {
-		return new Object[] { "quantum", "onloadFloor", "offloadFloor", "timeConstraint" };
-	}
-
-	@Override
-	public Object[] getFieldValues() {
-		return new Object[] { getQuantum(), getOnloadFloor(), getOffloadFloor(),
-				getTimeConstraint() };
-	}
-
 }
