@@ -42,8 +42,7 @@ public class ManageTemplatesView extends CustomComponent {
 	}
 
 	private void initCreateTemplateButton() {
-		Button createBtn = new Button("Create Template", new CreateClickHandler());
-		layout.addComponent(createBtn);
+		layout.addComponent(new Button("Create Template", new CreateClickHandler()));
 	}
 
 	private void initTemplatesTable() {
@@ -53,7 +52,7 @@ public class ManageTemplatesView extends CustomComponent {
 		templates.addContainerProperty(TemplateFields.Name, String.class, null);
 		templates.addContainerProperty(TemplateFields.CreatedDate, Date.class, null);
 		templates.addContainerProperty(TemplateFields.EditDate, Date.class, null);
-		templates.addContainerProperty(TemplateFields.Edit, Button.class, null);
+		templates.addContainerProperty(TemplateFields.Copy, Button.class, null);
 		templates.addContainerProperty(TemplateFields.Delete, Button.class, null);
 
 		try {
@@ -62,8 +61,7 @@ public class ManageTemplatesView extends CustomComponent {
 				addTemplateToContainer(templ);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			Notification databaseError = new Notification("Error while retrieving templates.<br>",
+			Notification databaseError = new Notification("Unable to retrieve templates.<br>",
 					e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
 			parent.showNotification(databaseError);
 		}
@@ -72,17 +70,24 @@ public class ManageTemplatesView extends CustomComponent {
 
 	private void addTemplateToContainer(SimulationTemplateDetail template) {
 		int id = template.getId();
-		Button edit = new Button("Edit", new CopyClickHandler(id));
-		Button delete = new Button("Delete", new DeleteClickHandler(id));
+		Button copyButton = new Button("Copy", new CopyClickHandler(id));
+		Button deleteButton = new Button("Delete", new DeleteClickHandler(id));
 		Object[] templateRow = new Object[] { template.getName(), template.getCreated(),
-				template.getLastEdit(), edit, delete };
+				template.getLastEdit(), copyButton, deleteButton };
 		templates.addItem(templateRow, id);
+	}
+
+	private void showCreateWindow(SimulationTemplate template) {
+		Window createWindow = new CreateTemplateWindow(this, parent, template);
+		createWindow.setModal(true);
+		createWindow.center();
+		createWindow.setWidth(800, Sizeable.UNITS_PIXELS);
+		parent.addWindow(createWindow);
 	}
 
 	public enum TemplateFields {
 
-		Name("Name"), CreatedDate("Created Date"), EditDate("Last Edit Date"), Edit("Edit"), Delete(
-				"Delete");
+		Name("Name"), CreatedDate("Created"), EditDate("Last Edit"), Copy("Copy"), Delete("Delete");
 
 		private String title;
 
@@ -99,13 +104,7 @@ public class ManageTemplatesView extends CustomComponent {
 	private class CreateClickHandler implements ClickListener {
 		@Override
 		public void buttonClick(ClickEvent event) {
-			SimulationTemplate newTemplate = new SimulationTemplate();
-			Window createWindow = new CreateTemplateWindow(ManageTemplatesView.this, parent,
-					newTemplate);
-			createWindow.setModal(true);
-			createWindow.center();
-			createWindow.setWidth(800, Sizeable.UNITS_PIXELS);
-			parent.addWindow(createWindow);
+			showCreateWindow(new SimulationTemplate());
 		}
 	}
 
@@ -118,7 +117,14 @@ public class ManageTemplatesView extends CustomComponent {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			// ManageTemplatesView.this.showNotification(templateId);
+			try {
+				SimulationTemplateRepository.deleteTemplate(templateId);
+				templates.removeItem(templateId);
+			} catch (Exception e) {
+				Notification databaseError = new Notification("Unable to delete template.<br>",
+						e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
+				parent.showNotification(databaseError);
+			}
 		}
 	}
 
@@ -132,9 +138,15 @@ public class ManageTemplatesView extends CustomComponent {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-//			SimulationTemplateDetail detail = new SimulationTemplateDetail(templateId, "booya",
-//					new Date(), new Date());
-//			ManageTemplatesView.this.templateEdited(detail);
+			try {
+				SimulationTemplate template = SimulationTemplateRepository.getTemplate(templateId);
+				template.setName("Copy of " + template.getName());
+				showCreateWindow(template);
+			} catch (Exception e) {
+				Notification databaseError = new Notification("Unable to retrieve template.<br>",
+						e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
+				parent.showNotification(databaseError);
+			}
 		}
 	}
 
