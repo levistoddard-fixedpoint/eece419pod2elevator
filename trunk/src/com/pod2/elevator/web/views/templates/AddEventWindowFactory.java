@@ -65,10 +65,7 @@ public class AddEventWindowFactory {
 				return time;
 			} else if (propertyId.equals("elevatorNumber")) {
 				Select elevators = new Select("Elevator Number:");
-				elevators.setRequired(true);
-				elevators.setRequiredError("Please select elevator that event should occur on.");
-				elevators.addValidator(new NonNegativeIntegerValidator(
-						"Elevator must be a positive integer."));
+				elevators.setNullSelectionAllowed(false);
 				for (int elevator = 0; elevator < numberElevators; elevator++) {
 					elevators.addItem(elevator);
 				}
@@ -94,9 +91,9 @@ public class AddEventWindowFactory {
 		@Override
 		public Field createField(Item item, Object propertyId, Component uiContext) {
 			if (propertyId.equals("onloadFloor")) {
-				return createFloorSelectField("Onload Floor:");
+				return createFloorSelectField("Onload Floor:", true);
 			} else if (propertyId.equals("offloadFloor")) {
-				return createFloorSelectField("Offload Floor:");
+				return createFloorSelectField("Offload Floor:", false);
 			} else if (propertyId.equals("timeConstraint")) {
 				TextField timeConstraint = new TextField("Time Constraint:");
 				timeConstraint.setWidth(FIELD_WIDTH);
@@ -116,36 +113,33 @@ public class AddEventWindowFactory {
 				if (areOnloadAndOffloadSame()) {
 					throw new InvalidValueException("Onload and offload floors must be different.");
 				}
-				if (isFloorOffLimits(value)) {
-					throw new InvalidValueException("Floor is off limits.");
-				}
 			}
 
 			@Override
 			public boolean isValid(Object value) {
-				return !areOnloadAndOffloadSame() && !isFloorOffLimits(value);
+				return !areOnloadAndOffloadSame();
 			}
 
 			private boolean areOnloadAndOffloadSame() {
 				return request.getOnloadFloor() == request.getOffloadFloor();
 			}
 
-			private boolean isFloorOffLimits(Object value) {
-				return template.getRestrictedFloors().contains(Integer.valueOf(value.toString()));
-			}
-
 		}
 
-		private Field createFloorSelectField(String caption) {
+		private Field createFloorSelectField(String caption, boolean includeRestricted) {
 			Select floors = new Select(caption);
-
 			floors.setWidth(FIELD_WIDTH);
 			floors.setRequired(true);
 			floors.setRequiredError("Please select a floor.");
-			floors.addValidator(new NonNegativeIntegerValidator("Floor must be a positive integer."));
-			floors.addValidator(new SelectedFloorsValidator());
+			floors.setNullSelectionAllowed(false);
+			floors.setNullSelectionItemId(-1);
 			floors.setInvalidCommitted(true);
+			floors.addValidator(new SelectedFloorsValidator());
+			floors.addValidator(new NonNegativeIntegerValidator("Floor must be a non-negative integer."));
 			for (int floor = 0; floor < template.getNumberFloors(); floor++) {
+				if (!includeRestricted && templateWindow.getRestrictedFloors().contains(floor)) {
+					continue;
+				}
 				floors.addItem(floor);
 			}
 			return floors;
@@ -155,14 +149,27 @@ public class AddEventWindowFactory {
 
 	private Window createRequestEventWindow(EventType type, SimulationTemplate template) {
 		final long DEFAULT_QUANTUM = 100;
-		final int DEFAULT_ONLOAD_FLOOR = 1;
-		final int DEFAULT_OFFLOAD_FLOOR = 2;
+		final int DEFAULT_ONLOAD_FLOOR = 0;
+		final int DEFAULT_OFFLOAD_FLOOR = 1;
 		final long DEFAULT_CONSTRAINT = 1000;
 
 		TemplatePassengerRequest request = new TemplatePassengerRequest();
 		request.setQuantum(DEFAULT_QUANTUM);
+		/*
+		 * Find a floor which is not off limits. Set the selected floor to the
+		 * null floor if this is not possible.
+		 */
 		request.setOnloadFloor(DEFAULT_ONLOAD_FLOOR);
-		request.setOffloadFloor(DEFAULT_OFFLOAD_FLOOR);
+		int floor = DEFAULT_OFFLOAD_FLOOR;
+		for (; floor < template.getNumberFloors(); floor++) {
+			if (!templateWindow.getRestrictedFloors().contains(floor)) {
+				break;
+			}
+		}
+		if (floor == template.getNumberFloors()) {
+			floor = -1;
+		}
+		request.setOffloadFloor(floor);
 		request.setTimeConstraint(DEFAULT_CONSTRAINT);
 		FormFieldFactory fieldFactory = new PassengerRequestFieldFactory(template, request);
 		return new AddEventWindow<TemplatePassengerRequest>(templateWindow, fieldFactory,
@@ -214,6 +221,7 @@ public class AddEventWindowFactory {
 				}
 				components.setRequired(true);
 				components.setRequiredError("Please select the component which should fail.");
+				components.setNullSelectionAllowed(false);
 				return components;
 			}
 			return super.createField(item, propertyId, uiContext);
@@ -223,7 +231,7 @@ public class AddEventWindowFactory {
 
 	private Window createFailureEventWindow(EventType type, SimulationTemplate template) {
 		final long DEFAULT_QUANTUM = 100;
-		final int DEFAULT_ELEVATOR = 1;
+		final int DEFAULT_ELEVATOR = 0;
 		final ComponentDetails DEFAULT_COMPONENT = ComponentRegistry.getFailableComponents()
 				.iterator().next();
 

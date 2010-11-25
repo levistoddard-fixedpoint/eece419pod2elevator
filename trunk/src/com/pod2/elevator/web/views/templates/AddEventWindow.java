@@ -2,6 +2,7 @@ package com.pod2.elevator.web.views.templates;
 
 import com.pod2.elevator.data.TemplateEvent;
 import com.pod2.elevator.web.views.EditWindow;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
@@ -9,8 +10,8 @@ import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- * A Window containing a Form which allows users to add events (i.e subclasses
- * of TemplateEvent) to a SimulationTemplate.
+ * An EditWindow which allows users to add events (i.e subclasses of
+ * TemplateEvent) to a SimulationTemplate.
  * 
  */
 public class AddEventWindow<T extends TemplateEvent> extends EditWindow {
@@ -22,7 +23,7 @@ public class AddEventWindow<T extends TemplateEvent> extends EditWindow {
 
 	private Form editForm;
 
-	public AddEventWindow(CreateTemplateWindow templateWindow, FormFieldFactory fieldFactory,
+	AddEventWindow(CreateTemplateWindow templateWindow, FormFieldFactory fieldFactory,
 			String[] editFields, T event) {
 		super();
 		this.templateWindow = templateWindow;
@@ -42,10 +43,12 @@ public class AddEventWindow<T extends TemplateEvent> extends EditWindow {
 
 	@Override
 	protected final void onSave() {
-		editForm.validate();
-		if (editForm.isValid()) {
+		try {
+			editForm.commit();
 			templateWindow.insertEvent(event);
-			close();
+			close();	
+		} catch(InvalidValueException e) {
+			/* Let user correct form. */
 		}
 	}
 
