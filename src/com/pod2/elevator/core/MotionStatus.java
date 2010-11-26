@@ -1,11 +1,11 @@
 package com.pod2.elevator.core;
 
-/**
- * Indicates the current motion of an Elevator.
- * 
- */
-public enum MotionStatus {
 
+public enum MotionStatus {
+	/**
+	 * OVERVIEW: Indicates the current motion of an Elevator.
+	 */
+	
 	/**
 	 * Elevator is currently travelling to a lower floor number.
 	 */
