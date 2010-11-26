@@ -5,33 +5,51 @@ import java.util.*;
 import com.pod2.elevator.core.*;
 
 public class FCFSScheduler implements ElevatorScheduler{
+	/**
+	 * 	OVERVIEW:	A first-come-first serve scheduling algorithm for elevator simulator
+	 */
 
 	private Set<Integer> assignedElevator = new HashSet<Integer>();
 	private Set<Double> assignedFloor = new HashSet<Double>();
 	
-	@Override
+	// methods
 	public String getKey() {
+	/**
+	 * 	EFFECTS:	returns the name of the class 
+	 */
 		return FCFSScheduler.class.getName();
 	}
 
 	@Override
 	public String getName() {
+	/**
+	* 	EFFECTS:	returns the name of the scheduling algorithm
+	*/
 		return "First-Come-First-Serve Scheduler";
 	}
 
 	@Override
 	public String getDescription() {
+	/**
+	 * 	EFFECTS:	returns the description of the scheduling algorithm
+	 */
 		return "First elevator request will be dealt with first by the first available elevator";
 	}
 
 	@Override
 	public void schedule(ActiveSimulation simulation) {
-		/*	Scheduler will search every floor and retrieve all elevator requests.  Scheduler
-		 * 	will first search delegate floor requests to elevators without any passengers.
-		 * 	If all elevators are currently being used, scheduler will assign floor to an
-		 * 	elevator with the fewest requests.  Only elevators that are in service will be
-		 * 	delegated.
-		 */
+	/**
+	 *	REQUIRES:	simulation != null
+	 *	MODIFIES:	AssignedElevator,assignedFloor
+	 *	EFFECTS:	Scheduler will search every floor and retrieve all elevator requests.
+	 * 				If an elevator request button is pressed in a floor, an elevator that
+	 * 				is not occupied will be assigned to it.  Each elevator will be checked
+	 * 				of its status.  If doors are opened, they will be closed.  If doors are
+	 * 				closed, scheduler will search for any floor requests made to the
+	 * 				elevator.  If such floor request is made, elevator will move towards
+	 * 				that particular floor.  If elevator has reached its designated floor,
+	 * 				elevator doors will open.
+	 */
 		
 		// retrieve all requests
 		FloorRequestButton[] requests = simulation.getRequestButtons();
@@ -67,7 +85,6 @@ public class FCFSScheduler implements ElevatorScheduler{
 						assignedElevator.add(elevator.getElevatorNumber());
 						assignedFloor.add((double)i);
 						elevator.moveToFloor(i);
-						System.out.println("Elevator " + elevator.getElevatorNumber() + " going to floor " + i);
 					}
 				}
 			} else if (MotionStatus.ReachedDestinationFloor.equals(elevator
