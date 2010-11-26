@@ -16,15 +16,18 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.pod2.elevator.main.CentralController;
 import com.pod2.elevator.view.layout.VerticalLayout;
+import com.pod2.elevator.web.ControlServerException;
 
 public class ConfigurationView extends JPanel implements ActionListener{
 	private JButton update;
 	private JLabel oldPort;
 	private JFormattedTextField newPort;
+	private CentralController centralController;
+	private int port = 8080;
 	
 	public ConfigurationView(){
-		int port=0;
 		//port = getWebInterfacePort();
 		update = new JButton("Update");
 		update.addActionListener(this);
@@ -32,6 +35,7 @@ public class ConfigurationView extends JPanel implements ActionListener{
 		newPort = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		newPort.setHorizontalAlignment(JTextField.CENTER);
 		newPort.setText("8080");
+		newPort.setColumns(6);
 		
 		this.setLayout(new VerticalLayout());
 		
@@ -40,18 +44,26 @@ public class ConfigurationView extends JPanel implements ActionListener{
 		this.add(newPort);
 		this.add(update);
 	}
+	
+	public void setCentralController(CentralController centralController) {
+		this.centralController = centralController;
+	}
 
 	public void actionPerformed(ActionEvent e) {
 		if(update.equals(e.getSource())){
 			try{
-				//int port = Integer.parseInt(newPort.getText());
 				long p = (Long) NumberFormat.getIntegerInstance().parse(newPort.getText());
-				if(p > 65535 || p < 1){
+				if(p > 65535 || p < 1024){
 					JOptionPane.showMessageDialog(this, "Port should be between 1024 to 65535.  Please enter a new port number.");
 				}else {
-					int port = (int) p;
-					//restartWebServer(port);
-					//port = getWebInterfacePort();
+					port = (int) p;
+					try {
+						centralController.restartWebServer(port);
+						oldPort.setText("Current Port: " + port);
+					} catch (ControlServerException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}catch(NumberFormatException n){
 				n.printStackTrace();
