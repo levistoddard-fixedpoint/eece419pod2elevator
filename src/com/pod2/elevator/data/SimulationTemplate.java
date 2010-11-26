@@ -10,6 +10,7 @@ import com.pod2.elevator.core.events.Event;
 import com.pod2.elevator.core.events.EventFactory;
 import com.pod2.elevator.core.events.EventSource;
 import com.pod2.elevator.scheduling.ElevatorScheduler;
+import com.pod2.elevator.scheduling.SchedulerRegistry;
 
 public class SimulationTemplate extends SimulationTemplateDetail {
 
@@ -20,7 +21,7 @@ public class SimulationTemplate extends SimulationTemplateDetail {
 	private int numberElevators = 1;
 	private double speed = 0.01; /* floors per second */
 	private Set<Integer> restrictedFloors = new HashSet<Integer>();
-	private ElevatorScheduler scheduler = null;
+	private ElevatorScheduler scheduler = SchedulerRegistry.getAvailableSchedulers().iterator().next();
 	private boolean requestGenerationOn = false;
 	private List<TemplatePassengerRequest> passengerRequests = new LinkedList<TemplatePassengerRequest>();
 	private List<TemplateFailureEvent> failureEvents = new LinkedList<TemplateFailureEvent>();
@@ -29,7 +30,7 @@ public class SimulationTemplate extends SimulationTemplateDetail {
 	private Date lastEdit = new Date();
 	private long quantumsBeforeService = 100000;
 	private double distanceBeforeService = 100000.00;
-	
+
 	public List<Event> getEvents() {
 		List<Event> eventList = new LinkedList<Event>();
 		for (TemplatePassengerRequest events : passengerRequests) {

@@ -52,4 +52,9 @@ public class SimulationTemplateDetail {
 		this.lastEdit = lastEdit;
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
+
 }
