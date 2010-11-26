@@ -92,5 +92,10 @@ public class FirstComeFirstServeScheduler implements ElevatorScheduler {
 			}
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return getName();
+	}
 
 }
