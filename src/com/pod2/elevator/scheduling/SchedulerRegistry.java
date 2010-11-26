@@ -11,7 +11,9 @@ public class SchedulerRegistry {
 
 	static {
 		schedulers = new HashMap<String, ElevatorScheduler>();
-		register(new SabathScheduler());
+		register(new BasicUpDownScheduler());
+		register(new FirstComeFirstServeScheduler());
+		register(new ShortestSeekTimeFirstScheduler());
 	}
 
 	private SchedulerRegistry() {
