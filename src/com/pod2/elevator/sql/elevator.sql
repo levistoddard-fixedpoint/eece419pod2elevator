@@ -13,7 +13,7 @@ CREATE  TABLE IF NOT EXISTS `ElevatorDB`.`SimulationTemplate` (
   `numberFloors` INT NOT NULL ,
   `elevatorCapacity` INT NOT NULL ,
   `numberElevators` INT NOT NULL ,
-  `scheduler` VARCHAR(45) NOT NULL ,
+  `scheduler` VARCHAR(255) NOT NULL ,
   `requestGenerationOn` TINYINT(1)  NOT NULL ,
   `name` VARCHAR(90) NOT NULL ,
   `created` DATE NOT NULL ,
