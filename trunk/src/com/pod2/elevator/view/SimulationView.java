@@ -15,27 +15,21 @@ public class SimulationView implements SimulationDisplay {
 		this.window = window;
 	}
 
-	@Override
 	public void startup(SimulationTemplate template) {
-		// TODO Auto-generated method stub
-
+		window.startup(template.getNumberFloors(), template.getNumberElevators(), template.getScheduler().getName());
 	}
 
-	@Override
 	public void update(final SystemSnapShot snapshot) {
 		window.statusUpdate(snapshot);
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				window.statusUpdate(snapshot);
 			}
 		});
 	}
 
-	@Override
 	public void teardown() {
-		// TODO Auto-generated method stub
-
+		window.teardown();
 	}
 
 }

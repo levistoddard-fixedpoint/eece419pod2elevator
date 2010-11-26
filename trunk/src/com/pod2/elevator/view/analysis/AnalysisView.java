@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -23,35 +24,31 @@ import com.pod2.elevator.data.SimulationTemplateRepository;
 import com.pod2.elevator.view.layout.VerticalLayout;
 
 public class AnalysisView extends JPanel implements ActionListener{
-	private JTabbedPane tabPane;
 	private AnalysisPanel analysisPanel;
 	
-	private JPanel choosePanel;
-	private JButton refresh;
 	private LinkedList<SimulationDetail> simulationList;
 	private SimulationResults simulationResults;
 	private SimulationTemplate simulationTemplate;
+	
+	private JButton refreshButton;
 	private JComboBox simulationComboBox;
+	private JButton analyzeButton;
 	
 	public AnalysisView(){
 		//Initialize Variables
-		refresh = new JButton("Refresh");
-		refresh.addActionListener(this);
+		refreshButton = new JButton("Refresh");
+		refreshButton.addActionListener(this);
+		analyzeButton = new JButton("Analyze");
+		analyzeButton.addActionListener(this);
 		
 		getSimulationList();
 		
-		//Add choice panel
-		choosePanel = new JPanel();
-		choosePanel.setLayout(new VerticalLayout());
-		choosePanel.add(Box.createRigidArea(new Dimension(0,5)));
-		choosePanel.add(refresh);
-		choosePanel.add(simulationComboBox);
-		
-		//Add tabs
-		tabPane = new JTabbedPane();
-		tabPane.addTab("Choose Simulation", choosePanel);
-		add(tabPane);
-		
+		//Add components
+		setLayout(new VerticalLayout());
+		add(Box.createRigidArea(new Dimension(0,5)));
+		add(refreshButton);
+		add(simulationComboBox);
+		add(analyzeButton);		
 	}
 	
 	public void getSimulationList(){
@@ -73,15 +70,15 @@ public class AnalysisView extends JPanel implements ActionListener{
 	public void paint(Graphics g){
 		super.paint(g);
 		Dimension size = this.getSize();
-		choosePanel.setPreferredSize(size);
-		choosePanel.revalidate();
+		setPreferredSize(size);
+		revalidate();
 		if(analysisPanel != null){
 			analysisPanel.setPreferredSize(size);
 			analysisPanel.revalidate();
 		}
 	}
 	
-	public void statusUpdate(int numFloors, int numElevators){
+	public void statusUpdate(int numFloors, int numElevators, String scheduler){
 		//Time vs Elevator Position
 		ArrayList<double[]> elevatorPosition = new ArrayList<double[]>();
 		double[] position = {0};
@@ -109,7 +106,6 @@ public class AnalysisView extends JPanel implements ActionListener{
 		
 		//Mean Wait Time
 		double meanWaitTime = 0;
-		long totalQuantum = simulationResults.getElevatorStates().size();
 		
 		//i = time
 		//j = id
@@ -173,26 +169,81 @@ public class AnalysisView extends JPanel implements ActionListener{
 		long stopQuantum = simulationResults.getStopQuantum();
 		
 		analysisPanel.statusUpdate(elevatorPosition, cumulativeDistance, cumulativeServiceTime, passengersWaiting, simulationName, startQuantum, stopQuantum, numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
+		
+		/* Test Display
+		ArrayList<double[]> elevatorPosition = new ArrayList<double[]>();
+		ArrayList<double[]> cumulativeDistance = new ArrayList<double[]>();
+		ArrayList<long[]> cumulativeServiceTime = new ArrayList<long[]>();
+		ArrayList<int[]> passengersWaiting = new ArrayList<int[]>();
+
+		double[] temp0 = new double[100];
+		double[] temp1 = new double[100];
+		long[] temp2 = new long[100];
+		int[] temp3 = new int[100];
+		for(int i=0; i<100; i++){
+			temp0[i] = i;
+		}
+		for(int i=0; i<100; i++){
+			temp1[i] = 100-i;
+		}
+		for(int i=0; i<100; i++){
+			temp2[i] = 2*i;
+		}
+		for(int i=0; i<100; i++){
+			temp3[i] = i/2;
+		}
+		elevatorPosition.add(temp0);
+		elevatorPosition.add(temp1);
+		
+		cumulativeDistance.add(temp1);
+		cumulativeDistance.add(temp0);
+		
+		cumulativeServiceTime.add(temp2);
+		
+		passengersWaiting.add(temp3);
+		
+		String simulationName = new String("Test Simulation");
+		
+		long startQuantum = 0;
+		long stopQuantum = 100;
+		
+		int numberPassengersDelivered = 152;
+		double meanTimeToFailure = 13.2;
+		double meanWaitTime = 5.6;
+		
+		analysisPanel.statusUpdate(elevatorPosition, cumulativeDistance, cumulativeServiceTime, passengersWaiting, scheduler, startQuantum, stopQuantum, numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
+		*/
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if(refresh.equals(e.getSource())){
+		if(refreshButton.equals(e.getSource())){
 			getSimulationList();
 		}
-		if(simulationComboBox.equals(e.getSource())){
-			JComboBox temp = (JComboBox)e.getSource();
-			int index = (int)temp.getSelectedIndex();
+		if(analyzeButton.equals(e.getSource())){
+			/* Test Display
+			analysisPanel = new AnalysisPanel(10, 10);
+			this.statusUpdate(10, 10, "FCFS");
+			JFrame temp = new JFrame("Test Simulation Analysis");
+			temp.add(analysisPanel);
+			temp.pack();
+			temp.setVisible(true);
+			*/
+
+			int index = (int)simulationComboBox.getSelectedIndex();
 			int Uuid = simulationList.get(index).getId();
 			try {
 				simulationResults = SimulationDataRepository.getSimulationResults(Uuid);
 				simulationTemplate = SimulationTemplateRepository.getTemplate(simulationResults.getTemplateId());
 				analysisPanel = new AnalysisPanel(simulationTemplate.getNumberFloors(), simulationTemplate.getNumberElevators());
-				this.statusUpdate(simulationTemplate.getNumberFloors(), simulationTemplate.getNumberElevators());
-				tabPane.add("Simulation Analysis", analysisPanel);
+				this.statusUpdate(simulationTemplate.getNumberFloors(), simulationTemplate.getNumberElevators(), simulationTemplate.getScheduler().getName());
+				JFrame temp = new JFrame(simulationResults.getName());
+				temp.add(analysisPanel);
+				temp.pack();
+				temp.setVisible(true);
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+
 		}
 	}
 	

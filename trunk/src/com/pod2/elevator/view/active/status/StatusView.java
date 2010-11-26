@@ -37,14 +37,16 @@ public class StatusView extends JPanel implements ActionListener{
 	
 	private JButton floorStatusButton;
 	private JLabel quantumLabel;
+	private JLabel schedulerLabel;
 	
-	public StatusView(int numFloors, int numElevators){
+	public StatusView(int numFloors, int numElevators, String scheduler){
 		//Initialize Variables
 		this.numElevators=numElevators;
 		elevatorStatus = new ElevatorStatusPanel[numElevators];
 		floorStatusButton = new JButton("Floor Status");
 		floorStatusButton.addActionListener(this);
 		quantumLabel = new JLabel("Quantum: 0");
+		schedulerLabel = new JLabel(scheduler);
 		
 		//Root Panel
 		rootPanel = new JPanel();
@@ -67,6 +69,7 @@ public class StatusView extends JPanel implements ActionListener{
 		rootPanel.add(floorStatus);
 		
 		//Add components
+		this.add(schedulerLabel);
 		this.add(quantumLabel);
 		this.add(floorStatusButton);
 		this.add(scrollPane);

@@ -53,9 +53,9 @@ public class AnalysisPanel extends JPanel{
 		this.add(analysisStatusPanel, BorderLayout.EAST);
 	}
 
-	protected void statusUpdate(ArrayList<double[]> elevatorPosition, ArrayList<double[]> cumulativeDistance, ArrayList<long[]> cumulativeServiceTime, ArrayList<int[]> passengersWaiting, String simulationName, long startQuantum, long stopQuantum, int numberPassengersDelivered, double meanTimeToFailure, double meanWaitTime){
+	protected void statusUpdate(ArrayList<double[]> elevatorPosition, ArrayList<double[]> cumulativeDistance, ArrayList<long[]> cumulativeServiceTime, ArrayList<int[]> passengersWaiting, String scheduler, long startQuantum, long stopQuantum, int numberPassengersDelivered, double meanTimeToFailure, double meanWaitTime){
 		analysisChartPanel.statusUpdate(elevatorPosition, cumulativeDistance, cumulativeServiceTime, passengersWaiting);
-		analysisStatusPanel.statusUpdate(simulationName, startQuantum, stopQuantum, numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
+		analysisStatusPanel.statusUpdate(scheduler, startQuantum, stopQuantum, numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
 }
 	
 }

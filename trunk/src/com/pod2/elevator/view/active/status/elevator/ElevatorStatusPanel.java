@@ -194,7 +194,7 @@ public class ElevatorStatusPanel extends JPanel{
 				key = keys[keys.length-1];
 			}
 			Boolean value = entry.getValue();
-			if(!value){
+			if(value){
 				componentFailureDisplay.setForeground(Color.RED);
 				componentFailureDisplay.append(key.toString() + "\nFAILED" + "\n");
 			}else {
