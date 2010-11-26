@@ -1,7 +1,7 @@
 package com.pod2.elevator.web.views;
 
 import com.pod2.elevator.main.CentralController;
-import com.pod2.elevator.web.views.simulation.RunSimulationView;
+import com.pod2.elevator.web.views.simulation.ManageSimulationsView;
 import com.pod2.elevator.web.views.templates.ManageTemplatesView;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Alignment;
@@ -15,7 +15,7 @@ import com.vaadin.ui.Window;
 
 public class ControlWindow extends Window implements SelectedTabChangeListener {
 
-	private static final String RUN_TAB_TITLE = "Run Simulation";
+	private static final String RUN_TAB_TITLE = "Manage Simulations";
 	private static final String MANAGE_TAB_TITLE = "Manage Templates";
 
 	private final CentralController controller;
@@ -47,7 +47,7 @@ public class ControlWindow extends Window implements SelectedTabChangeListener {
 	}
 
 	private Component getRunSimulationView() {
-		return new RunSimulationView(controller);
+		return new ManageSimulationsView(this, controller);
 	}
 
 	private Component getManageTemplatesView() {

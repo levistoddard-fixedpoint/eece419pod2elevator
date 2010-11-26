@@ -20,6 +20,8 @@ import com.pod2.elevator.scheduling.SchedulerRegistry;
 import com.pod2.elevator.web.validator.PositiveIntegerValidator;
 import com.pod2.elevator.web.validator.PositiveNumberValidator;
 import com.pod2.elevator.web.views.EditWindow;
+import com.pod2.elevator.web.views.common.LayoutUtils;
+import com.pod2.elevator.web.views.common.SimulationTemplateBasicFormFieldFactory;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -129,15 +131,15 @@ public class CreateTemplateWindow extends EditWindow {
 	protected Component getEditControls() {
 		layout = new VerticalLayout();
 		initBasicInfo();
-		layout.addComponent(createSpacer());
+		layout.addComponent(LayoutUtils.createSpacer());
 		initRestrictedFloors();
-		layout.addComponent(createSpacer());
+		layout.addComponent(LayoutUtils.createSpacer());
 		initRequestEventsTable();
-		layout.addComponent(createSpacer());
+		layout.addComponent(LayoutUtils.createSpacer());
 		initServiceEventsTable();
-		layout.addComponent(createSpacer());
+		layout.addComponent(LayoutUtils.createSpacer());
 		initFailureEventsTable();
-		layout.addComponent(createSpacer());
+		layout.addComponent(LayoutUtils.createSpacer());
 		return layout;
 	}
 
@@ -191,7 +193,7 @@ public class CreateTemplateWindow extends EditWindow {
 		restrictedFloors.setWriteThrough(true);
 		restrictedFloors.setImmediate(true);
 		restrictedFloors.setContainerDataSource(availableFloors);
-		for(Integer floor: template.getRestrictedFloors()) {
+		for (Integer floor : template.getRestrictedFloors()) {
 			restrictedFloors.select(floor);
 		}
 		restrictedFloors.addListener(new RestrictedFloorsChangeListener());
@@ -210,7 +212,7 @@ public class CreateTemplateWindow extends EditWindow {
 		layout.addComponent(createButtonPanel(new Label("Passenger Request Events"), new Button(
 				"Add", new AddEventListener(EventType.PassengerRequest,
 						"Add Passenger Request Event"))));
-		layout.addComponent(createSpacer());
+		layout.addComponent(LayoutUtils.createSpacer());
 		layout.addComponent(requestTable);
 	}
 
@@ -225,7 +227,7 @@ public class CreateTemplateWindow extends EditWindow {
 
 		layout.addComponent(createButtonPanel(new Label("Forced Servicing Events"), new Button(
 				"Add", new AddEventListener(EventType.ServiceRequest, "Add Forced Service Event"))));
-		layout.addComponent(createSpacer());
+		layout.addComponent(LayoutUtils.createSpacer());
 		layout.addComponent(serviceTable);
 	}
 
@@ -241,7 +243,7 @@ public class CreateTemplateWindow extends EditWindow {
 		layout.addComponent(createButtonPanel(new Label("Forced Failure Event"), new Button("Add",
 				new AddEventListener(EventType.ComponentFailure, "Add Forced Failure Event"))));
 
-		layout.addComponent(createSpacer());
+		layout.addComponent(LayoutUtils.createSpacer());
 		layout.addComponent(failureTable);
 	}
 
@@ -290,15 +292,11 @@ public class CreateTemplateWindow extends EditWindow {
 	private Layout createButtonPanel(Label tableTitle, Button addButton) {
 		HorizontalLayout buttonPanel = new HorizontalLayout();
 		buttonPanel.addComponent(tableTitle);
-		buttonPanel.addComponent(createSpacer());
-		buttonPanel.addComponent(createSpacer());
-		buttonPanel.addComponent(createSpacer());
+		buttonPanel.addComponent(LayoutUtils.createSpacer());
+		buttonPanel.addComponent(LayoutUtils.createSpacer());
+		buttonPanel.addComponent(LayoutUtils.createSpacer());
 		buttonPanel.addComponent(addButton);
 		return buttonPanel;
-	}
-
-	private Component createSpacer() {
-		return new Label("&nbsp;", Label.CONTENT_XHTML);
 	}
 
 	private void insertEvents(Collection<? extends TemplateEvent> events) {
@@ -334,7 +332,7 @@ public class CreateTemplateWindow extends EditWindow {
 
 	}
 
-	private class BasicInfoFieldFactory implements FormFieldFactory {
+	private class BasicInfoFieldFactory extends SimulationTemplateBasicFormFieldFactory {
 
 		private static final int MIN_ELEVATORS = 1;
 		private static final int MAX_ELEVATORS = 10;
@@ -342,24 +340,10 @@ public class CreateTemplateWindow extends EditWindow {
 		private static final int MIN_FLOORS = 2;
 		private static final int MAX_FLOORS = 50;
 
-		private static final int MIN_CAPACITY = 1;
-		private static final int MAX_CAPACITY = 20;
-
 		@Override
 		public Field createField(Item item, Object propertyId, Component uiContext) {
 			String pid = (String) propertyId;
-			if (pid.equals("name")) {
-				final int MIN_LEN = 1;
-				final int MAX_LEN = 20;
-
-				TextField name = new TextField("Name:");
-				name.setWidth(FIELD_WIDTH);
-				name.setRequired(true);
-				name.setRequiredError("Please enter a template name.");
-				name.addValidator(new StringLengthValidator("Name must be between " + MIN_LEN
-						+ " and " + MAX_LEN + " characters.", MIN_LEN, MAX_LEN, false));
-				return name;
-			} else if (pid.equals("numberFloors")) {
+			if (pid.equals("numberFloors")) {
 				Select numberFloors = createIntegerSelect("Number of Floors:",
 						"Number floors must be a positive integer.", MIN_FLOORS, MAX_FLOORS);
 				numberFloors.setNullSelectionAllowed(false);
@@ -372,63 +356,8 @@ public class CreateTemplateWindow extends EditWindow {
 				numberElevators.setNullSelectionAllowed(false);
 				numberElevators.addListener(new NumberElevatorsValueChanged());
 				return numberElevators;
-			} else if (pid.equals("scheduler")) {
-				Select schedulers = new Select("Scheduling Algorithm:");
-				schedulers.setWidth(FIELD_WIDTH);
-				schedulers.setRequired(true);
-				schedulers.setRequiredError("Please select a scheduler.");
-				schedulers.setNullSelectionAllowed(false);
-				for (ElevatorScheduler scheduler : SchedulerRegistry.getAvailableSchedulers()) {
-					schedulers.addItem(scheduler);
-				}
-				return schedulers;
-			} else if (pid.equals("requestGenerationOn")) {
-				return new CheckBox("Random request generation enabled");
-			} else if (pid.equals("speed")) {
-				TextField speed = new TextField("Speed (floors / quantum):");
-				speed.setWidth(FIELD_WIDTH);
-				speed.setRequired(true);
-				speed.setRequiredError("Please enter an elevator speed.");
-				speed.addValidator(new PositiveNumberValidator(
-						"Elevator speed must be a positive number."));
-				return speed;
-			} else if (pid.equals("elevatorCapacity")) {
-				return createIntegerSelect("Elevator Passenger Capacity:",
-						"Capacity must be a positive integer", MIN_CAPACITY, MAX_CAPACITY);
-			} else if (pid.equals("quantumsBeforeService")) {
-				TextField quantums = new TextField("Time Before Service (quantums):");
-				quantums.setWidth(FIELD_WIDTH);
-				quantums.setRequired(true);
-				quantums.setRequiredError("Please enter quantums before required service.");
-				quantums.addValidator(new PositiveIntegerValidator(
-						"Time must be a positive integer."));
-				return quantums;
-			} else if (pid.equals("distanceBeforeService")) {
-				TextField distance = new TextField("Distance Before Service (floors):");
-				distance.setWidth(FIELD_WIDTH);
-				distance.setRequired(true);
-				distance.setRequiredError("Please enter distance before required service.");
-				distance.addValidator(new PositiveNumberValidator(
-						"Distance must be a positive number."));
-				return distance;
-			}
-			throw new RuntimeException("unknown property: " + pid);
-		}
-
-		private Select createIntegerSelect(String label, String failureMessage, int min, int max) {
-			Select selectInput = new Select(label);
-			selectInput.setWidth(FIELD_WIDTH);
-			selectInput.setRequired(true);
-			selectInput.setRequiredError(failureMessage);
-			selectInput.setNullSelectionAllowed(false);
-			selectInput.setWriteThrough(true);
-			selectInput.setReadThrough(true);
-			selectInput.setImmediate(true);
-			selectInput.addValidator(new PositiveIntegerValidator(failureMessage));
-			for (int n = min; n <= max; n++) {
-				selectInput.addItem(n);
-			}
-			return selectInput;
+			} 
+			return super.createField(item, propertyId, uiContext);
 		}
 
 	}
