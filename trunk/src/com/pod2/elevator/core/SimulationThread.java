@@ -18,7 +18,9 @@ public class SimulationThread implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				simulation.executeNextQuantum();
+				synchronized (simulation) {
+					simulation.executeNextQuantum();
+				}
 				Thread.sleep(QUANTUM_MILLIS);
 				if (Thread.interrupted()) {
 					break;

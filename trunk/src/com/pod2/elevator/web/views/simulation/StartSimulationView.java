@@ -17,8 +17,6 @@ import com.vaadin.ui.Window.Notification;
 
 public class StartSimulationView extends CustomComponent {
 
-	private static final String FIELD_WIDTH = "15em";
-
 	private final ManageSimulationsView manageView;
 	private final Window window;
 	private final Panel layout;
@@ -46,7 +44,7 @@ public class StartSimulationView extends CustomComponent {
 		 * Create field to enter simulation name.
 		 */
 		name = new TextField("Name:");
-		name.setWidth(FIELD_WIDTH);
+		name.setWidth(LayoutUtils.getFieldWidth());
 		name.setMaxLength(20);
 		name.setRequired(true);
 		name.setRequiredError("Please enter a simulation name.");
@@ -58,7 +56,7 @@ public class StartSimulationView extends CustomComponent {
 		 */
 		templates = new BeanItemContainer<SimulationTemplateDetail>(SimulationTemplateDetail.class);
 		template = new Select("Template:");
-		template.setWidth(FIELD_WIDTH);
+		template.setWidth(LayoutUtils.getFieldWidth());
 		template.setReadThrough(true);
 		template.setContainerDataSource(templates);
 		formLayout.addComponent(template);

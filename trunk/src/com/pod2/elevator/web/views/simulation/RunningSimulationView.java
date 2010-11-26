@@ -55,12 +55,13 @@ public class RunningSimulationView extends CustomComponent {
 		settingsLayout.setMargin(true);
 
 		settingsForm = new Form();
+		settingsForm.setFormFieldFactory(new SimulationTemplateBasicFormFieldFactory());
 		BeanItem<SimulationSettings> settingsBean = new BeanItem<SimulationSettings>(settings);
 		settingsForm.setItemDataSource(settingsBean);
 		settingsForm.setVisibleItemProperties(SimulationSettings.getEditFields());
-		settingsForm.setFormFieldFactory(new SimulationTemplateBasicFormFieldFactory());
 		settingsForm.setImmediate(true);
 		settingsForm.setWriteThrough(true);
+
 		settingsLayout.addComponent(settingsForm);
 		settingsLayout.addComponent(LayoutUtils.createSpacer());
 

@@ -26,7 +26,7 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 			final int MAX_LEN = 20;
 
 			TextField name = new TextField("Name:");
-			name.setWidth(LayoutUtils.FIELD_WIDTH);
+			name.setWidth(LayoutUtils.getFieldWidth());
 			name.setRequired(true);
 			name.setRequiredError("Please enter a template name.");
 			name.addValidator(new StringLengthValidator("Name must be between " + MIN_LEN + " and "
@@ -34,7 +34,7 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 			return name;
 		} else if (pid.equals("scheduler")) {
 			Select schedulers = new Select("Scheduling Algorithm:");
-			schedulers.setWidth(LayoutUtils.FIELD_WIDTH);
+			schedulers.setWidth(LayoutUtils.getFieldWidth());
 			schedulers.setRequired(true);
 			schedulers.setRequiredError("Please select a scheduler.");
 			schedulers.setNullSelectionAllowed(false);
@@ -46,7 +46,7 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 			return new CheckBox("Random request generation enabled");
 		} else if (pid.equals("speed")) {
 			TextField speed = new TextField("Speed (floors / quantum):");
-			speed.setWidth(LayoutUtils.FIELD_WIDTH);
+			speed.setWidth(LayoutUtils.getFieldWidth());
 			speed.setRequired(true);
 			speed.setRequiredError("Please enter an elevator speed.");
 			speed.addValidator(new PositiveNumberValidator(
@@ -57,14 +57,14 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 					"Capacity must be a positive integer", MIN_CAPACITY, MAX_CAPACITY);
 		} else if (pid.equals("quantumsBeforeService")) {
 			TextField quantums = new TextField("Time Before Service (quantums):");
-			quantums.setWidth(LayoutUtils.FIELD_WIDTH);
+			quantums.setWidth(LayoutUtils.getFieldWidth());
 			quantums.setRequired(true);
 			quantums.setRequiredError("Please enter quantums before required service.");
 			quantums.addValidator(new PositiveIntegerValidator("Time must be a positive integer."));
 			return quantums;
 		} else if (pid.equals("distanceBeforeService")) {
 			TextField distance = new TextField("Distance Before Service (floors):");
-			distance.setWidth(LayoutUtils.FIELD_WIDTH);
+			distance.setWidth(LayoutUtils.getFieldWidth());
 			distance.setRequired(true);
 			distance.setRequiredError("Please enter distance before required service.");
 			distance.addValidator(new PositiveNumberValidator("Distance must be a positive number."));
@@ -75,7 +75,7 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 
 	protected Select createIntegerSelect(String label, String failureMessage, int min, int max) {
 		Select selectInput = new Select(label);
-		selectInput.setWidth(LayoutUtils.FIELD_WIDTH);
+		selectInput.setWidth(LayoutUtils.getFieldWidth());
 		selectInput.setRequired(true);
 		selectInput.setRequiredError(failureMessage);
 		selectInput.setNullSelectionAllowed(false);
