@@ -1,4 +1,4 @@
-package com.pod2.elevator.web.views.templates;
+package com.pod2.elevator.web.views.common;
 
 import com.pod2.elevator.core.component.ComponentDetails;
 import com.pod2.elevator.core.component.ComponentRegistry;
@@ -9,8 +9,9 @@ import com.pod2.elevator.data.TemplateFailureEvent;
 import com.pod2.elevator.data.TemplatePassengerRequest;
 import com.pod2.elevator.data.TemplateServiceEvent;
 import com.pod2.elevator.web.validators.NonNegativeIntegerValidator;
-import com.pod2.elevator.web.views.common.EventConsumer;
-import com.pod2.elevator.web.views.common.LayoutUtils;
+import com.pod2.elevator.web.views.templates.FailureEventAdapter;
+import com.pod2.elevator.web.views.templates.PassengerEventAdapter;
+import com.pod2.elevator.web.views.templates.ServiceEventAdapter;
 import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
 import com.vaadin.ui.CheckBox;
