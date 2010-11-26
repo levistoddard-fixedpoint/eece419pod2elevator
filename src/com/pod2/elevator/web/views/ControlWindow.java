@@ -16,12 +16,12 @@ import com.vaadin.ui.Window;
 /**
  * OVERVIEW: A Window which acts as a container for the top-level views of the
  * ControlApplication (i.e. Hosts the "Manage Simulations" and
- * "Manage Templates" views, and allows the user to navigate to them).
+ * "Manage Templates" views and allows the user to navigate to them).
  * 
  */
 public class ControlWindow extends Window implements SelectedTabChangeListener {
 
-	public static final int APP_WIDTH = 900;
+	public static final int APP_WIDTH = 800;
 
 	private static final String RUN_TAB_TITLE = "Manage Simulations";
 	private static final String MANAGE_TAB_TITLE = "Manage Templates";
@@ -59,7 +59,7 @@ public class ControlWindow extends Window implements SelectedTabChangeListener {
 		Component selectedTab = tabs.getSelectedTab();
 		if (selectedTab == runSimulation) {
 			runSimulation.removeAllComponents();
-			runSimulation.addComponent(getRunSimulationView());
+			runSimulation.addComponent(createRunSimulationView());
 		} else if (selectedTab == manageTemplates) {
 			manageTemplates.removeAllComponents();
 			manageTemplates.addComponent(getManageTemplatesView());
@@ -72,7 +72,7 @@ public class ControlWindow extends Window implements SelectedTabChangeListener {
 	 * EFFECTS: Returns a new instance of the ManageSimulationsView.
 	 * 
 	 */
-	private Component getRunSimulationView() {
+	private Component createRunSimulationView() {
 		return new ManageSimulationsView(this, controller);
 	}
 

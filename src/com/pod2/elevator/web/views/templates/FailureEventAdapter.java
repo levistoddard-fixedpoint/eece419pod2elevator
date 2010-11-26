@@ -3,6 +3,11 @@ package com.pod2.elevator.web.views.templates;
 import com.pod2.elevator.data.TemplateFailureEvent;
 import com.vaadin.ui.Button;
 
+/**
+ * OVERVIEW: A TemplateFailureEvent which is augmented with information for
+ * displaying the event in a table or form.
+ * 
+ */
 public class FailureEventAdapter extends TemplateFailureEvent {
 
 	private Button deleteButton;

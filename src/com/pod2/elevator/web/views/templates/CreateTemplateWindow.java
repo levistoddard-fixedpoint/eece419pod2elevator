@@ -36,15 +36,14 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 /**
- * An EditWindow which allows a user to create a new SimulationTemplate, and
- * save it to the database.
+ * OVERVIEW: An EditWindow which allows a user to create a new
+ * SimulationTemplate, and save it to the database.
  * 
  */
 public class CreateTemplateWindow extends EditWindow implements EventConsumer {
@@ -59,7 +58,6 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 	private final AddEventWindowFactory windowFactory;
 
 	private VerticalLayout layout;
-
 	private Form basicInfo;
 	private Select restrictedFloors;
 	private BeanItemContainer<PassengerEventAdapter> passengerEvents;
@@ -69,9 +67,9 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 	private int previousNumElevators;
 	private int previousNumFloors;
 
-	/**
-	 * Restricted floors multiselect binds to this container to determine
-	 * presents which floors are selectable.
+	/*
+	 * Restricted floors multiselect binds to this container to determine which
+	 * floors are selectable.
 	 */
 	private BeanItemContainer<Integer> availableFloors;
 
@@ -83,22 +81,35 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		this.template = template;
 
 		windowFactory = new AddEventWindowFactory(this);
-		availableFloors = new BeanItemContainer<Integer>(Integer.class);
+
+		previousNumElevators = template.getNumberElevators();
 		previousNumFloors = template.getNumberFloors();
+		availableFloors = new BeanItemContainer<Integer>(Integer.class);
 		for (int floor = 0; floor < template.getNumberFloors(); floor++) {
 			availableFloors.addBean(floor);
 		}
-		previousNumElevators = template.getNumberElevators();
 
 		setCaption("Create Template");
 		super.render();
 	}
 
+	/**
+	 * EFFECTS: Returns the set of floors that the user has currently selected
+	 * as restricted.
+	 * 
+	 */
 	@SuppressWarnings("unchecked")
 	Set<Integer> getRestrictedFloors() {
 		return new HashSet<Integer>((Set<Integer>) restrictedFloors.getValue());
 	}
 
+	/**
+	 * MODIFIES: passengerEvents, serviceEvents, failureEvents
+	 * 
+	 * EFFECTS: Inserts event into the appropriate events container in this
+	 * (i.e. passengerEvents, serviceEvents, or failureEvents).
+	 * 
+	 */
 	public void insertEvent(TemplateEvent event) {
 		if (event instanceof TemplatePassengerRequest) {
 			TemplatePassengerRequest request = (TemplatePassengerRequest) event;
@@ -153,10 +164,17 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 				parent.showNotification(databaseError);
 			}
 		} catch (InvalidValueException e) {
-			/* Allow user to correct their errors. */
+			/* Let user correct errors... */
 		}
 	}
 
+	/**
+	 * MODIFIES: layout
+	 * 
+	 * EFFECTS: Adds component to layout which allows user to enter data for the
+	 * basic template fields.
+	 * 
+	 */
 	private void initBasicInfo() {
 		basicInfo = new Form();
 		basicInfo.setItemDataSource(new BeanItem<SimulationTemplate>(template));
@@ -172,6 +190,12 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		layout.addComponent(basicInfo);
 	}
 
+	/**
+	 * MODIFIES: layout
+	 * 
+	 * EFFECTS: Adds component to layout which allows user to select which
+	 * floors are currently restricted.
+	 */
 	private void initRestrictedFloors() {
 		final String RESTRICTED_FLOORS_HEIGHT = "100px";
 
@@ -191,6 +215,14 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		layout.addComponent(restrictedFloors);
 	}
 
+	/**
+	 * MODIFIES: layout
+	 * 
+	 * EFFECTS: Adds component to layout which allows user to see which
+	 * TemplatePassengerRequest events are added to the SimulationTemplate, and
+	 * provides a method to create new events.
+	 * 
+	 */
 	private void initRequestEventsTable() {
 		passengerEvents = new BeanItemContainer<PassengerEventAdapter>(PassengerEventAdapter.class);
 		insertEvents(template.getPassengerRequests());
@@ -207,6 +239,14 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		layout.addComponent(requestTable);
 	}
 
+	/**
+	 * MODIFIES: layout
+	 * 
+	 * EFFECTS: Adds component to layout which allows user to see which
+	 * TemplateServiceEvent events are added to the SimulationTemplate, and
+	 * provides a method to create new events.
+	 * 
+	 */
 	private void initServiceEventsTable() {
 		serviceEvents = new BeanItemContainer<ServiceEventAdapter>(ServiceEventAdapter.class);
 		insertEvents(template.getServiceEvents());
@@ -222,6 +262,14 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		layout.addComponent(serviceTable);
 	}
 
+	/**
+	 * MODIFIES: layout
+	 * 
+	 * EFFECTS: Adds component to layout which allows user to see which
+	 * TemplateFailureEvent events are added to the SimulationTemplate, and
+	 * provides a method to create new events.
+	 * 
+	 */
 	private void initFailureEventsTable() {
 		failureEvents = new BeanItemContainer<FailureEventAdapter>(FailureEventAdapter.class);
 		insertEvents(template.getFailureEvents());
@@ -238,18 +286,36 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		layout.addComponent(failureTable);
 	}
 
+	/**
+	 * EFFECTS: Returns the list of passenger requests the user has inserted.
+	 * 
+	 */
 	private List<TemplatePassengerRequest> getPassengerEvents() {
 		return new ArrayList<TemplatePassengerRequest>(passengerEvents.getItemIds());
 	}
 
+	/**
+	 * EFFECTS: Returns the list of service events the user has inserted.
+	 * 
+	 */
 	private List<TemplateServiceEvent> getServiceEvents() {
 		return new ArrayList<TemplateServiceEvent>(serviceEvents.getItemIds());
 	}
 
+	/**
+	 * EFFECTS: Returns the list of failure events the user has inserted.
+	 * 
+	 */
 	private List<TemplateFailureEvent> getFailureEvents() {
 		return new ArrayList<TemplateFailureEvent>(failureEvents.getItemIds());
 	}
 
+	/**
+	 * MODIFIES: parent
+	 * 
+	 * EFFECTS: Displays the provided Window in the user interface.
+	 * 
+	 */
 	private void showWindow(String caption, Window addEventWindow) {
 		addEventWindow.setCaption(caption);
 		addEventWindow.setModal(true);
@@ -258,6 +324,13 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		parent.addWindow(addEventWindow);
 	}
 
+	/**
+	 * MODIFIES: availableFloors
+	 * 
+	 * EFFECTS: Updates availableFloors to reflect that the template now
+	 * contains newNumFloors number of floors.
+	 * 
+	 */
 	private void updateAvailableFloors(int newNumFloors) {
 		int start = Math.min(newNumFloors, previousNumFloors);
 		int end = Math.max(newNumFloors, previousNumFloors);
@@ -271,6 +344,10 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		previousNumFloors = newNumFloors;
 	}
 
+	/**
+	 * EFFECTS: Returns a new Table for displaying subclasses of TemplateEvent.
+	 * 
+	 */
 	private Table createTable() {
 		Table table = new EventTable();
 		table.setWidth(100, Sizeable.UNITS_PERCENTAGE);
@@ -280,7 +357,12 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		return table;
 	}
 
-	private Layout createButtonPanel(Label tableTitle, Button addButton) {
+	/**
+	 * EFFECTS: Returns a new component which displays the provided title and
+	 * button.
+	 * 
+	 */
+	private Component createButtonPanel(Label tableTitle, Button addButton) {
 		HorizontalLayout buttonPanel = new HorizontalLayout();
 		buttonPanel.addComponent(tableTitle);
 		buttonPanel.addComponent(LayoutUtils.createSpacer());
@@ -290,12 +372,24 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		return buttonPanel;
 	}
 
+	/**
+	 * MODIFIES: passengerEvents, serviceEvents, failureEvents
+	 * 
+	 * EFFECTS: Inserts the collection of events into the appropriate event
+	 * containers in this (i.e. passengerEvents, serviceEvents, or
+	 * failureEvents).
+	 * 
+	 */
 	private void insertEvents(Collection<? extends TemplateEvent> events) {
 		for (TemplateEvent event : events) {
 			insertEvent(event);
 		}
 	}
 
+	/**
+	 * EFFECTS: Returns a new Button which removes the provided item from the
+	 * provided container when clicked.
+	 */
 	private Button createDelete(final BeanItemContainer<? extends Object> container,
 			final Object item) {
 		return new Button("Delete", new ClickListener() {
@@ -306,6 +400,11 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		});
 	}
 
+	/**
+	 * OVERVIEW: A ClickListener which displays a Window to input an event of
+	 * the specified type when clicked.
+	 * 
+	 */
 	private class AddEventListener implements ClickListener {
 
 		private final EventType type;
@@ -318,12 +417,22 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			template.setRestrictedFloors(getRestrictedFloors()); // needs most up-to-date restrictions.
+			/*
+			 * needs most up-to-date floor restrictions.
+			 */
+			template.setRestrictedFloors(getRestrictedFloors());
 			showWindow(caption, windowFactory.createWindow(type, template));
 		}
 
 	}
 
+	/**
+	 * OVERVIEW: A SimulationTemplateBasicFormFieldFactory which also provides
+	 * Fields for the number of floors, and number of elevators (i.e. fields
+	 * where there are implications when events or restricted floors are
+	 * updated).
+	 * 
+	 */
 	private class BasicInfoFieldFactory extends SimulationTemplateBasicFormFieldFactory {
 
 		private static final int MIN_ELEVATORS = 1;
@@ -354,6 +463,11 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 
 	}
 
+	/**
+	 * OVERVIEW: A Table which provides custom column titles when displaying any
+	 * subclass of TemplateEvent.
+	 * 
+	 */
 	public class EventTable extends Table {
 
 		@Override
@@ -371,6 +485,12 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 
 	}
 
+	/**
+	 * OVERVIEW: A ValueChangeListener that doesn't allow the user to remove
+	 * elevators from a simulation while those elevators are referenced by one
+	 * or more events.
+	 * 
+	 */
 	private class NumberElevatorsValueChanged implements ValueChangeListener {
 		@Override
 		public void valueChange(ValueChangeEvent event) {
@@ -412,6 +532,12 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		}
 	}
 
+	/**
+	 * OVERVIEW: A ValueChangeListener which doesn't allow a user to remove
+	 * floors from a simulation while those floors are referenced by one or more
+	 * events.
+	 * 
+	 */
 	private class NumberFloorsValueChanged implements ValueChangeListener {
 		@Override
 		public void valueChange(ValueChangeEvent event) {
@@ -426,13 +552,13 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 				boolean isOnloadHigher = request.getOnloadFloor() >= newNumFloors;
 				boolean isOffloadHigher = request.getOffloadFloor() >= newNumFloors;
 				if (isOnloadHigher || isOffloadHigher) {
-					Notification updateNotification = new Notification(
+					Notification floorInUseMessage = new Notification(
 							"Floor in use.<br>",
 							"There are passenger requests set to onload or offload "
 									+ "on the removed floors.<br> Please delete these requests before lowering the "
 									+ "number of floors.", Notification.TYPE_WARNING_MESSAGE);
-					updateNotification.setDelayMsec(-1);
-					parent.showNotification(updateNotification);
+					floorInUseMessage.setDelayMsec(-1);
+					parent.showNotification(floorInUseMessage);
 					event.getProperty().setValue(previousNumFloors);
 					return;
 				}
@@ -441,14 +567,18 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 		}
 	}
 
+	/**
+	 * OVERVIEW: A ValueChangeListener which doesn't allow a user to restrict
+	 * floors when one or more passenger requests are configured to offload at
+	 * that floor.
+	 * 
+	 */
 	private class RestrictedFloorsChangeListener implements ValueChangeListener {
 
 		@Override
 		public void valueChange(ValueChangeEvent event) {
 			boolean inUse = false;
-			@SuppressWarnings("unchecked")
-			Set<Integer> restrictedSet = (Set<Integer>) event.getProperty().getValue();
-
+			Set<Integer> restrictedSet = getRestrictedFloors();
 			for (TemplatePassengerRequest request : getPassengerEvents()) {
 				if (restrictedSet.contains(request.getOffloadFloor())) {
 					inUse = true;
@@ -456,13 +586,13 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 				}
 			}
 			if (inUse) {
-				Notification updateNotification = new Notification("Floor in use.<br>",
+				Notification floorInUseMessage = new Notification("Floor in use.<br>",
 						"There are passenger requests set to offload "
 								+ "on the restricted floor(s).<br> Please delete these "
 								+ "requests before restricting floors.",
 						Notification.TYPE_WARNING_MESSAGE);
-				updateNotification.setDelayMsec(-1);
-				parent.showNotification(updateNotification);
+				floorInUseMessage.setDelayMsec(-1);
+				parent.showNotification(floorInUseMessage);
 			}
 
 		}

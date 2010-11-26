@@ -20,12 +20,13 @@ import com.vaadin.ui.Window.Notification;
  * OVERVIEW: A CustomComponent which allows the user to start a new simulation
  * if none are currently running, or stop/update the curently running
  * simulation.
+ * 
  */
 public class ManageSimulationsView extends CustomComponent {
 
 	private final Window parent;
 	private final CentralController controller;
-	private VerticalLayout layout;
+	private final VerticalLayout layout;
 
 	public ManageSimulationsView(Window parent, CentralController controller) {
 		super();
@@ -33,7 +34,10 @@ public class ManageSimulationsView extends CustomComponent {
 		assert (controller != null);
 		this.parent = parent;
 		this.controller = controller;
-		initLayout();
+
+		layout = new VerticalLayout();
+		updateView();
+		setCompositionRoot(layout);
 	}
 
 	/**
@@ -131,12 +135,11 @@ public class ManageSimulationsView extends CustomComponent {
 		}
 	}
 
-	private void initLayout() {
-		layout = new VerticalLayout();
-		updateView();
-		setCompositionRoot(layout);
-	}
-
+	/**
+	 * EFFECTS: Displays the StartSimulationView if no simulation is currently
+	 * running. Displays the RunningSimulationView if a simulation is currently
+	 * running.
+	 */
 	private void updateView() {
 		layout.removeAllComponents();
 		ActiveSimulation simulation = controller.getSimulation();
@@ -146,8 +149,8 @@ public class ManageSimulationsView extends CustomComponent {
 			SimulationSettings settings = new SimulationSettings(simulation.getScheduler(),
 					simulation.isRequestGenerationEnabled(), simulation.getQuantumsBeforeService(),
 					simulation.getDistanceBeforeService());
-			layout.addComponent(new RunningSimulationView(parent, this, simulation.getTemplate(),
-					settings));
+			SimulationTemplate template = simulation.getTemplate();
+			layout.addComponent(new RunningSimulationView(parent, this, template, settings));
 		}
 	}
 
