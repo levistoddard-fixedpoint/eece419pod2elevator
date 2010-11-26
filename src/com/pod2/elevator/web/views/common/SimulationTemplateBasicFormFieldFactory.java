@@ -2,8 +2,8 @@ package com.pod2.elevator.web.views.common;
 
 import com.pod2.elevator.scheduling.ElevatorScheduler;
 import com.pod2.elevator.scheduling.SchedulerRegistry;
-import com.pod2.elevator.web.validator.PositiveIntegerValidator;
-import com.pod2.elevator.web.validator.PositiveNumberValidator;
+import com.pod2.elevator.web.validators.PositiveIntegerValidator;
+import com.pod2.elevator.web.validators.PositiveNumberValidator;
 import com.vaadin.data.Item;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.CheckBox;

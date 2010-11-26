@@ -8,7 +8,7 @@ import com.pod2.elevator.data.TemplateEvent;
 import com.pod2.elevator.data.TemplateFailureEvent;
 import com.pod2.elevator.data.TemplatePassengerRequest;
 import com.pod2.elevator.data.TemplateServiceEvent;
-import com.pod2.elevator.web.validator.NonNegativeIntegerValidator;
+import com.pod2.elevator.web.validators.NonNegativeIntegerValidator;
 import com.pod2.elevator.web.views.common.EventConsumer;
 import com.pod2.elevator.web.views.common.LayoutUtils;
 import com.vaadin.data.Item;

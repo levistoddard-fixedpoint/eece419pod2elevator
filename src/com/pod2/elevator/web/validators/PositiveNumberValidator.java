@@ -1,17 +1,17 @@
-package com.pod2.elevator.web.validator;
+package com.pod2.elevator.web.validators;
 
 import com.vaadin.data.Validator;
 
 /**
- * OVERVIEW: A Validator that ensures a value is an integer, and is greater than
- * or equal to zero.
+ * OVERVIEW: A Validator that ensures a value can be parsed as numeric, and is
+ * greater than zero.
  * 
  */
-public class NonNegativeIntegerValidator implements Validator {
+public class PositiveNumberValidator implements Validator {
 
 	private final String failureMessage;
 
-	public NonNegativeIntegerValidator(String failureMessage) {
+	public PositiveNumberValidator(String failureMessage) {
 		this.failureMessage = failureMessage;
 	}
 
@@ -25,7 +25,7 @@ public class NonNegativeIntegerValidator implements Validator {
 	@Override
 	public boolean isValid(Object value) {
 		try {
-			return Integer.valueOf(value.toString()) >= 0;
+			return Double.valueOf(value.toString()) > 0.0;
 		} catch (Exception e) {
 			return false;
 		}
