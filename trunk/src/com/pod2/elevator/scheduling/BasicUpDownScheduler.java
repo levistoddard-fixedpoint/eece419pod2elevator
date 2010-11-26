@@ -6,22 +6,22 @@ import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
 
 /**
- * An ElevatorScheduler which makes each elevator continuously travel from the
+ * OVERVIEW: An ElevatorScheduler which makes each elevator continuously travel from the
  * bottom to the top floor, then back to the bottom floor again.
  * 
  */
-public class SabathScheduler implements ElevatorScheduler {
+public class BasicUpDownScheduler implements ElevatorScheduler {
 
 	int nextFloor = 1;
 
 	@Override
 	public String getKey() {
-		return SabathScheduler.class.getName();
+		return BasicUpDownScheduler.class.getName();
 	}
 
 	@Override
 	public String getName() {
-		return "Sabath Scheduler";
+		return "Basic Up and Down";
 	}
 
 	@Override
