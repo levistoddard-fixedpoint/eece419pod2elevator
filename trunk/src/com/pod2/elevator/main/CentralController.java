@@ -65,7 +65,7 @@ public class CentralController {
 
 	public static void main(String[] args) throws Exception {
 		try {
-			SimulationWindow window = new SimulationWindow(5, 5);
+			SimulationWindow window = new SimulationWindow();
 			SimulationView view = new SimulationView(window);
 			CentralController controller = new CentralController(view);
 			controller.start();
