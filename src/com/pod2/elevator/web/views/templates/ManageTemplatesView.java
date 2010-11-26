@@ -2,10 +2,12 @@ package com.pod2.elevator.web.views.templates;
 
 import java.util.Date;
 
+import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.data.SimulationDataRepository;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.data.SimulationTemplateDetail;
 import com.pod2.elevator.data.SimulationTemplateRepository;
+import com.pod2.elevator.main.CentralController;
 import com.pod2.elevator.web.views.ControlWindow;
 import com.pod2.elevator.web.views.common.LayoutUtils;
 import com.vaadin.terminal.Sizeable;
@@ -26,12 +28,14 @@ import com.vaadin.ui.Window.Notification;
 public class ManageTemplatesView extends CustomComponent {
 
 	private final Window parent;
+	private final CentralController controller;
 	private VerticalLayout layout;
 	private Table templates;
 
-	public ManageTemplatesView(Window parent) {
+	public ManageTemplatesView(Window parent, CentralController controller) {
 		super();
 		this.parent = parent;
+		this.controller = controller;
 		layout = new VerticalLayout();
 		initCreateTemplateButton();
 		layout.addComponent(LayoutUtils.createSpacer());
@@ -59,8 +63,17 @@ public class ManageTemplatesView extends CustomComponent {
 	 */
 	void deleteTemplate(int templateId) {
 		try {
-			SimulationTemplateRepository.deleteTemplate(templateId);
-			templates.removeItem(templateId);
+			ActiveSimulation simulation = controller.getSimulation();
+			if (simulation != null && simulation.getTemplate().getId() == templateId) {
+				Notification currentlyRunningMessage = new Notification("Template in use.<br>",
+						"The currently running simulation is using this template. You must stop the"
+								+ " simulation before deleting the template.",
+						Notification.TYPE_WARNING_MESSAGE);
+				parent.showNotification(currentlyRunningMessage);
+			} else {
+				SimulationTemplateRepository.deleteTemplate(templateId);
+				templates.removeItem(templateId);
+			}
 		} catch (Exception e) {
 			Notification databaseError = new Notification("Unable to delete template.<br>",
 					e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
