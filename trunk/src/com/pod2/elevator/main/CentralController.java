@@ -3,7 +3,7 @@ package com.pod2.elevator.main;
 import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.ResultsBuilder;
 import com.pod2.elevator.core.SimulationDisplay;
-import com.pod2.elevator.data.DummyResultsBuilder;
+import com.pod2.elevator.data.SimulationDataRepository;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.web.ControlServer;
 import com.pod2.elevator.web.ControlServerException;
@@ -31,10 +31,8 @@ public class CentralController {
 		if (simulation != null) {
 			throw new SimulationAlreadyRunningException("Another simulation is currently running.");
 		}
-		// ResultsBuilder results =
-		// SimulationDataRepository.getSimulationResultsBuilder(name,
-		// template);
-		ResultsBuilder results = new DummyResultsBuilder();
+		ResultsBuilder results = SimulationDataRepository.getSimulationResultsBuilder(name,
+				template);
 		simulation = new ActiveSimulation(template, results, display);
 		simulation.start();
 	}

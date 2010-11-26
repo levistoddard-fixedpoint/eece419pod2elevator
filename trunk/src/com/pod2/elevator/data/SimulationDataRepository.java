@@ -52,7 +52,7 @@ public class SimulationDataRepository {
 		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root", "");
 		
 		Statement s = conn.createStatement();
-		s.executeQuery("SELECT * FROM `SimulationTemplate` WHERE `uuid` = " + uuid);
+		s.executeQuery("SELECT * FROM `SimulationResults` WHERE `uuid` = " + uuid);
 		ResultSet rs = s.getResultSet();
 		rs.next();
 		

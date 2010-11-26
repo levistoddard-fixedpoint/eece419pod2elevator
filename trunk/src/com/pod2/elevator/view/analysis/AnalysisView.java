@@ -41,14 +41,13 @@ public class AnalysisView extends JPanel implements ActionListener{
 		analyzeButton = new JButton("Analyze");
 		analyzeButton.addActionListener(this);
 		
-		getSimulationList();
-		
 		//Add components
 		setLayout(new VerticalLayout());
 		add(Box.createRigidArea(new Dimension(0,5)));
 		add(refreshButton);
-		add(simulationComboBox);
-		add(analyzeButton);		
+		add(analyzeButton);
+		
+		getSimulationList();
 	}
 	
 	public void getSimulationList(){
@@ -58,6 +57,9 @@ public class AnalysisView extends JPanel implements ActionListener{
 			for(int i=0; i<simulationList.size(); i++){
 				temp[i] = simulationList.get(i).getName();
 			}
+			if(simulationComboBox != null){
+				this.remove(simulationComboBox);
+			}
 			simulationComboBox = new JComboBox(temp);
 		} catch (SQLException s) {
 			if(simulationComboBox == null){
@@ -65,6 +67,7 @@ public class AnalysisView extends JPanel implements ActionListener{
 			}
 			s.printStackTrace();
 		}
+		add(simulationComboBox);
 	}
 	
 	public void paint(Graphics g){
@@ -217,6 +220,7 @@ public class AnalysisView extends JPanel implements ActionListener{
 
 	public void actionPerformed(ActionEvent e) {
 		if(refreshButton.equals(e.getSource())){
+			System.out.println("Refresh");
 			getSimulationList();
 		}
 		if(analyzeButton.equals(e.getSource())){
@@ -228,7 +232,6 @@ public class AnalysisView extends JPanel implements ActionListener{
 			temp.pack();
 			temp.setVisible(true);
 			*/
-
 			int index = (int)simulationComboBox.getSelectedIndex();
 			int Uuid = simulationList.get(index).getId();
 			try {
