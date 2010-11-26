@@ -2,6 +2,11 @@ package com.pod2.elevator.web.validator;
 
 import com.vaadin.data.Validator;
 
+/**
+ * OVERVIEW: A Validator that ensures a value can be parsed as numeric, and is
+ * greater than zero.
+ * 
+ */
 public class PositiveNumberValidator implements Validator {
 
 	private final String failureMessage;

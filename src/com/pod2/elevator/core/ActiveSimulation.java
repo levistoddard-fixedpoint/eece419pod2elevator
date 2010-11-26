@@ -174,6 +174,10 @@ public class ActiveSimulation {
 		return scheduler;
 	}
 
+	public SimulationTemplate getTemplate() {
+		return template;
+	}
+
 	public boolean isRequestGenerationEnabled() {
 		return isRequestGenerationEnabled;
 	}

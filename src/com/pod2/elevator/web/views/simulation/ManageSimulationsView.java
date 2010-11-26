@@ -16,46 +16,57 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
+/**
+ * OVERVIEW: A CustomComponent which allows the user to start a new simulation
+ * if none are currently running, or stop/update the curently running
+ * simulation.
+ */
 public class ManageSimulationsView extends CustomComponent {
 
 	private final Window parent;
 	private final CentralController controller;
-
 	private VerticalLayout layout;
 
 	public ManageSimulationsView(Window parent, CentralController controller) {
 		super();
+		assert (parent != null);
+		assert (controller != null);
 		this.parent = parent;
 		this.controller = controller;
 		initLayout();
 	}
 
-	public void initLayout() {
-		layout = new VerticalLayout();
-		updateView();
-		setCompositionRoot(layout);
-	}
-
+	/**
+	 * REQUIRES: This is currently displaying the StartSimulationView.
+	 * 
+	 * MODIFIES: controller, layout
+	 * 
+	 * EFFECTS: Starts a new simulation with the given name and template. If the
+	 * simulation could be started, the RunningSimulationView is shown in this.
+	 * If the simulation could not be started, an error message is displayed,
+	 * and the current view is not changed.
+	 * 
+	 */
 	void startSimulation(String name, SimulationTemplateDetail details) {
 		try {
-			SimulationTemplate template = null;
-			if (details != null) {
-				template = SimulationTemplateRepository.getTemplate(details.getId());
-			} else {
-				template = new SimulationTemplate();
-				template.setName("N/A");
-				template.setDistanceBeforeService(-1);
-				template.setQuantumsBeforeService(-1);
-			}
+			SimulationTemplate template = SimulationTemplateRepository.getTemplate(details.getId());
 			controller.startSimulation(name, template);
 			updateView();
 		} catch (Exception e) {
-			Notification databaseError = new Notification("Unable to start simulation.<br>",
+			Notification startError = new Notification("Unable to start simulation.<br>",
 					e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
-			parent.showNotification(databaseError);
+			parent.showNotification(startError);
 		}
 	}
 
+	/**
+	 * REQUIRES: This is currently displaying the RunSimulationView.
+	 * 
+	 * MODIFIES: controller.getSimulation
+	 * 
+	 * EFFECTS: Updates the settings of the currently running simulation from
+	 * the input settings.
+	 */
 	void updateSimulationSettings(SimulationSettings settings) {
 		ActiveSimulation simulation = controller.getSimulation();
 		synchronized (simulation) {
@@ -66,9 +77,16 @@ public class ManageSimulationsView extends CustomComponent {
 		}
 	}
 
+	/**
+	 * REQUIRES: This is currently displaying the RunSimulationView.
+	 * 
+	 * MODIFIES: controller.getSimulation
+	 * 
+	 * EFFECTS: Enqueues input event with the currently running simulation.
+	 */
 	void insertSimulationEvent(TemplateEvent event) {
 		ActiveSimulation simulation = controller.getSimulation();
-		synchronized (event) {
+		synchronized (simulation) {
 			if (event instanceof TemplatePassengerRequest) {
 				TemplatePassengerRequest request = (TemplatePassengerRequest) event;
 				simulation.enqueueEvent(EventFactory.createPassengerRequest(EventSource.Inserted,
@@ -86,20 +104,37 @@ public class ManageSimulationsView extends CustomComponent {
 						EventSource.Inserted, failure.getQuantum(), failure.getElevatorNumber(),
 						failure.getComponent()));
 			} else {
-				throw new RuntimeException("unrecognized event type!");
+				throw new RuntimeException("unexpected event type!");
 			}
 		}
 	}
 
+	/**
+	 * REQUIRES: This is currently displaying the RunSimulationView.
+	 * 
+	 * MODIFIES: controller, layout
+	 * 
+	 * EFFECTS: Stops the currently running simulation. If the simulation could
+	 * be stopped, layout is updated to display the StartSimulationView. If the
+	 * simulation could not be stopped, an error message is displayed to the
+	 * user, and no changes are made to the layout.
+	 * 
+	 */
 	void stopSimulation() {
 		try {
 			controller.stopSimulation();
 			updateView();
 		} catch (Exception e) {
-			Notification databaseError = new Notification("Unable to stop simulation.<br>",
+			Notification stopError = new Notification("Unable to stop simulation.<br>",
 					e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
-			parent.showNotification(databaseError);
+			parent.showNotification(stopError);
 		}
+	}
+
+	private void initLayout() {
+		layout = new VerticalLayout();
+		updateView();
+		setCompositionRoot(layout);
 	}
 
 	private void updateView() {
@@ -111,7 +146,8 @@ public class ManageSimulationsView extends CustomComponent {
 			SimulationSettings settings = new SimulationSettings(simulation.getScheduler(),
 					simulation.isRequestGenerationEnabled(), simulation.getQuantumsBeforeService(),
 					simulation.getDistanceBeforeService());
-			layout.addComponent(new RunningSimulationView(this, settings));
+			layout.addComponent(new RunningSimulationView(parent, this, simulation.getTemplate(),
+					settings));
 		}
 	}
 

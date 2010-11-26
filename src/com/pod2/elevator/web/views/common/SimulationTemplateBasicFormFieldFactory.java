@@ -13,10 +13,13 @@ import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
 
+/**
+ * OVERVIEW: A FormFieldFactory which generates Field components for the name,
+ * scheduler, request generation enabled, capacity, and quantums/distance before
+ * service fields of a SimulationTemplate.
+ * 
+ */
 public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory {
-
-	private static final int MIN_CAPACITY = 1;
-	private static final int MAX_CAPACITY = 20;
 
 	@Override
 	public Field createField(Item item, Object propertyId, Component uiContext) {
@@ -28,15 +31,15 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 			TextField name = new TextField("Name:");
 			name.setWidth(LayoutUtils.getFieldWidth());
 			name.setRequired(true);
-			name.setRequiredError("Please enter a template name.");
-			name.addValidator(new StringLengthValidator("Name must be between " + MIN_LEN + " and "
-					+ MAX_LEN + " characters.", MIN_LEN, MAX_LEN, false));
+			name.setRequiredError("Please enter a name.");
+			String message = "Name must be between " + MIN_LEN + " and " + MAX_LEN + " characters.";
+			name.addValidator(new StringLengthValidator(message, MIN_LEN, MAX_LEN, false));
 			return name;
 		} else if (pid.equals("scheduler")) {
 			Select schedulers = new Select("Scheduling Algorithm:");
 			schedulers.setWidth(LayoutUtils.getFieldWidth());
 			schedulers.setRequired(true);
-			schedulers.setRequiredError("Please select a scheduler.");
+			schedulers.setRequiredError("Please select a scheduling algorithm.");
 			schedulers.setNullSelectionAllowed(false);
 			for (ElevatorScheduler scheduler : SchedulerRegistry.getAvailableSchedulers()) {
 				schedulers.addItem(scheduler);
@@ -53,8 +56,11 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 					"Elevator speed must be a positive number."));
 			return speed;
 		} else if (pid.equals("elevatorCapacity")) {
+			final int MIN_CAPACITY = 1;
+			final int MAX_CAPACITY = 20;
+
 			return createIntegerSelect("Elevator Passenger Capacity:",
-					"Capacity must be a positive integer", MIN_CAPACITY, MAX_CAPACITY);
+					"Capacity must be a positive integer.", MIN_CAPACITY, MAX_CAPACITY);
 		} else if (pid.equals("quantumsBeforeService")) {
 			TextField quantums = new TextField("Time Before Service (quantums):");
 			quantums.setWidth(LayoutUtils.getFieldWidth());
@@ -73,6 +79,11 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 		throw new RuntimeException("unexpected property: " + pid);
 	}
 
+	/**
+	 * EFFECTS: Returns a new Select field which allows a user to select an
+	 * integer value between min and max.
+	 * 
+	 */
 	protected Select createIntegerSelect(String label, String failureMessage, int min, int max) {
 		Select selectInput = new Select(label);
 		selectInput.setWidth(LayoutUtils.getFieldWidth());

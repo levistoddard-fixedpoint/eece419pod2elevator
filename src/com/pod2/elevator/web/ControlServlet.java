@@ -7,11 +7,17 @@ import com.pod2.elevator.main.CentralController;
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
+/**
+ * OVERVIEW: A Servlet which acts as a factory for instances of the the web
+ * control interface application.
+ * 
+ */
 public class ControlServlet extends AbstractApplicationServlet {
 
 	private final CentralController controller;
 
 	public ControlServlet(CentralController controller) {
+		assert (controller != null);
 		this.controller = controller;
 	}
 
@@ -21,8 +27,7 @@ public class ControlServlet extends AbstractApplicationServlet {
 	}
 
 	@Override
-	protected Application getNewApplication(HttpServletRequest request)
-			throws ServletException {
+	protected Application getNewApplication(HttpServletRequest request) throws ServletException {
 		return new ControlApplication(controller);
 	}
 

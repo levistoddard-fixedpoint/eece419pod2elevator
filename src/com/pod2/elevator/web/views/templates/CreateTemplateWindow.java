@@ -16,6 +16,7 @@ import com.pod2.elevator.data.TemplateFailureEvent;
 import com.pod2.elevator.data.TemplatePassengerRequest;
 import com.pod2.elevator.data.TemplateServiceEvent;
 import com.pod2.elevator.web.views.EditWindow;
+import com.pod2.elevator.web.views.common.EventConsumer;
 import com.pod2.elevator.web.views.common.LayoutUtils;
 import com.pod2.elevator.web.views.common.SimulationTemplateBasicFormFieldFactory;
 import com.vaadin.data.Item;
@@ -46,7 +47,7 @@ import com.vaadin.ui.Window;
  * save it to the database.
  * 
  */
-public class CreateTemplateWindow extends EditWindow {
+public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 
 	public static final List<String> BASIC_FIELDS = Arrays.asList("name", "numberFloors",
 			"numberElevators", "scheduler", "requestGenerationOn", "speed", "elevatorCapacity",
@@ -98,7 +99,7 @@ public class CreateTemplateWindow extends EditWindow {
 		return new HashSet<Integer>((Set<Integer>) restrictedFloors.getValue());
 	}
 
-	void insertEvent(TemplateEvent event) {
+	public void insertEvent(TemplateEvent event) {
 		if (event instanceof TemplatePassengerRequest) {
 			TemplatePassengerRequest request = (TemplatePassengerRequest) event;
 			final PassengerEventAdapter adapter = new PassengerEventAdapter(request);
@@ -317,6 +318,7 @@ public class CreateTemplateWindow extends EditWindow {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
+			template.setRestrictedFloors(getRestrictedFloors()); // needs most up-to-date restrictions.
 			showWindow(caption, windowFactory.createWindow(type, template));
 		}
 
