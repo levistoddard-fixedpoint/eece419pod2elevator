@@ -4,9 +4,8 @@ import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.view.data.SystemSnapShot;
 
 /**
- * Graphically displays the state of an ActiveSimulation in a particular
- * quantum.
- * 
+ * OVERVIEW: Graphically displays the state of an ActiveSimulation in a particular
+ * 		quantum.
  */
 public interface SimulationDisplay {
 

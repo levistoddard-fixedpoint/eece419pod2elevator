@@ -7,11 +7,10 @@ import com.pod2.elevator.core.events.Event;
 import com.pod2.elevator.view.data.LogMessage;
 
 /**
- * Aggregates all data resulting from an ActiveSimulation.
- * 
+ *  OVERVIEW: Aggregates all data resulting from an ActiveSimulation.
  */
 public interface ResultsBuilder {
-
+	
 	public void onStart();
 
 	public void logCompletedQuantum(long quantum, ActiveSimulation activeSimulation);
