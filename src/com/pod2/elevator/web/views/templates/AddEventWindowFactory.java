@@ -9,6 +9,7 @@ import com.pod2.elevator.data.TemplateFailureEvent;
 import com.pod2.elevator.data.TemplatePassengerRequest;
 import com.pod2.elevator.data.TemplateServiceEvent;
 import com.pod2.elevator.web.validator.NonNegativeIntegerValidator;
+import com.pod2.elevator.web.views.common.LayoutUtils;
 import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
 import com.vaadin.ui.CheckBox;
@@ -26,8 +27,6 @@ import com.vaadin.ui.Window;
  * 
  */
 public class AddEventWindowFactory {
-
-	private static final String FIELD_WIDTH = "15em";
 
 	private final CreateTemplateWindow templateWindow;
 
@@ -96,7 +95,7 @@ public class AddEventWindowFactory {
 				return createFloorSelectField("Offload Floor:", false);
 			} else if (propertyId.equals("timeConstraint")) {
 				TextField timeConstraint = new TextField("Time Constraint:");
-				timeConstraint.setWidth(FIELD_WIDTH);
+				timeConstraint.setWidth(LayoutUtils.getFieldWidth());
 				timeConstraint.setRequired(true);
 				timeConstraint.setRequiredError("Please enter a time constraint.");
 				timeConstraint.addValidator(new NonNegativeIntegerValidator(
@@ -128,7 +127,7 @@ public class AddEventWindowFactory {
 
 		private Field createFloorSelectField(String caption, boolean includeRestricted) {
 			Select floors = new Select(caption);
-			floors.setWidth(FIELD_WIDTH);
+			floors.setWidth(LayoutUtils.getFieldWidth());
 			floors.setRequired(true);
 			floors.setRequiredError("Please select a floor.");
 			floors.setNullSelectionAllowed(false);

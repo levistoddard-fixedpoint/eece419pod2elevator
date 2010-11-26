@@ -3,7 +3,7 @@ package com.pod2.elevator.main;
 import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.ResultsBuilder;
 import com.pod2.elevator.core.SimulationDisplay;
-import com.pod2.elevator.core.test.DummyResultsBuilder;
+import com.pod2.elevator.data.DummyResultsBuilder;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.view.SimulationView;
 import com.pod2.elevator.view.SimulationWindow;

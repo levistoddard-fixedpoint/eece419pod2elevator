@@ -15,10 +15,6 @@ import com.pod2.elevator.data.TemplateEvent;
 import com.pod2.elevator.data.TemplateFailureEvent;
 import com.pod2.elevator.data.TemplatePassengerRequest;
 import com.pod2.elevator.data.TemplateServiceEvent;
-import com.pod2.elevator.scheduling.ElevatorScheduler;
-import com.pod2.elevator.scheduling.SchedulerRegistry;
-import com.pod2.elevator.web.validator.PositiveIntegerValidator;
-import com.pod2.elevator.web.validator.PositiveNumberValidator;
 import com.pod2.elevator.web.views.EditWindow;
 import com.pod2.elevator.web.views.common.LayoutUtils;
 import com.pod2.elevator.web.views.common.SimulationTemplateBasicFormFieldFactory;
@@ -29,23 +25,19 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -55,8 +47,6 @@ import com.vaadin.ui.Window;
  * 
  */
 public class CreateTemplateWindow extends EditWindow {
-
-	private static final String FIELD_WIDTH = "15em";
 
 	public static final List<String> BASIC_FIELDS = Arrays.asList("name", "numberFloors",
 			"numberElevators", "scheduler", "requestGenerationOn", "speed", "elevatorCapacity",
@@ -186,7 +176,7 @@ public class CreateTemplateWindow extends EditWindow {
 
 		restrictedFloors = new Select("Restricted Floors:");
 		restrictedFloors.setHeight(RESTRICTED_FLOORS_HEIGHT);
-		restrictedFloors.setWidth(FIELD_WIDTH);
+		restrictedFloors.setWidth(LayoutUtils.getFieldWidth());
 		restrictedFloors.setMultiSelect(true);
 		restrictedFloors.setNullSelectionAllowed(true);
 		restrictedFloors.setReadThrough(true);
@@ -356,7 +346,7 @@ public class CreateTemplateWindow extends EditWindow {
 				numberElevators.setNullSelectionAllowed(false);
 				numberElevators.addListener(new NumberElevatorsValueChanged());
 				return numberElevators;
-			} 
+			}
 			return super.createField(item, propertyId, uiContext);
 		}
 
