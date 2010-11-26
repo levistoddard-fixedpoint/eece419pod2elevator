@@ -68,6 +68,7 @@ public class CentralController {
 			SimulationWindow window = new SimulationWindow();
 			SimulationView view = new SimulationView(window);
 			CentralController controller = new CentralController(view);
+			window.setCentralController(controller);
 			controller.start();
 		} catch (Exception e) {
 			System.err.print("Unable to start simulator:\n\t");

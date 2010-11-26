@@ -8,6 +8,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
+import com.pod2.elevator.main.CentralController;
 import com.pod2.elevator.view.active.ActiveView;
 import com.pod2.elevator.view.analysis.AnalysisView;
 import com.pod2.elevator.view.configuration.ConfigurationView;
@@ -30,6 +31,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 	private AnalysisView analysisView;
 	private ConfigurationView configurationView;
 	private SystemSnapShot prevSystemSnapShot;
+	private CentralController centralController;
 
 	public SimulationWindow() {
 		// Get screen size
@@ -89,6 +91,11 @@ public class SimulationWindow extends JFrame implements Runnable {
 			activeView.statusUpdate(systemSnapShot);
 		}
 		prevSystemSnapShot = systemSnapShot;
+	}
+
+	public void setCentralController(CentralController centralController) {
+		this.centralController = centralController;
+		configurationView.setCentralController(centralController);
 	}
 
 }
