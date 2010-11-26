@@ -3,32 +3,14 @@ package com.pod2.elevator.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
-import com.pod2.elevator.core.FloorRequestButton;
-import com.pod2.elevator.core.MotionStatus;
-import com.pod2.elevator.core.ServiceStatus;
-import com.pod2.elevator.core.component.DoorDriveMechanism;
-import com.pod2.elevator.core.component.DoorSensor;
-import com.pod2.elevator.core.component.DriveMechanism;
-import com.pod2.elevator.core.component.ElevatorComponent;
-import com.pod2.elevator.core.component.PositionSensor;
 import com.pod2.elevator.view.active.ActiveView;
 import com.pod2.elevator.view.analysis.AnalysisView;
 import com.pod2.elevator.view.configuration.ConfigurationView;
-import com.pod2.elevator.view.data.ElevatorSnapShot;
-import com.pod2.elevator.view.data.FloorSnapShot;
-import com.pod2.elevator.view.data.LogMessage;
 import com.pod2.elevator.view.data.SystemSnapShot;
 import com.pod2.elevator.view.model.Menu;
 import com.pod2.elevator.view.model.Toolbar;
@@ -49,10 +31,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 	private ConfigurationView configurationView;
 	private SystemSnapShot prevSystemSnapShot;
 
-	public SimulationWindow(int numFloors, int numElevators) {
-		this.numFloors = numFloors;
-		this.numElevators = numElevators;
-
+	public SimulationWindow() {
 		// Get screen size
 		Toolkit toolkit = getToolkit();
 		Dimension size = toolkit.getScreenSize();
@@ -77,7 +56,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 		// Add tabs
 		tabPane = new JTabbedPane();
 		tabPane.setPreferredSize(new Dimension(640, 480));
-		activeView = new ActiveView(numFloors, numElevators);
+		activeView = new ActiveView();
 		analysisView = new AnalysisView();
 		configurationView = new ConfigurationView();
 		tabPane.addTab("Active Simulation", activeView);
@@ -87,6 +66,18 @@ public class SimulationWindow extends JFrame implements Runnable {
 
 		pack();
 		setVisible(true);
+	}
+	
+	public void startup(int numFloors, int numElevators, String scheduler){
+		this.numFloors = numFloors;
+		this.numElevators = numElevators;
+		activeView = new ActiveView(numFloors, numElevators, scheduler);
+		tabPane.setComponentAt(0, activeView);
+	}
+	
+	public void teardown(){
+		activeView = new ActiveView();
+		tabPane.setComponentAt(0, activeView);
 	}
 
 	public void run() {
@@ -98,39 +89,6 @@ public class SimulationWindow extends JFrame implements Runnable {
 			activeView.statusUpdate(systemSnapShot);
 		}
 		prevSystemSnapShot = systemSnapShot;
-	}
-
-	public static void main(String[] args) {
-		SimulationWindow sim = new SimulationWindow(5, 4);
-		javax.swing.SwingUtilities.invokeLater(sim);
-
-		FloorSnapShot[] floors = new FloorSnapShot[5];
-		for (int n = 0; n < 5; n++) {
-			FloorRequestButton button = new FloorRequestButton();
-			floors[n] = new FloorSnapShot(button, n);
-		}
-
-		ElevatorSnapShot[] elevators = new ElevatorSnapShot[4];
-		for (int n = 0; n < 4; n++) {
-			List<ElevatorComponent> components = new LinkedList<ElevatorComponent>();
-			components.add(new DoorSensor(null, 4.0));
-			components.add(new DoorDriveMechanism(null, 4.0));
-			components.add(new PositionSensor(null));
-			components.add(new DriveMechanism(null, 4.0));
-			elevators[n] = new ElevatorSnapShot((double) n,
-					new HashSet<Integer>(), n + 2, n + 4,
-					MotionStatus.DoorsOpen, ServiceStatus.InService, components);
-		}
-
-		LogMessage[] messages = new LogMessage[5];
-		for (int n = 0; n < 5; n++) {
-			messages[n] = new LogMessage("A test message");
-		}
-
-		SystemSnapShot snapshot = new SystemSnapShot(100, elevators, floors,
-				Arrays.asList(messages));
-		sim.statusUpdate(snapshot);
-
 	}
 
 }
