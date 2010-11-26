@@ -2,6 +2,7 @@ package com.pod2.elevator.web.views.templates;
 
 import java.util.Date;
 
+import com.pod2.elevator.data.SimulationDataRepository;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.data.SimulationTemplateDetail;
 import com.pod2.elevator.data.SimulationTemplateRepository;
@@ -46,6 +47,25 @@ public class ManageTemplatesView extends CustomComponent {
 	 */
 	void templateCreated(SimulationTemplateDetail template) {
 		addTemplateToContainer(template);
+	}
+
+	/**
+	 * MODIFIES: templates
+	 * 
+	 * EFFECTS: Deletes template with templateId from the
+	 * SimulationTemplateRepository. Displays notification to user if template
+	 * cannot be deleted. Template is removed from templates if delete is
+	 * successful.
+	 */
+	void deleteTemplate(int templateId) {
+		try {
+			SimulationTemplateRepository.deleteTemplate(templateId);
+			templates.removeItem(templateId);
+		} catch (Exception e) {
+			Notification databaseError = new Notification("Unable to delete template.<br>",
+					e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
+			parent.showNotification(databaseError);
+		}
 	}
 
 	/**
@@ -163,11 +183,21 @@ public class ManageTemplatesView extends CustomComponent {
 		@Override
 		public void buttonClick(ClickEvent event) {
 			try {
-				SimulationTemplateRepository.deleteTemplate(templateId);
-				templates.removeItem(templateId);
+				int count = SimulationDataRepository.getSimulationCountByTemplate(templateId);
+				if (count > 0) {
+					Window confirmDelete = new ConfirmDeleteWindow(ManageTemplatesView.this,
+							templateId, count);
+					confirmDelete.setModal(true);
+					confirmDelete.setWidth(400, UNITS_PIXELS);
+					confirmDelete.center();
+					parent.addWindow(confirmDelete);
+				} else {
+					deleteTemplate(templateId);
+				}
 			} catch (Exception e) {
-				Notification databaseError = new Notification("Unable to delete template.<br>",
-						e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
+				Notification databaseError = new Notification(
+						"Unable to retrieve associated simulations.<br>", e.getMessage(),
+						Notification.TYPE_ERROR_MESSAGE);
 				parent.showNotification(databaseError);
 			}
 		}
