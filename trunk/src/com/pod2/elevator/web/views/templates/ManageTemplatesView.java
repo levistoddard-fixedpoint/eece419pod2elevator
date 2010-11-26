@@ -5,6 +5,7 @@ import java.util.Date;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.data.SimulationTemplateDetail;
 import com.pod2.elevator.data.SimulationTemplateRepository;
+import com.pod2.elevator.web.views.ControlWindow;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -81,7 +82,7 @@ public class ManageTemplatesView extends CustomComponent {
 		Window createWindow = new CreateTemplateWindow(this, parent, template);
 		createWindow.setModal(true);
 		createWindow.center();
-		createWindow.setWidth(800, Sizeable.UNITS_PIXELS);
+		createWindow.setWidth(ControlWindow.APP_WIDTH, Sizeable.UNITS_PIXELS);
 		parent.addWindow(createWindow);
 	}
 

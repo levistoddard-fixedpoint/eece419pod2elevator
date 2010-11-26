@@ -9,6 +9,7 @@ import com.pod2.elevator.data.TemplateFailureEvent;
 import com.pod2.elevator.data.TemplatePassengerRequest;
 import com.pod2.elevator.data.TemplateServiceEvent;
 import com.pod2.elevator.web.validator.NonNegativeIntegerValidator;
+import com.pod2.elevator.web.views.common.EventConsumer;
 import com.pod2.elevator.web.views.common.LayoutUtils;
 import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
@@ -28,10 +29,10 @@ import com.vaadin.ui.Window;
  */
 public class AddEventWindowFactory {
 
-	private final CreateTemplateWindow templateWindow;
+	private final EventConsumer consumer;
 
-	public AddEventWindowFactory(CreateTemplateWindow templateWindow) {
-		this.templateWindow = templateWindow;
+	public AddEventWindowFactory(EventConsumer consumer) {
+		this.consumer = consumer;
 	}
 
 	public Window createWindow(EventType type, SimulationTemplate template) {
@@ -134,9 +135,10 @@ public class AddEventWindowFactory {
 			floors.setNullSelectionItemId(-1);
 			floors.setInvalidCommitted(true);
 			floors.addValidator(new SelectedFloorsValidator());
-			floors.addValidator(new NonNegativeIntegerValidator("Floor must be a non-negative integer."));
+			floors.addValidator(new NonNegativeIntegerValidator(
+					"Floor must be a non-negative integer."));
 			for (int floor = 0; floor < template.getNumberFloors(); floor++) {
-				if (!includeRestricted && templateWindow.getRestrictedFloors().contains(floor)) {
+				if (!includeRestricted && template.getRestrictedFloors().contains(floor)) {
 					continue;
 				}
 				floors.addItem(floor);
@@ -161,7 +163,7 @@ public class AddEventWindowFactory {
 		request.setOnloadFloor(DEFAULT_ONLOAD_FLOOR);
 		int floor = DEFAULT_OFFLOAD_FLOOR;
 		for (; floor < template.getNumberFloors(); floor++) {
-			if (!templateWindow.getRestrictedFloors().contains(floor)) {
+			if (!template.getRestrictedFloors().contains(floor)) {
 				break;
 			}
 		}
@@ -171,7 +173,7 @@ public class AddEventWindowFactory {
 		request.setOffloadFloor(floor);
 		request.setTimeConstraint(DEFAULT_CONSTRAINT);
 		FormFieldFactory fieldFactory = new PassengerRequestFieldFactory(template, request);
-		return new AddEventWindow<TemplatePassengerRequest>(templateWindow, fieldFactory,
+		return new AddEventWindow<TemplatePassengerRequest>(consumer, fieldFactory,
 				PassengerEventAdapter.getEditableFields(), request);
 	}
 
@@ -201,7 +203,7 @@ public class AddEventWindowFactory {
 		service.setElevatorNumber(DEFAULT_ELEVATOR);
 		service.setPutInService(DEFAULT_PUT_IN_SERVICE);
 		FormFieldFactory fieldFactory = new ServiceEventFieldFactory(template.getNumberElevators());
-		return new AddEventWindow<TemplateEvent>(templateWindow, fieldFactory,
+		return new AddEventWindow<TemplateEvent>(consumer, fieldFactory,
 				ServiceEventAdapter.getEditableFields(), service);
 	}
 
@@ -240,7 +242,7 @@ public class AddEventWindowFactory {
 		failure.setComponent(DEFAULT_COMPONENT);
 		FormFieldFactory fieldFactory = new FailureRequestFieldFactory(
 				template.getNumberElevators());
-		return new AddEventWindow<TemplateFailureEvent>(templateWindow, fieldFactory,
+		return new AddEventWindow<TemplateFailureEvent>(consumer, fieldFactory,
 				FailureEventAdapter.getEditableFields(), failure);
 	}
 

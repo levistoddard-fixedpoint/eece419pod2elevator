@@ -2,6 +2,7 @@ package com.pod2.elevator.web.views.templates;
 
 import com.pod2.elevator.data.TemplateEvent;
 import com.pod2.elevator.web.views.EditWindow;
+import com.pod2.elevator.web.views.common.EventConsumer;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Component;
@@ -16,19 +17,19 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class AddEventWindow<T extends TemplateEvent> extends EditWindow {
 
-	private final CreateTemplateWindow templateWindow;
+	// private final CreateTemplateWindow templateWindow;
+	private final EventConsumer consumer;
 	private final FormFieldFactory fieldFactory;
-	private final String[] editFields;
+	private final String[] fields;
 	private final T event;
 
 	private Form editForm;
 
-	AddEventWindow(CreateTemplateWindow templateWindow, FormFieldFactory fieldFactory,
-			String[] editFields, T event) {
+	AddEventWindow(EventConsumer consumer, FormFieldFactory fieldFactory, String[] fields, T event) {
 		super();
-		this.templateWindow = templateWindow;
+		this.consumer = consumer;
 		this.fieldFactory = fieldFactory;
-		this.editFields = editFields;
+		this.fields = fields;
 		this.event = event;
 		super.render();
 	}
@@ -45,9 +46,9 @@ public class AddEventWindow<T extends TemplateEvent> extends EditWindow {
 	protected final void onSave() {
 		try {
 			editForm.commit();
-			templateWindow.insertEvent(event);
-			close();	
-		} catch(InvalidValueException e) {
+			consumer.insertEvent(event);
+			close();
+		} catch (InvalidValueException e) {
 			/* Let user correct form. */
 		}
 	}
@@ -56,7 +57,7 @@ public class AddEventWindow<T extends TemplateEvent> extends EditWindow {
 		Form form = new Form();
 		form.setItemDataSource(new BeanItem<T>(event));
 		form.setFormFieldFactory(fieldFactory);
-		form.setVisibleItemProperties(editFields);
+		form.setVisibleItemProperties(fields);
 		form.setWriteThrough(true);
 		return form;
 	}

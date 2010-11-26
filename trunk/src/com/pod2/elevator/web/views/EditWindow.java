@@ -9,16 +9,26 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+/**
+ * OVERVIEW: A Window with "Save", and "Cancel" buttons that allows subclasses
+ * to override the actions that occur when "Save" or "Cancel" are clicked.
+ * 
+ */
 public abstract class EditWindow extends Window {
-
-	private VerticalLayout layout;
 
 	public EditWindow() {
 		super();
 	}
 
+	/**
+	 * MODIFIES: this
+	 * 
+	 * EFFECTS: Calls getEditControls to get the main content to display, and
+	 * displays this main content along with "Save" or "Cancel" buttons. MUST be
+	 * called by sub-classes when ready to show the display.
+	 */
 	protected final void render() {
-		layout = new VerticalLayout();
+		VerticalLayout layout = new VerticalLayout();
 		layout.setMargin(true);
 		layout.addComponent(getEditControls());
 		HorizontalLayout buttons = new HorizontalLayout();
@@ -29,10 +39,23 @@ public abstract class EditWindow extends Window {
 		setContent(layout);
 	}
 
+	/**
+	 * EFFECTS: Returns the Component which should be displayed as the content
+	 * of this Window (i.e. the interface which the user interacts with before
+	 * clicking the "Save" or "Cancel" buttons).
+	 */
 	protected abstract Component getEditControls();
 
+	/**
+	 * EFFECTS: Executes any action that should be done when the user clicks the
+	 * "Save" button, and closes this window if necessary.
+	 */
 	protected abstract void onSave();
 
+	/**
+	 * EFFECTS: Executes any action that should be done when the user clicks the
+	 * "Cancel" button. Closes this Window by default.
+	 */
 	protected void onCancel() {
 		close();
 	}

@@ -2,6 +2,11 @@ package com.pod2.elevator.web.views.simulation;
 
 import com.pod2.elevator.scheduling.ElevatorScheduler;
 
+/**
+ * OVERVIEW: Represents a collection of settings which can be updated on a
+ * running simulation.
+ * 
+ */
 public class SimulationSettings {
 
 	private ElevatorScheduler scheduler;

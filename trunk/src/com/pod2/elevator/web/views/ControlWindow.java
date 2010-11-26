@@ -13,45 +13,44 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+/**
+ * OVERVIEW: A Window which acts as a container for the top-level views of the
+ * ControlApplication (i.e. Hosts the "Manage Simulations" and
+ * "Manage Templates" views, and allows the user to navigate to them).
+ * 
+ */
 public class ControlWindow extends Window implements SelectedTabChangeListener {
+
+	public static final int APP_WIDTH = 900;
 
 	private static final String RUN_TAB_TITLE = "Manage Simulations";
 	private static final String MANAGE_TAB_TITLE = "Manage Templates";
 
 	private final CentralController controller;
-
 	private final TabSheet appTabs;
 	private final Panel runSimulation;
 	private final Panel manageTemplates;
 
 	public ControlWindow(CentralController controller) {
 		super();
+		assert (controller != null);
 		this.controller = controller;
 
 		VerticalLayout content = new VerticalLayout();
 		content.setSizeFull();
+		setContent(content);
 
 		appTabs = new TabSheet();
-		appTabs.setWidth(800, Sizeable.UNITS_PIXELS);
+		appTabs.setWidth(APP_WIDTH, Sizeable.UNITS_PIXELS);
 		appTabs.addListener((SelectedTabChangeListener) this);
-		
-		runSimulation = new Panel();
-		appTabs.addTab(runSimulation).setCaption(RUN_TAB_TITLE);
-		
-		manageTemplates = new Panel();
-		appTabs.addTab(manageTemplates).setCaption(MANAGE_TAB_TITLE);
-		
 		content.addComponent(appTabs);
 		content.setComponentAlignment(appTabs, Alignment.TOP_CENTER);
-		setContent(content);
-	}
 
-	private Component getRunSimulationView() {
-		return new ManageSimulationsView(this, controller);
-	}
+		runSimulation = new Panel();
+		appTabs.addTab(runSimulation).setCaption(RUN_TAB_TITLE);
 
-	private Component getManageTemplatesView() {
-		return new ManageTemplatesView(this);
+		manageTemplates = new Panel();
+		appTabs.addTab(manageTemplates).setCaption(MANAGE_TAB_TITLE);
 	}
 
 	@Override
@@ -65,8 +64,24 @@ public class ControlWindow extends Window implements SelectedTabChangeListener {
 			manageTemplates.removeAllComponents();
 			manageTemplates.addComponent(getManageTemplatesView());
 		} else {
-			throw new RuntimeException("unkown tab!");
+			throw new RuntimeException("unexpected tab.");
 		}
+	}
+
+	/**
+	 * EFFECTS: Returns a new instance of the ManageSimulationsView.
+	 * 
+	 */
+	private Component getRunSimulationView() {
+		return new ManageSimulationsView(this, controller);
+	}
+
+	/**
+	 * EFFECTS: Returns a new instance of hte ManageTemplatesView.
+	 * 
+	 */
+	private Component getManageTemplatesView() {
+		return new ManageTemplatesView(this);
 	}
 
 }
