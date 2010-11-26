@@ -8,8 +8,8 @@ import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
 /**
- * OVERVIEW: A Servlet which acts as a factory for instances of the the web
- * control interface application.
+ * OVERVIEW: An AbstractApplicationServlet which acts as a factory for instances
+ * of the the ControlApplication.
  * 
  */
 public class ControlServlet extends AbstractApplicationServlet {

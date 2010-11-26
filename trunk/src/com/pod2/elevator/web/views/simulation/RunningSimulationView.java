@@ -10,7 +10,6 @@ import com.pod2.elevator.web.views.templates.AddEventWindowFactory;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -50,51 +49,42 @@ public class RunningSimulationView extends CustomComponent implements EventConsu
 		layout.addComponent(LayoutUtils.createSpacer());
 		initSettingsPanel();
 		layout.addComponent(LayoutUtils.createSpacer());
-		initRequestEventsPanel();
-		layout.addComponent(LayoutUtils.createSpacer());
-		initServiceEventsPanel();
-		layout.addComponent(LayoutUtils.createSpacer());
-		initFailureEventsPanel();
+		initInsertEventsPanel();
 		setCompositionRoot(layout);
 	}
 
 	/**
-	 * MODIFIES: manageView
+	 * MODIFIES: manageView, parent
 	 * 
 	 * EFFECTS: Inserts an event into the currently running simulation.
+	 * Indicates to the user that the event was inserted successfully.
 	 */
 	public void insertEvent(TemplateEvent event) {
 		manageView.insertSimulationEvent(event);
+		Notification successMessage = new Notification("Event inserted successfully.", null,
+				Notification.TYPE_HUMANIZED_MESSAGE);
+		parent.showNotification(successMessage);
 	}
 
 	/**
 	 * MODIFIES: layout
 	 * 
-	 * EFFECTS: Displays component panel which allows user to stop the currently
+	 * EFFECTS: Displays component which allows user to stop the currently
 	 * running simulation.
 	 */
 	private void initStopPanel() {
-		Panel stopPanel = new Panel("Stop Simulation");
-		HorizontalLayout stopLayout = new HorizontalLayout();
-		stopLayout.setWidth(100, UNITS_PERCENTAGE);
-		stopLayout.setMargin(true);
-
 		Button stopButton = new Button("Stop Current Simulation", new StopClickListener());
-		stopLayout.addComponent(stopButton);
-		stopLayout.setComponentAlignment(stopButton, Alignment.MIDDLE_CENTER);
-
-		stopPanel.setContent(stopLayout);
-		layout.addComponent(stopPanel);
+		insertButtonPanel("Stop Simulation", stopButton);
 	}
 
 	/**
 	 * MODIFIES: layout
 	 * 
-	 * EFFECTS: Displays component panel which allows user to update the
-	 * settings of the currently running simulation.
+	 * EFFECTS: Displays component which allows user to update the settings of
+	 * the currently running simulation.
 	 */
 	private void initSettingsPanel() {
-		Panel settingsPanel = new Panel("Simulation Settings");
+		Panel settingsPanel = new Panel("Update Simulation Settings");
 		VerticalLayout settingsLayout = new VerticalLayout();
 		settingsLayout.setMargin(true);
 
@@ -107,7 +97,6 @@ public class RunningSimulationView extends CustomComponent implements EventConsu
 		settingsForm.setWriteThrough(true);
 
 		settingsLayout.addComponent(settingsForm);
-		settingsLayout.setComponentAlignment(settingsForm, Alignment.MIDDLE_CENTER);
 		settingsLayout.addComponent(LayoutUtils.createSpacer());
 
 		Button updateButton = new Button("Update Settings", new UpdateSettingsListener());
@@ -120,46 +109,42 @@ public class RunningSimulationView extends CustomComponent implements EventConsu
 	/**
 	 * MODIFIES: layout
 	 * 
-	 * EFFECTS: Displays component panel which allows users to enqueue a
-	 * passenger request with the currently running simulation.
+	 * EFFECTS: Displays component which allows users to insert events into the
+	 * currently running simulation.
 	 */
-	private void initRequestEventsPanel() {
-		insertButtonPanel("Insert Passenger Request", new Button("Insert Passenger Request",
-				new InsertEventListener("Insert Passenger Request", EventType.PassengerRequest)));
+	private void initInsertEventsPanel() {
+		Button requestButton = new Button("Insert Passenger Request", new InsertEventListener(
+				"Insert Passenger Request", EventType.PassengerRequest));
+		Button serviceButton = new Button("Insert Service Request", new InsertEventListener(
+				"Insert Service Request", EventType.ServiceRequest));
+		Button failureButton = new Button("Insert Component Failure", new InsertEventListener(
+				"Insert Component Failure", EventType.ComponentFailure));
+		insertButtonPanel("Insert Events", requestButton, serviceButton, failureButton);
 	}
 
 	/**
 	 * MODIFIES: layout
 	 * 
-	 * EFFECTS: Displays component panel which allows users to enqueue a service
-	 * request with the currently running simulation.
-	 */
-	private void initServiceEventsPanel() {
-		insertButtonPanel("Insert Service Request", new Button("Insert Service Request",
-				new InsertEventListener("Insert Service Request", EventType.ServiceRequest)));
-	}
-
-	/**
-	 * MODIFIES: layout
+	 * EFFECTS: Inserts a collection of buttons into the layout.
 	 * 
-	 * EFFECTS: Displays component panel which allows users to enqueue a
-	 * component failure event with the currently running simulation.
 	 */
-	private void initFailureEventsPanel() {
-		insertButtonPanel("Insert Component Failure", new Button("Insert Component Failure",
-				new InsertEventListener("Insert Component Failure", EventType.ComponentFailure)));
-	}
-
-	private void insertButtonPanel(String title, Button button) {
+	private void insertButtonPanel(String title, Button... buttons) {
 		Panel panel = new Panel(title);
 		HorizontalLayout panelLayout = new HorizontalLayout();
 		panelLayout.setWidth(100, UNITS_PERCENTAGE);
 		panelLayout.setMargin(true);
-		panelLayout.addComponent(button);
+		for (Button button : buttons) {
+			panelLayout.addComponent(button);
+		}
 		panel.setContent(panelLayout);
 		layout.addComponent(panel);
 	}
 
+	/**
+	 * OVERVIEW: A ClickListener which stops the currently executing simulation
+	 * when clicked.
+	 * 
+	 */
 	private class StopClickListener implements ClickListener {
 		@Override
 		public void buttonClick(ClickEvent event) {
@@ -167,13 +152,18 @@ public class RunningSimulationView extends CustomComponent implements EventConsu
 		}
 	}
 
+	/**
+	 * OVERVIEW: A ClickListener which updates the settings of the currently
+	 * executing simulation when clicked.
+	 * 
+	 */
 	private class UpdateSettingsListener implements ClickListener {
 		@Override
 		public void buttonClick(ClickEvent event) {
 			try {
 				settingsForm.commit();
 				manageView.updateSimulationSettings(settings);
-				Notification successMessage = new Notification("Settings updated sucessfully.",
+				Notification successMessage = new Notification("Settings updated successfully.",
 						null, Notification.TYPE_HUMANIZED_MESSAGE);
 				parent.showNotification(successMessage);
 			} catch (InvalidValueException e) {
@@ -182,6 +172,11 @@ public class RunningSimulationView extends CustomComponent implements EventConsu
 		}
 	}
 
+	/**
+	 * OVERVIEW: A ClickListener which displays a component that allows the user
+	 * to input an event of the specified type, when clicked.
+	 * 
+	 */
 	private class InsertEventListener implements ClickListener {
 
 		private final String caption;

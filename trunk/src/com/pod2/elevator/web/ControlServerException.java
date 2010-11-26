@@ -1,7 +1,7 @@
 package com.pod2.elevator.web;
 
 /**
- * OVERVIEW: Thrown by ControlServer instances when the web service cannot be
+ * OVERVIEW: Thrown by ControlServer instances when the web server cannot be
  * started or stopped for any reason.
  * 
  */

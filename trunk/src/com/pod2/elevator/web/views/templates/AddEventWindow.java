@@ -11,18 +11,16 @@ import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- * An EditWindow which allows users to add events (i.e subclasses of
- * TemplateEvent) to a SimulationTemplate.
+ * OVERVIEW: An EditWindow which allows users to input parameters for a single
+ * event (i.e subclass of TemplateEvent).
  * 
  */
 public class AddEventWindow<T extends TemplateEvent> extends EditWindow {
 
-	// private final CreateTemplateWindow templateWindow;
 	private final EventConsumer consumer;
 	private final FormFieldFactory fieldFactory;
 	private final String[] fields;
 	private final T event;
-
 	private Form editForm;
 
 	AddEventWindow(EventConsumer consumer, FormFieldFactory fieldFactory, String[] fields, T event) {
@@ -37,7 +35,11 @@ public class AddEventWindow<T extends TemplateEvent> extends EditWindow {
 	@Override
 	protected final Component getEditControls() {
 		VerticalLayout layout = new VerticalLayout();
-		editForm = getForm();
+		editForm = new Form();
+		editForm.setItemDataSource(new BeanItem<T>(event));
+		editForm.setFormFieldFactory(fieldFactory);
+		editForm.setVisibleItemProperties(fields);
+		editForm.setWriteThrough(true);
 		layout.addComponent(editForm);
 		return layout;
 	}
@@ -49,17 +51,8 @@ public class AddEventWindow<T extends TemplateEvent> extends EditWindow {
 			consumer.insertEvent(event);
 			close();
 		} catch (InvalidValueException e) {
-			/* Let user correct form. */
+			/* Let user correct form... */
 		}
-	}
-
-	private Form getForm() {
-		Form form = new Form();
-		form.setItemDataSource(new BeanItem<T>(event));
-		form.setFormFieldFactory(fieldFactory);
-		form.setVisibleItemProperties(fields);
-		form.setWriteThrough(true);
-		return form;
 	}
 
 }

@@ -5,8 +5,6 @@ import com.pod2.elevator.core.ResultsBuilder;
 import com.pod2.elevator.core.SimulationDisplay;
 import com.pod2.elevator.data.DummyResultsBuilder;
 import com.pod2.elevator.data.SimulationTemplate;
-import com.pod2.elevator.view.SimulationView;
-import com.pod2.elevator.view.SimulationWindow;
 import com.pod2.elevator.web.ControlServer;
 import com.pod2.elevator.web.ControlServerException;
 
@@ -19,7 +17,7 @@ public class CentralController {
 	private ActiveSimulation simulation = null;
 	private ControlServer controlServer;
 
-	private CentralController(SimulationDisplay display) {
+	CentralController(SimulationDisplay display) {
 		this.display = display;
 		this.controlServer = new ControlServer(this);
 	}
@@ -61,19 +59,6 @@ public class CentralController {
 	public void restartWebServer(int port) throws ControlServerException {
 		controlServer.stop();
 		controlServer.start(port);
-	}
-
-	public static void main(String[] args) throws Exception {
-		try {
-			SimulationWindow window = new SimulationWindow();
-			SimulationView view = new SimulationView(window);
-			CentralController controller = new CentralController(view);
-			window.setCentralController(controller);
-			controller.start();
-		} catch (Exception e) {
-			System.err.print("Unable to start simulator:\n\t");
-			System.err.print(e.getMessage());
-		}
 	}
 
 }

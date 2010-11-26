@@ -3,6 +3,11 @@ package com.pod2.elevator.web.views.templates;
 import com.pod2.elevator.data.TemplateServiceEvent;
 import com.vaadin.ui.Button;
 
+/**
+ * OVERVIEW: A TemplateServiceEvent which is augmented with information for
+ * displaying the event in a table or form.
+ * 
+ */
 public class ServiceEventAdapter extends TemplateServiceEvent {
 
 	private Button deleteButton;

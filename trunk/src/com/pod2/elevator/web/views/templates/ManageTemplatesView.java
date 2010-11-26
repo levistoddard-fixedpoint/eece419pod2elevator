@@ -6,46 +6,65 @@ import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.data.SimulationTemplateDetail;
 import com.pod2.elevator.data.SimulationTemplateRepository;
 import com.pod2.elevator.web.views.ControlWindow;
+import com.pod2.elevator.web.views.common.LayoutUtils;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
+/**
+ * OVERVIEW: A Component which allows a user to view all SimulationTemplates
+ * which exist in the system, and to copy or delete these templates.
+ * 
+ */
 public class ManageTemplatesView extends CustomComponent {
 
 	private final Window parent;
-
 	private VerticalLayout layout;
 	private Table templates;
 
 	public ManageTemplatesView(Window parent) {
 		super();
 		this.parent = parent;
-		initLayout();
-	}
-
-	void templateCreated(SimulationTemplateDetail template) {
-		addTemplateToContainer(template);
-	}
-
-	private void initLayout() {
 		layout = new VerticalLayout();
 		initCreateTemplateButton();
-		layout.addComponent(new Label("&nbsp;", Label.CONTENT_XHTML));
+		layout.addComponent(LayoutUtils.createSpacer());
 		initTemplatesTable();
 		setCompositionRoot(layout);
 	}
 
+	/**
+	 * MODIFIES: templates
+	 * 
+	 * EFFECTS: Adds template to the collection of currently displayed
+	 * templates.
+	 */
+	void templateCreated(SimulationTemplateDetail template) {
+		addTemplateToContainer(template);
+	}
+
+	/**
+	 * MODIFIES: layout
+	 * 
+	 * EFFECTS: Adds a component to this layout which allows the user to create
+	 * a new template.
+	 * 
+	 */
 	private void initCreateTemplateButton() {
 		layout.addComponent(new Button("Create Template", new CreateClickHandler()));
 	}
 
+	/**
+	 * MODIFIES: layout
+	 * 
+	 * EFFECTS: Adds a component to this layout which allows the user to view,
+	 * copy, and delete any template in the system.
+	 */
 	private void initTemplatesTable() {
 		templates = new Table();
 		templates.setWidth(100, UNITS_PERCENTAGE);
@@ -57,7 +76,6 @@ public class ManageTemplatesView extends CustomComponent {
 		templates.addContainerProperty(TemplateFields.Delete, Button.class, null);
 
 		try {
-			/* populate the table table */
 			for (SimulationTemplateDetail templ : SimulationTemplateRepository.getAllTemplates()) {
 				addTemplateToContainer(templ);
 			}
@@ -69,6 +87,11 @@ public class ManageTemplatesView extends CustomComponent {
 		layout.addComponent(templates);
 	}
 
+	/**
+	 * MODIFIES: templates
+	 * 
+	 * EFFECTS: Adds template to the collection of displayed templates.
+	 */
 	private void addTemplateToContainer(SimulationTemplateDetail template) {
 		int id = template.getId();
 		Button copyButton = new Button("Copy", new CopyClickHandler(id));
@@ -78,6 +101,13 @@ public class ManageTemplatesView extends CustomComponent {
 		templates.addItem(templateRow, id);
 	}
 
+	/**
+	 * MODIFIES: parent
+	 * 
+	 * OVERVIEW: Displays a Window for creating a new template. Fields of the
+	 * template are initialized from the provided template.
+	 * 
+	 */
 	private void showCreateWindow(SimulationTemplate template) {
 		Window createWindow = new CreateTemplateWindow(this, parent, template);
 		createWindow.setModal(true);
@@ -86,6 +116,11 @@ public class ManageTemplatesView extends CustomComponent {
 		parent.addWindow(createWindow);
 	}
 
+	/**
+	 * OVERVIEW: An enumeration of the fields which should be visible when
+	 * viewing an existing template.
+	 * 
+	 */
 	public enum TemplateFields {
 
 		Name("Name"), CreatedDate("Created"), EditDate("Last Edit"), Copy("Copy"), Delete("Delete");
@@ -102,6 +137,11 @@ public class ManageTemplatesView extends CustomComponent {
 
 	}
 
+	/**
+	 * OVERVIEW: A ClickListener which displays a component that allows the user
+	 * to create a new template, when clicked.
+	 * 
+	 */
 	private class CreateClickHandler implements ClickListener {
 		@Override
 		public void buttonClick(ClickEvent event) {
@@ -109,6 +149,10 @@ public class ManageTemplatesView extends CustomComponent {
 		}
 	}
 
+	/**
+	 * OVERVIEW: A ClickListener which deletes a template when clicked.
+	 * 
+	 */
 	private class DeleteClickHandler implements ClickListener {
 		private final int templateId;
 
@@ -129,6 +173,11 @@ public class ManageTemplatesView extends CustomComponent {
 		}
 	}
 
+	/**
+	 * OVERVIEW: A ClickListener which displays a component that allows the user
+	 * to create a modified copy of a template, when clicked.
+	 * 
+	 */
 	private class CopyClickHandler implements ClickListener {
 
 		private final int templateId;

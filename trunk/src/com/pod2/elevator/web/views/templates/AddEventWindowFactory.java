@@ -22,9 +22,9 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
 /**
- * An factory class to create Windows which the user can use to create new
- * events (i.e. subclasses of TemplateEvent) for insertion into a simulation
- * template.
+ * OVERVIEW: A factory class which creates Windows that the user can use to
+ * enter new events (i.e. subclasses of TemplateEvent), for insertion into a
+ * simulation.
  * 
  */
 public class AddEventWindowFactory {
@@ -32,20 +32,31 @@ public class AddEventWindowFactory {
 	private final EventConsumer consumer;
 
 	public AddEventWindowFactory(EventConsumer consumer) {
+		assert (consumer != null);
 		this.consumer = consumer;
 	}
 
+	/**
+	 * OVERVIEW: Creates and returns a new Window which allows a user to input
+	 * an event of the specified type.
+	 * 
+	 */
 	public Window createWindow(EventType type, SimulationTemplate template) {
 		if (EventType.PassengerRequest.equals(type)) {
-			return createRequestEventWindow(type, template);
+			return createRequestEventWindow(template);
 		} else if (EventType.ServiceRequest.equals(type)) {
-			return createServiceEventWindow(type, template);
+			return createServiceEventWindow(template);
 		} else if (EventType.ComponentFailure.equals(type)) {
-			return createFailureEventWindow(type, template);
+			return createFailureEventWindow(template);
 		}
-		throw new RuntimeException("Unknown event type:" + type);
+		throw new RuntimeException("unexpected event type.");
 	}
 
+	/**
+	 * OVERVIEW: A FormFieldFactory which creates Fields for the common
+	 * properties between every TemplateEvent subclass.
+	 * 
+	 */
 	private class EventFormFieldFactory implements FormFieldFactory {
 
 		protected final int numberElevators;
@@ -61,7 +72,7 @@ public class AddEventWindowFactory {
 				time.setRequired(true);
 				time.setRequiredError("Please enter time at which event should occur.");
 				time.addValidator(new NonNegativeIntegerValidator(
-						"Time must be a positive integer."));
+						"Time must be a non-negative integer."));
 				return time;
 			} else if (propertyId.equals("elevatorNumber")) {
 				Select elevators = new Select("Elevator Number:");
@@ -71,11 +82,16 @@ public class AddEventWindowFactory {
 				}
 				return elevators;
 			}
-			throw new RuntimeException("Unknown property: " + propertyId);
+			throw new RuntimeException("unexpected property: " + propertyId);
 		}
 
 	}
 
+	/**
+	 * OVERVIEW: An EventFormFieldFactory which create Fields for the properties
+	 * of a TemplatePassengerRequest.
+	 * 
+	 */
 	private class PassengerRequestFieldFactory extends EventFormFieldFactory {
 
 		private final SimulationTemplate template;
@@ -100,12 +116,17 @@ public class AddEventWindowFactory {
 				timeConstraint.setRequired(true);
 				timeConstraint.setRequiredError("Please enter a time constraint.");
 				timeConstraint.addValidator(new NonNegativeIntegerValidator(
-						"Time constraint must be a positive integer."));
+						"Time constraint must be a non-negative integer."));
 				return timeConstraint;
 			}
 			return super.createField(item, propertyId, uiContext);
 		}
 
+		/**
+		 * OVERVIEW: A Validator which ensures that the onload and offload
+		 * floors of a TemplatePassengerRequest are not equal.
+		 * 
+		 */
 		private class SelectedFloorsValidator implements Validator {
 
 			@Override
@@ -126,6 +147,12 @@ public class AddEventWindowFactory {
 
 		}
 
+		/**
+		 * EFFECTS: Returns a Select field with an option for every floor in
+		 * this template. Restricted floors are included in the options if
+		 * includeRestructed is true, they are excluded otherwise.
+		 * 
+		 */
 		private Field createFloorSelectField(String caption, boolean includeRestricted) {
 			Select floors = new Select(caption);
 			floors.setWidth(LayoutUtils.getFieldWidth());
@@ -148,7 +175,12 @@ public class AddEventWindowFactory {
 
 	}
 
-	private Window createRequestEventWindow(EventType type, SimulationTemplate template) {
+	/**
+	 * OVERVIEW: Returns a new Window in which the user can enter the parameters
+	 * for a TemplatePassengerRequest event.
+	 * 
+	 */
+	private Window createRequestEventWindow(SimulationTemplate template) {
 		final long DEFAULT_QUANTUM = 100;
 		final int DEFAULT_ONLOAD_FLOOR = 0;
 		final int DEFAULT_OFFLOAD_FLOOR = 1;
@@ -177,6 +209,11 @@ public class AddEventWindowFactory {
 				PassengerEventAdapter.getEditableFields(), request);
 	}
 
+	/**
+	 * OVERVIEW: An EventFormFieldFactory which create Fields for the properties
+	 * of a TemplateServiceEvent.
+	 * 
+	 */
 	private class ServiceEventFieldFactory extends EventFormFieldFactory {
 
 		public ServiceEventFieldFactory(int numberFloors) {
@@ -193,7 +230,12 @@ public class AddEventWindowFactory {
 
 	}
 
-	private Window createServiceEventWindow(EventType type, SimulationTemplate template) {
+	/**
+	 * OVERVIEW: Returns a new Window in which the user can enter the parameters
+	 * for a TemplateServiceEvent event.
+	 * 
+	 */
+	private Window createServiceEventWindow(SimulationTemplate template) {
 		final long DEFAULT_QUANTUM = 100;
 		final int DEFAULT_ELEVATOR = 0;
 		final boolean DEFAULT_PUT_IN_SERVICE = false;
@@ -207,6 +249,11 @@ public class AddEventWindowFactory {
 				ServiceEventAdapter.getEditableFields(), service);
 	}
 
+	/**
+	 * OVERVIEW: An EventFormFieldFactory which create Fields for the properties
+	 * of a TemplateFailureEvent.
+	 * 
+	 */
 	private class FailureRequestFieldFactory extends EventFormFieldFactory {
 
 		public FailureRequestFieldFactory(int numberFloors) {
@@ -230,7 +277,12 @@ public class AddEventWindowFactory {
 
 	}
 
-	private Window createFailureEventWindow(EventType type, SimulationTemplate template) {
+	/**
+	 * OVERVIEW: Returns a new Window in which the user can enter the parameters
+	 * for a TemplateFailureEvent event.
+	 * 
+	 */
+	private Window createFailureEventWindow(SimulationTemplate template) {
 		final long DEFAULT_QUANTUM = 100;
 		final int DEFAULT_ELEVATOR = 0;
 		final ComponentDetails DEFAULT_COMPONENT = ComponentRegistry.getFailableComponents()
