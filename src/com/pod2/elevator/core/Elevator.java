@@ -61,16 +61,13 @@ public class Elevator {
 			int elevatorCapacity, double speed, long quantumsBeforeService,
 			double distanceBeforeService, Set<Integer> restrictedFloors) {
 		/**
+		 * 	REQUIRES: simulation != null && elevatorNumber != null && numberFloors > 0 &&
+		 * 		elevator Capacity > 0 && speed > 0 && quantumsBeforeService != null &&
+		 * 		quantumsBeforeService >= 0 && distanceBeforService != null &&
+		 * 		distanceBeforeService >= 0 && restrictedFloors != null
 		 * 	MODIFIES: this
-		 * 	EFFECTS: Constructor for this class.  Throws AssertionException if simulation or
-		 * 		restrictedFloors is null.  Throws AssertionException if numberFloors or speed
-		 * 		is less than or equal to 0.  Initialize simulation, elevatorNumber,
-		 * 		elevatorCapacity, floorsOffLimit, quantumsBeforeService, distanceBeforeService,
-		 * 		and speed.  Set cumulativeQuantumsInService and cumulativeDistanceInService to 0.
-		 * 		Initialize and create each component of the elevator.  Enter each component to
-		 * 		components.  Initialize requestPanel with new a FloorRequestPanel object.  Set
-		 * 		elevator motionStatus to "DoorsOpen" and serviceStatus to "InService".
-		 * 		targetPosition is set to 0.0.
+		 * 	EFFECTS: Constructor for this class.  Initialize variables in preparation for
+		 * 		utilizing the class.
 		 */
 		
 		assert (simulation != null);
@@ -109,7 +106,7 @@ public class Elevator {
 	public void closeDoors() {
 		/**
 		 * 	MODIFIES: motionStatus, targetPosition
-		 * 	EFFECTS: Changes motionStatus to "DoorsClosing" and targetPosition to 0.0
+		 * 	EFFECTS: Change the motion status to represent closing the door
 		 */
 		motionStatus = MotionStatus.DoorsClosing;
 		targetPosition = 0.0;
@@ -119,9 +116,9 @@ public class Elevator {
 		/**
 		 * 	REQUIRES: floor != null && floor < numberFloors
 		 *  MODIFIES: targetPosition, motionStatus
-		 *  EFFECTS: Set targetPosition to floor.  If targetPosition is lower than
-		 *  	current position, set motionStatus to "MovingDown".  Else, set
-		 *  	motionStatus to "MovingUp".
+		 *  EFFECTS: Set targetPosition to floor.  Set motion status according
+		 *  	to the relativity of the position between the target position
+		 *  	and current position.
 		 */
 		targetPosition = (double) floor;
 		if (targetPosition < getPosition()) {
@@ -143,10 +140,9 @@ public class Elevator {
 	public void putInService() {
 		/**
 		 * 	MODIFIES: this
-		 * 	EFFECTS: For each ElevatorComponent in components, set Failed to false.  Reset
-		 * 		cumulativeQuantumsInService and cumulativeDistanceInService to zero.  Disable
-		 * 		emergencyBrake component.  Set serviceStatus to "InService".  Call method to
-		 * 		place elevator back in service on the simulator
+		 * 	EFFECTS: Put the elevator back to InService mode.  Reset all components to
+		 * 		working order.  Disable emergency brakes.  Reflect the changes to the
+		 * 		simulation.		
 		 */
 		for (ElevatorComponent component : components.values()) {
 			component.setFailed(false);
@@ -169,7 +165,8 @@ public class Elevator {
 	public void putOutOfService() {
 		/**
 		 * 	MODIFIES: components, serviceStatus
-		 * 	EFFECTS: Enable elevator emergency brake.  Set serviceStatus to "OutOfService".
+		 * 	EFFECTS: Put the elevator out of service.  Enable elevator emergency brake.
+		 * 		Set serviceStatus to reflect the status of the elevator.
 		 */
 		getEmergencyBrake().setIsEnabled(true);
 		serviceStatus = ServiceStatus.OutOfService;
@@ -179,8 +176,8 @@ public class Elevator {
 		/**
 		 * 	REQUIRES: distance != null && distance >= 0
 		 * 	MODIFIES: distanceBeforeService
-		 * 	EFFECTS: Change the distance before service.  Call method to check if service
-		 * 		distance has been reached or not.
+		 * 	EFFECTS: Change the distance before service.  Check if service distance
+		 * 		has been reached.
 		 */
 		this.distanceBeforeService = distance;
 		checkServiceDistanceReached();
@@ -190,9 +187,10 @@ public class Elevator {
 		/**
 		 * 	REQUIRES: quantums != null && quantums >= 0
 		 * 	MODIFIES: quantumsBeforeService
-		 *  EFFECTS: Change the number of quantum before service.  Call method to check
-		 *  	if quantum for servicing has been reached or not.
+		 *  EFFECTS: Change the number of quantum before service.  Check if service
+		 *  	quantum has been has been reached.
 		 */
+		
 		this.quantumsBeforeService = quantums;
 		checkServiceQuantumsReached();
 	}
@@ -200,7 +198,7 @@ public class Elevator {
 	public void setSchedulerData(SchedulerData data) {
 		/**
 		 * 	REQUIRES: data != null
-		 * 	MODIFIES: data
+		 * 	MODIFIES: this.data
 		 * 	EFFECTS: Changes the data of the scheduler algorithm
 		 */
 		this.data = data;
@@ -250,9 +248,7 @@ public class Elevator {
 
 	ElevatorSnapShot createSnapshot() {
 		/**
-		 * 	EFFECTS: returns an ElevatorSnapShot object with current position of
-		 * 		elevator, off limit floors, passengers in elevator, elevator capacity
-		 * 		motion status, service status, and components in elevator
+		 * 	EFFECTS: returns an ElevatorSnapShot object with elevator information.
 		 */
 		double currentPosition = positionContext.getCurrentPosition();
 		int requestsInElevator = requests.values().size();
@@ -263,15 +259,9 @@ public class Elevator {
 	void executeQuantum() {
 		/**
 		 * 	MODIFIES: this
-		 * 	EFFECTS: Execute the current time quantum events.  If service status is
-		 * 		"OutOfService", then do nothing and return.  If elevator service status is
-		 * 		"InService", increment cumulativeQuantumsInService by 1.  If motion status
-		 * 		is "MovingDown" or "MovingUp", move elevator with driveMechanism component.
-		 * 		If motionStatus is "DoorsClosing", change motionStatus to "DoorsClosed".
-		 * 		If motionStatus is "DoorsOpening", clear the request for the current floor
-		 * 		in elevator and change motionStatus to "DoorsOpen".  Throw
-		 * 		ComponentFailedException if any component has failed and apply emergency
-		 * 		brake.
+		 * 	EFFECTS: Execute the current time quantum events.  Change the motion status
+		 * 		and position of the elevator in response to the elevator position relative
+		 * 		to the target position.
 		 */
 		if (!serviceStatus.equals(ServiceStatus.InService))
 			return;
@@ -332,8 +322,8 @@ public class Elevator {
 		/**
 		 * 	MODIFIES: requests, requestPanel
 		 * 	EFFECTS: Insert a passenger (request) into elevator unless elevator is full.
-		 * 		If full, return false.  Return true when passenger has been added to the list
-		 * 		of requests.
+		 * 		Return true when passenger has been added to the list of requests. False
+		 * 		otherwise.
 		 */
 		if (requests.values().size() < elevatorCapacity) {
 			int offloadFloor = request.getOffloadFloor();
@@ -417,9 +407,8 @@ public class Elevator {
 		/**
 		 * 	REQUIRES: condition != null && reason != null
 		 * 	MODIFIES: simulation, isPuttingOutOfService
-		 * 	EFFECTS: If condition has been met to put elevator out of service, create an out of service
-		 * 		event with reason.  Insert the event to simulation and set out of service flag to true.
-		 * 		If condition not met, return without changes.
+		 * 	EFFECTS: Check for conditions which out of service conditions may have met.
+		 * 		Put elevator out of service if condition occurs.
 		 */
 		if (!isPuttingOutOfService && condition) {
 			long quantum = simulation.getCurrentQuantum() + 1;

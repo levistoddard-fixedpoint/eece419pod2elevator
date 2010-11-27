@@ -20,10 +20,10 @@ public class RequestInTransit {
 	// constructor
 	public RequestInTransit(long requestNumber, PassengerRequest request) {
 		/**
-		 * REQUIRES: requestNumber != null MODIFIES: requestNumber, request
-		 * EFFECTS: Constructor of the class. Throw AssertionException if
-		 * request is null. If request is not null, initialize this.quest and
-		 * this.requestNumber.
+		 * 	REQUIRES: request != null && requestNumber != null
+		 * 	MODIFIES: requestNumber, request
+		 * 	EFFECTS: Constructor of the class. Initialize variables for use
+		 * 		in this class.
 		 */
 		assert (request != null);
 		this.requestNumber = requestNumber;
@@ -32,7 +32,8 @@ public class RequestInTransit {
 
 	public void setDeliveryStatus(DeliveryStatus deliveryStatus) {
 		/**
-		 * REQUIRES: deliveryStatus != null MODIFIES: status EFFECTS: Set the
+		 * REQUIRES: deliveryStatus != null
+		 * MODIFIES: status EFFECTS: Set the
 		 * status of the passenger.
 		 */
 		this.status = deliveryStatus;
@@ -40,7 +41,8 @@ public class RequestInTransit {
 
 	public void setElevatorNumber(int elevatorNumber) {
 		/**
-		 * REQUIRES: elevatorNumber != null MODIFIES: this.elevatorNumber
+		 * REQUIRES: elevatorNumber != null
+		 * MODIFIES: this.elevatorNumber
 		 * EFFECTS: Set the elevator number that passenger is in.
 		 */
 		this.elevatorNumber = elevatorNumber;
@@ -48,18 +50,19 @@ public class RequestInTransit {
 
 	public void setOffloadQuantum(long offloadQuantum) {
 		/**
-		 * REQUIRES: offloadQuantum != null && offloadQuantum >= 0 MODIFIES:
-		 * this.offloadQuantum EFFECTS: Set the quantum that passenger gets out
-		 * of elevator.
+		 * REQUIRES: offloadQuantum != null && offloadQuantum >= 0
+		 * MODIFIES: this.offloadQuantum
+		 * EFFECTS: Set the quantum that passenger gets out of elevator.
 		 */
 		this.offloadQuantum = offloadQuantum;
 	}
 
 	public void setOnloadQuantum(long onloadQuantum) {
 		/**
-		 * REQUIRES: onloadQuantum != null && onloadQuantum >= 0 MODIFIES:
-		 * this.onloadQuantum EFFECTS: Set the quantum that passenger gets into
-		 * elevator.
+		 * REQUIRES: onloadQuantum != null && onloadQuantum >= 0
+		 * MODIFIES:
+		 * this.onloadQuantum
+		 * EFFECTS: Set the quantum that passenger gets into elevator.
 		 */
 		this.onloadQuantum = onloadQuantum;
 	}
@@ -86,6 +89,9 @@ public class RequestInTransit {
 	}
 
 	public long getEnterQuantum() {
+		/**
+		 * EFFECTS: Return the time quantum of the request.
+		 */
 		return request.getQuantum();
 	}
 
@@ -127,13 +133,10 @@ public class RequestInTransit {
 	@Override
 	public String toString() {
 		/**
-		 * EFFECTS: If passenger is waiting for elevator, return string with
-		 * floor which passenger is waiting. If passenger is in elevator, return
-		 * string with the elevator number which the passenger is in. If
-		 * passenger is rescued, return string with elevator number of the
-		 * elevation which passenger is rescued from. If passenger is delivered,
-		 * return string with the floor which passenger is delivered to. If none
-		 * of the above has occurred, throw RunTimeException.
+		 * 	EFFECTS: Returns a string based on the DelvieryStatus of the passenger.
+		 * 		The string should include information specific to the status.  (Ex.
+		 * 		if DelvieryStatus is "Waiting", string should return the passenger
+		 * 		number and the floor the passenger is waiting at").
 		 */
 		if (DeliveryStatus.Waiting.equals(status)) {
 			return String.format("Passenger %d waiting on floor %d.", requestNumber,

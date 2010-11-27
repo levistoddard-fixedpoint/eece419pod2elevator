@@ -25,8 +25,7 @@ public class RequestGenerator {
 		/**
 		 *  REQUIRES: simulation != null
 		 *  MODIFIES: this
-		 *  EFFECTS: Constructor of the class.  Initialize simulation and random object respectively.
-		 *  	Set maxConstraint to product of maximum number of floors and REASONABLE_QUANTUM_PER_FLOOR
+		 *  EFFECTS: Constructor of the class.  Initialize variables.
 		 */
 		
 		this.simulation = simulation;
