@@ -89,7 +89,7 @@ public class AnalysisChartPanel extends JPanel implements ActionListener {
 				time_CumulativeServiceTimeSeriesCollection,
 				PlotOrientation.VERTICAL, true, false, false);
 
-		time_PassengersWaitingSeries = new XYSeries[numElevators];
+		time_PassengersWaitingSeries = new XYSeries[numFloors];
 		for (int i = 0; i < time_PassengersWaitingSeries.length; i++) {
 			time_PassengersWaitingSeries[i] = new XYSeries(new String("Floor "
 					+ i));
@@ -158,6 +158,8 @@ public class AnalysisChartPanel extends JPanel implements ActionListener {
 			ArrayList<int[]> passengersWaiting) {
 		this.clear();
 
+		// j = time
+		// i = elevator
 		for (int i = 0; i < elevatorPosition.size(); i++) {
 			for (int j = 0; j < elevatorPosition.get(i).length; j++) {
 				time_ElevatorPositionSeries[i].add(j,
