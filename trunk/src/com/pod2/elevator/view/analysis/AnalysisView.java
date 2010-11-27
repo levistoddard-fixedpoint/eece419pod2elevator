@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.DefaultListCellRenderer;
@@ -16,8 +15,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 import com.pod2.elevator.core.ServiceStatus;
-import com.pod2.elevator.data.ElevatorState;
 import com.pod2.elevator.data.LoggedEvent;
 import com.pod2.elevator.data.SimulationDataRepository;
 import com.pod2.elevator.data.SimulationDetail;
@@ -70,10 +69,9 @@ public class AnalysisView extends JPanel implements ActionListener {
 			SimulationResults tempResults;
 			for (int i = 0; i < simulationList.size(); i++) {
 				Uuid = simulationList.get(i).getId();
-				tempResults = SimulationDataRepository
-						.getSimulationResults(Uuid);
-				simulationComboBox.addItem(simulationList.get(i).getName()
-						+ " : " + "[" + tempResults.getStartTime() + "]");
+				tempResults = SimulationDataRepository.getSimulationResults(Uuid);
+				simulationComboBox.addItem(simulationList.get(i).getName() + " : " + "["
+						+ tempResults.getStartTime() + "]");
 			}
 		} catch (SQLException s) {
 			if (simulationComboBox == null) {
@@ -132,8 +130,7 @@ public class AnalysisView extends JPanel implements ActionListener {
 
 			for (int j = 0; j < simulationResults.getElevatorStates().get(i).length; j++) {
 				// Get elevator position
-				position[j] = simulationResults.getElevatorStates().get(i)[j]
-						.getPosition();
+				position[j] = simulationResults.getElevatorStates().get(i)[j].getPosition();
 
 				// Get cumulative distance
 				deltaDistance = position[j] - prevDistance;
@@ -152,7 +149,7 @@ public class AnalysisView extends JPanel implements ActionListener {
 			cumulativeDistance.add(i, distance);
 			cumulativeServiceTime.add(i, service);
 		}
-		
+
 		System.out.println(simulationResults.getPassengerDeliveries().size());
 		for (int i = 0; i < simulationResults.getPassengersWaiting().size(); i++) {
 			// Initialize arrays
@@ -167,10 +164,8 @@ public class AnalysisView extends JPanel implements ActionListener {
 
 		for (int i = 0; i < simulationResults.getPassengerDeliveries().size(); i++) {
 			// Calculate mean wait time
-			meanWaitTime += simulationResults.getPassengerDeliveries().get(i)
-					.getOnloadQuantum()
-					- simulationResults.getPassengerDeliveries().get(i)
-							.getEnterQuantum();
+			meanWaitTime += simulationResults.getPassengerDeliveries().get(i).getOnloadQuantum()
+					- simulationResults.getPassengerDeliveries().get(i).getEnterQuantum();
 		}
 		meanWaitTime /= simulationResults.getPassengerDeliveries().size();
 
@@ -181,8 +176,7 @@ public class AnalysisView extends JPanel implements ActionListener {
 		meanTimeToFailure /= numberFailures;
 
 		// Calculate total passengers delivered
-		numberPassengersDelivered = simulationResults.getPassengerDeliveries()
-				.size();
+		numberPassengersDelivered = simulationResults.getPassengerDeliveries().size();
 
 		// Simulation Name
 		String simulationName = simulationResults.getName();
@@ -194,10 +188,9 @@ public class AnalysisView extends JPanel implements ActionListener {
 		// Event Log
 		Collection<LoggedEvent> eventLog = simulationResults.getEvents();
 
-		analysisPanel.statusUpdate(eventLog, elevatorPosition,
-				cumulativeDistance, cumulativeServiceTime, passengersWaiting,
-				simulationName, startQuantum, stopQuantum,
-				numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
+		analysisPanel.statusUpdate(eventLog, elevatorPosition, cumulativeDistance,
+				cumulativeServiceTime, passengersWaiting, simulationName, startQuantum,
+				stopQuantum, numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -209,16 +202,13 @@ public class AnalysisView extends JPanel implements ActionListener {
 			int Uuid;
 			try {
 				Uuid = simulationList.get(index).getId();
-				simulationResults = SimulationDataRepository
-						.getSimulationResults(Uuid);
-				simulationTemplate = SimulationTemplateRepository
-						.getTemplate(simulationResults.getTemplateId());
-				analysisPanel = new AnalysisPanel(
-						simulationTemplate.getNumberFloors(),
+				simulationResults = SimulationDataRepository.getSimulationResults(Uuid);
+				simulationTemplate = SimulationTemplateRepository.getTemplate(simulationResults
+						.getTemplateId());
+				analysisPanel = new AnalysisPanel(simulationTemplate.getNumberFloors(),
 						simulationTemplate.getNumberElevators());
-				this.statusUpdate(simulationTemplate.getNumberFloors(),
-						simulationTemplate.getNumberElevators(),
-						simulationTemplate.getScheduler().getName());
+				this.statusUpdate(simulationTemplate.getNumberFloors(), simulationTemplate
+						.getNumberElevators(), simulationTemplate.getScheduler().getName());
 				JFrame temp = new JFrame(simulationResults.getName());
 				temp.add(analysisPanel);
 				temp.pack();

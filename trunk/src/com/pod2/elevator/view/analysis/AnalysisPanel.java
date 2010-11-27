@@ -7,7 +7,6 @@ import java.util.Collection;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 import com.pod2.elevator.data.LoggedEvent;
 import com.pod2.elevator.view.model.TextArea;
@@ -39,11 +38,9 @@ public class AnalysisPanel extends JPanel {
 	}
 
 	protected void statusUpdate(Collection<LoggedEvent> eventLog,
-			ArrayList<double[]> elevatorPosition,
-			ArrayList<double[]> cumulativeDistance,
-			ArrayList<long[]> cumulativeServiceTime,
-			ArrayList<int[]> passengersWaiting, String scheduler,
-			long startQuantum, long stopQuantum, int numberPassengersDelivered,
+			ArrayList<double[]> elevatorPosition, ArrayList<double[]> cumulativeDistance,
+			ArrayList<long[]> cumulativeServiceTime, ArrayList<int[]> passengersWaiting,
+			String scheduler, long startQuantum, long stopQuantum, int numberPassengersDelivered,
 			double meanTimeToFailure, double meanWaitTime) {
 		for (LoggedEvent e : eventLog) {
 			log.append(e.getMessage() + "\n");

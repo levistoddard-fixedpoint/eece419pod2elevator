@@ -6,8 +6,11 @@ package com.pod2.elevator.view.layout;
  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK ARISING OUT OF USE OR
  PERFORMANCE OF THE PROGRAM AND DOCUMENTATION REMAINS WITH THE USER.
  */
-import java.awt.*;
-import java.util.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.LayoutManager;
 
 /**
  * 
@@ -62,7 +65,6 @@ public class VerticalLayout implements LayoutManager {
 							// are justified
 	private int anchor; // TOP, BOTTOM or CENTER ...where are the components
 						// positioned in an overlarge space
-	private Hashtable comps;
 
 	// Constructors
 	/**

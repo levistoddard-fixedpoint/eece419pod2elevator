@@ -1,9 +1,7 @@
 package com.pod2.elevator.scheduling;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.Elevator;
@@ -53,72 +51,68 @@ public class FirstComeFirstServeScheduler implements ElevatorScheduler {
 	 */
 	@Override
 	public void schedule(ActiveSimulation simulation) {
-	
-	// retrieve all requests
-	FloorRequestButton[] requests = simulation.getRequestButtons();
-	Elevator[] elevators = simulation.getElevators();
-	int firstElevator;
 
-	for (int floor = 0; floor < requests.length; floor++) {
-		if ((requests[floor].isUpSelected() || requests[floor]
-				.isDownSelected())) {
-			// assign floors to elevators without passengers
-			firstElevator = 0;
-			for (int j = 0; j < elevators.length; j++) {
-				if (elevators[j].getServiceStatus().equals(
-						ServiceStatus.InService)) {
-					if (!elevators[firstElevator].getServiceStatus()
-							.equals(ServiceStatus.InService)) {
-						firstElevator = j;
+		// retrieve all requests
+		FloorRequestButton[] requests = simulation.getRequestButtons();
+		Elevator[] elevators = simulation.getElevators();
+		int firstElevator;
+
+		for (int floor = 0; floor < requests.length; floor++) {
+			if ((requests[floor].isUpSelected() || requests[floor].isDownSelected())) {
+				// assign floors to elevators without passengers
+				firstElevator = 0;
+				for (int j = 0; j < elevators.length; j++) {
+					if (elevators[j].getServiceStatus().equals(ServiceStatus.InService)) {
+						if (!elevators[firstElevator].getServiceStatus().equals(
+								ServiceStatus.InService)) {
+							firstElevator = j;
+						}
+						if (elevators[j].getRequestPanel().getRequestedFloors().isEmpty()
+								&& !elevatorRequest.containsKey(j)) {
+							firstElevator = j;
+							break;
+						}
+					} else {
+						floorRequest.remove(j);
 					}
-					if (elevators[j].getRequestPanel().getRequestedFloors().isEmpty()
-							&& !elevatorRequest.containsKey(j)) {
-						firstElevator = j;
-						break;
+				}
+
+				if (!floorRequest.containsKey(firstElevator)
+						&& !floorRequest.containsValue(floor)
+						&& elevators[firstElevator].getServiceStatus().equals(
+								ServiceStatus.InService)) {
+					floorRequest.put(firstElevator, floor);
+					if (elevators[firstElevator].getPosition() != floor) {
+						elevators[firstElevator].moveToFloor(floor);
+					} else {
+						elevators[firstElevator].openDoors();
 					}
-				} else {
-					floorRequest.remove(j);
 				}
-			}
 
-			if (!floorRequest.containsKey(firstElevator)
-					&& !floorRequest.containsValue(floor)
-					&& elevators[firstElevator].getServiceStatus()
-							.equals(ServiceStatus.InService)) {
-				floorRequest.put(firstElevator, floor);
-				if (elevators[firstElevator].getPosition() != floor) {
-					elevators[firstElevator].moveToFloor(floor);
-				} else {
-					elevators[firstElevator].openDoors();
-				}
 			}
-
 		}
+
+		for (Elevator elevator : simulation.getElevators()) {
+			if (MotionStatus.DoorsOpen.equals(elevator.getMotionStatus())) {
+				floorRequest.remove(elevator.getElevatorNumber());
+				elevatorRequest.remove(elevator.getElevatorNumber());
+				elevator.closeDoors();
+			} else if (MotionStatus.DoorsClosed.equals(elevator.getMotionStatus())) {
+				floorRequest.remove(elevator.getElevatorNumber());
+				elevatorRequest.remove(elevator.getElevatorNumber());
+				for (int i = 0; i < requests.length; i++) {
+					if (elevator.getRequestPanel().isRequested(i)) {
+						elevatorRequest.put(elevator.getElevatorNumber(), i);
+						elevator.moveToFloor(i);
+					}
+				}
+			} else if (MotionStatus.ReachedDestinationFloor.equals(elevator.getMotionStatus())) {
+				elevator.openDoors();
+			}
+		}
+
 	}
 
-	for (Elevator elevator : simulation.getElevators()) {
-		if (MotionStatus.DoorsOpen.equals(elevator.getMotionStatus())) {
-			floorRequest.remove(elevator.getElevatorNumber());
-			elevatorRequest.remove(elevator.getElevatorNumber());
-			elevator.closeDoors();
-		} else if (MotionStatus.DoorsClosed.equals(elevator
-				.getMotionStatus())) {
-			floorRequest.remove(elevator.getElevatorNumber());
-			elevatorRequest.remove(elevator.getElevatorNumber());
-			for (int i = 0; i < requests.length; i++) {
-				if (elevator.getRequestPanel().isRequested(i)) {
-					elevatorRequest.put(elevator.getElevatorNumber(), i);
-					elevator.moveToFloor(i);
-				}
-			}
-		} else if (MotionStatus.ReachedDestinationFloor.equals(elevator
-				.getMotionStatus())) {
-			elevator.openDoors();
-		}
-	}
-
-}
-	
 	@Override
 	public String toString() {
 		return getName();
