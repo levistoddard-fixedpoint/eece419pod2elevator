@@ -38,17 +38,20 @@ public class AnalysisPanel extends JPanel {
 	}
 
 	protected void statusUpdate(Collection<LoggedEvent> eventLog,
-			ArrayList<double[]> elevatorPosition, ArrayList<double[]> cumulativeDistance,
-			ArrayList<long[]> cumulativeServiceTime, ArrayList<int[]> passengersWaiting,
-			String scheduler, long startQuantum, long stopQuantum, int numberPassengersDelivered,
-			double meanTimeToFailure, double meanWaitTime) {
+			ArrayList<double[]> elevatorPosition,
+			ArrayList<double[]> cumulativeDistance,
+			ArrayList<long[]> cumulativeServiceTime,
+			ArrayList<int[]> passengersWaiting, String scheduler,
+			long startQuantum, long stopQuantum, int numberPassengersDelivered,
+			int rescued, double meanTimeToFailure, double meanWaitTime) {
 		for (LoggedEvent e : eventLog) {
 			log.append(e.getMessage() + "\n");
 		}
 		analysisChartPanel.statusUpdate(elevatorPosition, cumulativeDistance,
 				cumulativeServiceTime, passengersWaiting);
 		analysisStatusPanel.statusUpdate(scheduler, startQuantum, stopQuantum,
-				numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
+				numberPassengersDelivered, rescued, meanTimeToFailure,
+				meanWaitTime);
 	}
 
 }

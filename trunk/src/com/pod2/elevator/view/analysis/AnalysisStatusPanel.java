@@ -23,6 +23,9 @@ public class AnalysisStatusPanel extends JPanel {
 
 	private JLabel numberPassengersDeliveredLabel;
 	private JLabel numberPassengersDeliveredDisplay;
+	
+	private JLabel rescuedLabel;
+	private JLabel rescuedDisplay;
 
 	private JLabel meanTimeToFailureLabel;
 	private JLabel meanTimeToFailureDisplay;
@@ -41,6 +44,7 @@ public class AnalysisStatusPanel extends JPanel {
 		startLabel = createLabel(0, "Start Quantum");
 		stopLabel = createLabel(0, "Stop Quantum");
 		numberPassengersDeliveredLabel = createLabel(0, "Passengers Delivered");
+		rescuedLabel = createLabel(0, "Passengers Rescued");
 		meanTimeToFailureLabel = createLabel(0, "Mean Time to Failure");
 		meanWaitTimeLabel = createLabel(0, "Average Wait Time");
 
@@ -48,6 +52,7 @@ public class AnalysisStatusPanel extends JPanel {
 		startDisplay = createLabel(1, "");
 		stopDisplay = createLabel(1, "");
 		numberPassengersDeliveredDisplay = createLabel(1, "");
+		rescuedDisplay = createLabel(1, "");
 		meanTimeToFailureDisplay = createLabel(1, "");
 		meanWaitTimeDisplay = createLabel(1, "");
 
@@ -64,6 +69,9 @@ public class AnalysisStatusPanel extends JPanel {
 
 		this.add(numberPassengersDeliveredLabel);
 		this.add(numberPassengersDeliveredDisplay);
+		
+		this.add(rescuedLabel);
+		this.add(rescuedDisplay);
 
 		this.add(meanTimeToFailureLabel);
 		this.add(meanTimeToFailureDisplay);
@@ -93,12 +101,13 @@ public class AnalysisStatusPanel extends JPanel {
 
 	protected void statusUpdate(String scheduler, long startQuantum,
 			long stopQuantum, int numberPassengersDelivered,
-			double meanTimeToFailure, double meanWaitTime) {
+			int rescued, double meanTimeToFailure, double meanWaitTime) {
 		schedulerDisplay.setText(scheduler);
 		startDisplay.setText(Long.toString(startQuantum));
 		stopDisplay.setText(Long.toString(stopQuantum));
 		numberPassengersDeliveredDisplay.setText(Integer
 				.toString(numberPassengersDelivered));
+		rescuedDisplay.setText(Integer.toString(rescued));
 		if(meanTimeToFailure >= 0){
 			meanTimeToFailureDisplay.setText(Double.toString(meanTimeToFailure));
 		}else {
