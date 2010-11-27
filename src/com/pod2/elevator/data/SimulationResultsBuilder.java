@@ -95,12 +95,11 @@ public class SimulationResultsBuilder implements ResultsBuilder {
 		//
 		// Elevator states
 		//
-		sqlQuery = "INSERT INTO `ElevatorState` (" + "`resultId`," + "`elevatorNumber`"
+		sqlQuery = "INSERT INTO `ElevatorState` (" + "`resultId`," + "`elevatorNumber`,"
 				+ "`position`," + "`quantum`," + "`status`" + ") VALUES (?, ?, ?, ?, ?)";
 		preparedStmt = conn.prepareStatement(sqlQuery);
 		Iterator<ElevatorState[]> elevatorStates = results.getElevatorStates().iterator();
 		while (elevatorStates.hasNext()) {
-			System.out.println("ElevatorState");
 			ElevatorState[] states = elevatorStates.next();
 			for (int i = 0; i < states.length; i++) {
 				preparedStmt.setInt(1, results.getUuid());
@@ -164,20 +163,6 @@ public class SimulationResultsBuilder implements ResultsBuilder {
 		return logEntries;
 	}
 
-	public void logCompletedQuantum(ActiveSimulation activeSimulation) {
-		//
-		// log elevator states
-		//
-		Elevator[] elevators = activeSimulation.getElevators();
-		ElevatorState[] states = new ElevatorState[elevators.length];
-		for (int i = 0; i < elevators.length; i++) {
-			states[i].setPosition(elevators[i].getPosition());
-			states[i].setQuantum(activeSimulation.getCurrentQuantum());
-			states[i].setStatus(elevators[i].getServiceStatus());
-		}
-		results.getElevatorStates().add(states);
-	}
-
 	public void logEvent(long quantum, Event event) {
 		LoggedEvent logEvt = new LoggedEvent();
 		logEvt.setMessage(event.toString());
@@ -224,9 +209,18 @@ public class SimulationResultsBuilder implements ResultsBuilder {
 		results.setStartTime(new Date());
 	}
 
-	@Override
 	public void logCompletedQuantum(long quantum, ActiveSimulation activeSimulation) {
-		// TODO Auto-generated method stub
-
+		//
+		// log elevator states
+		//
+		Elevator[] elevators = activeSimulation.getElevators();
+		ElevatorState[] states = new ElevatorState[elevators.length];
+		for (int i = 0; i < elevators.length; i++) {
+			states[i] = new ElevatorState();
+			states[i].setPosition(elevators[i].getPosition());
+			states[i].setQuantum(activeSimulation.getCurrentQuantum());
+			states[i].setStatus(elevators[i].getServiceStatus());
+		}
+		results.getElevatorStates().add(states);
 	}
 }
