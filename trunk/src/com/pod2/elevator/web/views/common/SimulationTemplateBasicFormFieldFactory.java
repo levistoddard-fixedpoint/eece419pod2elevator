@@ -50,7 +50,7 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 		} else if (pid.equals("requestGenerationOn")) {
 			return new CheckBox("Random request generation enabled");
 		} else if (pid.equals("speed")) {
-			final double MAX_SPEED = 2.0;
+			final double MAX_SPEED = 1.0;
 
 			TextField speed = new TextField("Speed (floors / quantum):");
 			speed.setWidth(LayoutUtils.getFieldWidth());
