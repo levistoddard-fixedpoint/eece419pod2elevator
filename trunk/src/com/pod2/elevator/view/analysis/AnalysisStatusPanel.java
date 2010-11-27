@@ -99,8 +99,15 @@ public class AnalysisStatusPanel extends JPanel {
 		stopDisplay.setText(Long.toString(stopQuantum));
 		numberPassengersDeliveredDisplay.setText(Integer
 				.toString(numberPassengersDelivered));
-		meanTimeToFailureDisplay.setText(Double.toString(meanTimeToFailure));
-		meanWaitTimeDisplay.setText(Double.toString(meanWaitTime));
+		if(meanTimeToFailure >= 0){
+			meanTimeToFailureDisplay.setText(Double.toString(meanTimeToFailure));
+		}else {
+			meanTimeToFailureDisplay.setText("No Failures");
+		}
+		if(meanWaitTime >= 0){
+			meanWaitTimeDisplay.setText(Double.toString(meanWaitTime));
+		}else {
+			meanWaitTimeDisplay.setText("No Passengers");
+		}
 	}
-
 }

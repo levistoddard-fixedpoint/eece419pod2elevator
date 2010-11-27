@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -100,8 +101,9 @@ public class SimulationDataRepository {
 		while (rs.next()) {
 			numElevators = rs.getInt("maxElevator");
 		}
-
-		ElevatorState[] es = new ElevatorState[numElevators];
+		
+		ArrayList<ElevatorState> esArrayList;
+		ElevatorState[] esArray = new ElevatorState[0];
 
 		// Fill array for each elevator
 		for (int i = 0; i < numElevators; i++) {
@@ -109,13 +111,15 @@ public class SimulationDataRepository {
 					+ " AND elevatorNumber = " + i);
 			rs = s.getResultSet();
 
+			esArrayList = new ArrayList<ElevatorState>();
 			while (rs.next()) {
-				es[i] = new ElevatorState();
-				es[i].setPosition(rs.getDouble("position"));
-				es[i].setQuantum(rs.getLong("quantum"));
-				es[i].setStatus((ServiceStatus.values()[rs.getInt("status")]));
+				ElevatorState es = new ElevatorState();
+				es.setPosition(rs.getDouble("position"));
+				es.setQuantum(rs.getLong("quantum"));
+				es.setStatus((ServiceStatus.values()[rs.getInt("status")]));
+				esArrayList.add(es);
 			}
-			elevatorStates.add(es);
+			elevatorStates.add(esArrayList.toArray(esArray));
 		}
 		results.setElevatorStates(elevatorStates);
 
