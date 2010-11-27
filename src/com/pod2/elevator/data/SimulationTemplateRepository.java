@@ -226,6 +226,7 @@ public class SimulationTemplateRepository {
 			TemplatePassengerRequest req = new TemplatePassengerRequest();
 			req.setOnloadFloor(rs.getInt("onloadFloor"));
 			req.setOffloadFloor(rs.getInt("offloadFloor"));
+			req.setQuantum(rs.getLong("quantum"));
 			req.setTimeConstraint(rs.getLong("timeConstraint"));
 			passengerRequests.add(req);
 		}
