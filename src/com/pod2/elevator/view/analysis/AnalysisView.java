@@ -38,36 +38,37 @@ public class AnalysisView extends JPanel implements ActionListener{
 		//Initialize Variables
 		refreshButton = new JButton("Refresh");
 		refreshButton.addActionListener(this);
+		refreshButton.setPreferredSize(new Dimension(150, 30));
 		analyzeButton = new JButton("Analyze");
 		analyzeButton.addActionListener(this);
+		analyzeButton.setPreferredSize(new Dimension(150, 30));
+		simulationComboBox = new JComboBox();
+		simulationComboBox.setPreferredSize(new Dimension(150, 30));
 		
 		//Add components
 		setLayout(new VerticalLayout());
 		add(Box.createRigidArea(new Dimension(0,5)));
 		add(refreshButton);
+		add(simulationComboBox);
 		add(analyzeButton);
 		
 		getSimulationList();
 	}
 	
 	public void getSimulationList(){
+		simulationComboBox.removeAllItems();
 		try {
 			simulationList = (LinkedList<SimulationDetail>) SimulationDataRepository.getCompletedSimulations();
-			String [] temp = new String[simulationList.size()];
 			for(int i=0; i<simulationList.size(); i++){
-				temp[i] = simulationList.get(i).getName();
+				simulationComboBox.addItem(simulationList.get(i).getName());
 			}
-			if(simulationComboBox != null){
-				this.remove(simulationComboBox);
-			}
-			simulationComboBox = new JComboBox(temp);
 		} catch (SQLException s) {
 			if(simulationComboBox == null){
 				simulationComboBox = new JComboBox();
 			}
 			s.printStackTrace();
 		}
-		add(simulationComboBox);
+		
 	}
 	
 	public void paint(Graphics g){

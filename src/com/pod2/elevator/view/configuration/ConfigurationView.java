@@ -3,8 +3,6 @@ package com.pod2.elevator.view.configuration;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -15,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import com.pod2.elevator.main.CentralController;
 import com.pod2.elevator.view.layout.VerticalLayout;
@@ -31,11 +30,18 @@ public class ConfigurationView extends JPanel implements ActionListener{
 		//port = getWebInterfacePort();
 		update = new JButton("Update");
 		update.addActionListener(this);
+		update.setHorizontalTextPosition(SwingConstants.CENTER);
+		update.setPreferredSize(new Dimension(150, 30));
+		
 		oldPort = new JLabel("Current Port: " + port);
+		oldPort.setPreferredSize(new Dimension(150, 30));
+		oldPort.setHorizontalAlignment(JLabel.CENTER);
+		
 		newPort = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		newPort.setHorizontalAlignment(JTextField.CENTER);
 		newPort.setText("8080");
 		newPort.setColumns(6);
+		newPort.setPreferredSize(new Dimension(150, 30));
 		
 		this.setLayout(new VerticalLayout());
 		
