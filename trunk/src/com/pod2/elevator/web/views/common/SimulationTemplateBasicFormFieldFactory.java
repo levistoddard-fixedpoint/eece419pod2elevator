@@ -2,6 +2,8 @@ package com.pod2.elevator.web.views.common;
 
 import com.pod2.elevator.scheduling.ElevatorScheduler;
 import com.pod2.elevator.scheduling.SchedulerRegistry;
+import com.pod2.elevator.web.validators.MaxDoubleValidator;
+import com.pod2.elevator.web.validators.MaxIntegerValidator;
 import com.pod2.elevator.web.validators.PositiveIntegerValidator;
 import com.pod2.elevator.web.validators.PositiveNumberValidator;
 import com.vaadin.data.Item;
@@ -48,12 +50,16 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 		} else if (pid.equals("requestGenerationOn")) {
 			return new CheckBox("Random request generation enabled");
 		} else if (pid.equals("speed")) {
+			final double MAX_SPEED = 2.0;
+
 			TextField speed = new TextField("Speed (floors / quantum):");
 			speed.setWidth(LayoutUtils.getFieldWidth());
 			speed.setRequired(true);
 			speed.setRequiredError("Please enter an elevator speed.");
 			speed.addValidator(new PositiveNumberValidator(
 					"Elevator speed must be a positive number."));
+			speed.addValidator(new MaxDoubleValidator(MAX_SPEED,
+					"Speed must be less than or equal to " + MAX_SPEED + " floors/quantum"));
 			return speed;
 		} else if (pid.equals("elevatorCapacity")) {
 			final int MIN_CAPACITY = 1;
@@ -62,18 +68,28 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 			return createIntegerSelect("Elevator Passenger Capacity:",
 					"Capacity must be a positive integer.", MIN_CAPACITY, MAX_CAPACITY);
 		} else if (pid.equals("quantumsBeforeService")) {
+			final int MAX_QUANTUMS_BEFORE_SERVICE = 5000;
+
 			TextField quantums = new TextField("Time Before Service (quantums):");
 			quantums.setWidth(LayoutUtils.getFieldWidth());
 			quantums.setRequired(true);
 			quantums.setRequiredError("Please enter quantums before required service.");
 			quantums.addValidator(new PositiveIntegerValidator("Time must be a positive integer."));
+			quantums.addValidator(new MaxIntegerValidator(5000,
+					"Time must be less than or equal to " + MAX_QUANTUMS_BEFORE_SERVICE
+							+ " quantums."));
 			return quantums;
 		} else if (pid.equals("distanceBeforeService")) {
+			final double MAX_DISTANCE_BEFORE_SERVICE = 5000.0;
+
 			TextField distance = new TextField("Distance Before Service (floors):");
 			distance.setWidth(LayoutUtils.getFieldWidth());
 			distance.setRequired(true);
 			distance.setRequiredError("Please enter distance before required service.");
 			distance.addValidator(new PositiveNumberValidator("Distance must be a positive number."));
+			distance.addValidator(new MaxDoubleValidator(MAX_DISTANCE_BEFORE_SERVICE,
+					"Distance must be less than or equal to " + MAX_DISTANCE_BEFORE_SERVICE
+							+ " floors."));
 			return distance;
 		}
 		throw new RuntimeException("unexpected property: " + pid);

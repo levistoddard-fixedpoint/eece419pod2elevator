@@ -8,6 +8,7 @@ import com.pod2.elevator.data.TemplateEvent;
 import com.pod2.elevator.data.TemplateFailureEvent;
 import com.pod2.elevator.data.TemplatePassengerRequest;
 import com.pod2.elevator.data.TemplateServiceEvent;
+import com.pod2.elevator.web.validators.MaxIntegerValidator;
 import com.pod2.elevator.web.validators.NonNegativeIntegerValidator;
 import com.pod2.elevator.web.views.templates.FailureEventAdapter;
 import com.pod2.elevator.web.views.templates.PassengerEventAdapter;
@@ -29,6 +30,8 @@ import com.vaadin.ui.Window;
  * 
  */
 public class AddEventWindowFactory {
+
+	private static final int MAX_QUANTUM = 1000000000;
 
 	private final EventConsumer consumer;
 
@@ -74,6 +77,8 @@ public class AddEventWindowFactory {
 				time.setRequiredError("Please enter time at which event should occur.");
 				time.addValidator(new NonNegativeIntegerValidator(
 						"Time must be a non-negative integer."));
+				time.addValidator(new MaxIntegerValidator(MAX_QUANTUM,
+						"Time must be less than or equal to " + MAX_QUANTUM + " quantums."));
 				return time;
 			} else if (propertyId.equals("elevatorNumber")) {
 				Select elevators = new Select("Elevator Number:");
@@ -118,6 +123,8 @@ public class AddEventWindowFactory {
 				timeConstraint.setRequiredError("Please enter a time constraint.");
 				timeConstraint.addValidator(new NonNegativeIntegerValidator(
 						"Time constraint must be a non-negative integer."));
+				timeConstraint.addValidator(new MaxIntegerValidator(MAX_QUANTUM,
+						"Time must be less than or equal to " + MAX_QUANTUM + "quantums."));
 				return timeConstraint;
 			}
 			return super.createField(item, propertyId, uiContext);
