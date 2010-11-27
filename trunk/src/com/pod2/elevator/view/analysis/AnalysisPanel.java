@@ -38,13 +38,14 @@ public class AnalysisPanel extends JPanel {
 		this.add(analysisStatusPanel, BorderLayout.EAST);
 	}
 
-	protected void statusUpdate(Collection<LoggedEvent> eventLog, ArrayList<double[]> elevatorPosition,
+	protected void statusUpdate(Collection<LoggedEvent> eventLog,
+			ArrayList<double[]> elevatorPosition,
 			ArrayList<double[]> cumulativeDistance,
 			ArrayList<long[]> cumulativeServiceTime,
 			ArrayList<int[]> passengersWaiting, String scheduler,
 			long startQuantum, long stopQuantum, int numberPassengersDelivered,
 			double meanTimeToFailure, double meanWaitTime) {
-		for(LoggedEvent e : eventLog){
+		for (LoggedEvent e : eventLog) {
 			log.append(e.getMessage() + "\n");
 		}
 		analysisChartPanel.statusUpdate(elevatorPosition, cumulativeDistance,
