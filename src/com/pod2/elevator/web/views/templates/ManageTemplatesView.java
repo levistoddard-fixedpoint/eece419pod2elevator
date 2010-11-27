@@ -153,7 +153,7 @@ public class ManageTemplatesView extends CustomComponent {
 	 * viewing an existing template.
 	 * 
 	 */
-	public enum TemplateFields {
+	private enum TemplateFields {
 
 		Name("Name"), CreatedDate("Created"), Copy("Copy"), Delete("Delete");
 
