@@ -479,7 +479,7 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 	 * subclass of TemplateEvent.
 	 * 
 	 */
-	public class EventTable extends Table {
+	private class EventTable extends Table {
 
 		@Override
 		protected String formatPropertyValue(Object rowId, Object colId, Property property) {
