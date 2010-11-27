@@ -13,16 +13,15 @@ CREATE  TABLE IF NOT EXISTS `ElevatorDB`.`SimulationTemplate` (
   `numberFloors` INT NOT NULL ,
   `elevatorCapacity` INT NOT NULL ,
   `numberElevators` INT NOT NULL ,
-  `scheduler` VARCHAR(255) NOT NULL ,
+  `scheduler` VARCHAR(100) NOT NULL ,
   `requestGenerationOn` TINYINT(1)  NOT NULL ,
   `name` VARCHAR(90) NOT NULL ,
-  `created` DATE NOT NULL ,
+  `created` DATETIME NOT NULL ,
+  `lastEdit` DATETIME NOT NULL ,
   `speed` DOUBLE NOT NULL ,
-  `distanceBeforeService` DOUBLE NOT NULL,
-  `quantumsBeforeService` BIGINT NOT NULL,
   PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  UNIQUE (`name`) )
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) )
 ENGINE = InnoDB;
 
 
@@ -33,17 +32,17 @@ CREATE  TABLE IF NOT EXISTS `ElevatorDB`.`SimulationResults` (
   `uuid` INT NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(90) NOT NULL ,
   `templateId` INT NOT NULL ,
-  `startTime` DATE NOT NULL ,
-  `stopTime` DATE NOT NULL ,
+  `startTime` DATETIME NOT NULL ,
+  `stopTime` DATETIME NOT NULL ,
   `startQuantum` BIGINT NOT NULL ,
   `stopQuantum` BIGINT NOT NULL ,
   PRIMARY KEY (`uuid`) ,
-  INDEX `sr_templateId` (`templateId` ASC) ,
   UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC) ,
+  INDEX `sr_templateId` (`templateId` ASC) ,
   CONSTRAINT `sr_templateId`
     FOREIGN KEY (`templateId` )
     REFERENCES `ElevatorDB`.`SimulationTemplate` (`id` )
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -160,7 +159,7 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `ElevatorDB`.`TemplateFailureEvent` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `templateId` INT NOT NULL ,
-  `component` VARCHAR(100) NOT NULL ,
+  `component` VARCHAR(45) NOT NULL ,
   `elevatorNumber` INT NOT NULL ,
   `quantum` BIGINT NOT NULL ,
   INDEX `tfe_templateId` (`templateId` ASC) ,
