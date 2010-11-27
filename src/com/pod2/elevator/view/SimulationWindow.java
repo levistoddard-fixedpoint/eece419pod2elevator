@@ -13,8 +13,6 @@ import com.pod2.elevator.view.active.ActiveView;
 import com.pod2.elevator.view.analysis.AnalysisView;
 import com.pod2.elevator.view.configuration.ConfigurationView;
 import com.pod2.elevator.view.data.SystemSnapShot;
-import com.pod2.elevator.view.model.Menu;
-import com.pod2.elevator.view.model.Toolbar;
 
 public class SimulationWindow extends JFrame implements Runnable {
 
