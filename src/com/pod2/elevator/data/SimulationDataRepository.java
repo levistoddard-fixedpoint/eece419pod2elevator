@@ -1,7 +1,6 @@
 package com.pod2.elevator.data;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,8 +16,7 @@ public class SimulationDataRepository {
 
 		List<SimulationDetail> completedSimulations = new LinkedList<SimulationDetail>();
 
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root",
-				"");
+		Connection conn = DatabaseUtils.getConnection();
 
 		Statement s = conn.createStatement();
 		s.executeQuery("SELECT `uuid`,`name` FROM `SimulationResults`");
@@ -53,8 +51,7 @@ public class SimulationDataRepository {
 		int numElevators = 0;
 		List<LoggedEvent> events = new Vector<LoggedEvent>();
 
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root",
-				"");
+		Connection conn = DatabaseUtils.getConnection();
 
 		Statement s = conn.createStatement();
 		s.executeQuery("SELECT * FROM `SimulationResults` WHERE `uuid` = " + uuid);
@@ -143,8 +140,7 @@ public class SimulationDataRepository {
 	}
 
 	static public int getSimulationCountByTemplate(int templateId) throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root",
-				"");
+		Connection conn = DatabaseUtils.getConnection();
 		Statement s = conn.createStatement();
 		ResultSet rs = s.executeQuery("SELECT COUNT(*) FROM `SimulationResults` "
 				+ "WHERE `templateId` = " + templateId);

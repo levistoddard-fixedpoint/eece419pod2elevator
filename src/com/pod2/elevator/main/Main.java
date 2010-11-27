@@ -17,22 +17,22 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-//		if (args.length != 1) {
-//			showUsageAndDie("Must supply path to database configuration file.");
-//		}
-//
-//		Properties databaseConfig = new Properties();
-//		try {
-//			databaseConfig.load(new FileInputStream(args[0]));
-//		} catch (Exception e) {
-//			showUsageAndDie(e.getMessage());
-//		}
-//
-//		try {
-//			DatabaseUtils.initialize(databaseConfig);
-//		} catch (InvalidDatabaseConfigurationException e) {
-//			showUsageAndDie(e.getMessage());
-//		}
+		if (args.length != 1) {
+			showUsageAndDie("Must supply path to database configuration file.");
+		}
+
+		Properties databaseConfig = new Properties();
+		try {
+			databaseConfig.load(new FileInputStream(args[0]));
+		} catch (Exception e) {
+			showUsageAndDie(e.getMessage());
+		}
+
+		try {
+			DatabaseUtils.initialize(databaseConfig);
+		} catch (InvalidDatabaseConfigurationException e) {
+			showUsageAndDie(e.getMessage());
+		}
 
 		try {
 			SimulationWindow window = new SimulationWindow();
