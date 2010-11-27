@@ -1,7 +1,6 @@
 package com.pod2.elevator.web.views.common;
 
 import com.pod2.elevator.data.TemplateEvent;
-import com.pod2.elevator.web.views.EditWindow;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Component;

@@ -1,6 +1,5 @@
-package com.pod2.elevator.web.views;
+package com.pod2.elevator.web.views.common;
 
-import com.pod2.elevator.web.views.common.LayoutUtils;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
