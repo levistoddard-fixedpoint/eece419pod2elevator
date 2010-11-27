@@ -15,6 +15,7 @@ import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
 import com.pod2.elevator.core.component.ComponentDetails;
 import com.pod2.elevator.core.component.ComponentRegistry;
+import com.pod2.elevator.main.CentralController;
 import com.pod2.elevator.view.active.elevator.ElevatorView;
 import com.pod2.elevator.view.active.status.StatusView;
 import com.pod2.elevator.view.data.LogMessage;
@@ -40,11 +41,12 @@ public class ActiveView extends JPanel {
 		active = false;
 	}
 
-	public ActiveView(int numFloors, int numElevators, String scheduler) {
+	public ActiveView(int numFloors, int numElevators,
+			CentralController centralController) {
 		// Initialize Variables
 		this.numFloors = numFloors;
 		this.numElevators = numElevators;
-		statusView = new StatusView(numFloors, numElevators, scheduler);
+		statusView = new StatusView(numFloors, numElevators, centralController);
 		elevatorView = new ElevatorView(numFloors, numElevators, statusView);
 		log = new TextArea();
 		components = ComponentRegistry.getFailableComponents();

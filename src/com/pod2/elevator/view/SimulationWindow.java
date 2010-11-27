@@ -22,6 +22,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 	private AnalysisView analysisView;
 	private ConfigurationView configurationView;
 	private SystemSnapShot prevSystemSnapShot;
+	private CentralController centralController;
 
 	public SimulationWindow() {
 		// Get screen size
@@ -52,8 +53,8 @@ public class SimulationWindow extends JFrame implements Runnable {
 		setVisible(true);
 	}
 
-	public void startup(int numFloors, int numElevators, String scheduler) {
-		activeView = new ActiveView(numFloors, numElevators, scheduler);
+	public void startup(int numFloors, int numElevators) {
+		activeView = new ActiveView(numFloors, numElevators, centralController);
 		tabPane.setComponentAt(0, activeView);
 	}
 
@@ -75,6 +76,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 	}
 
 	public void setCentralController(CentralController centralController) {
+		this.centralController = centralController;
 		configurationView.setCentralController(centralController);
 	}
 
