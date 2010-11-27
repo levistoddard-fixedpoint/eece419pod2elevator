@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.DefaultListCellRenderer;
@@ -16,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import com.pod2.elevator.core.ServiceStatus;
+import com.pod2.elevator.data.ElevatorState;
 import com.pod2.elevator.data.LoggedEvent;
 import com.pod2.elevator.data.SimulationDataRepository;
 import com.pod2.elevator.data.SimulationDetail;
@@ -150,7 +152,8 @@ public class AnalysisView extends JPanel implements ActionListener {
 			cumulativeDistance.add(i, distance);
 			cumulativeServiceTime.add(i, service);
 		}
-
+		
+		System.out.println(simulationResults.getPassengerDeliveries().size());
 		for (int i = 0; i < simulationResults.getPassengersWaiting().size(); i++) {
 			// Initialize arrays
 			wait = new int[simulationResults.getPassengersWaiting().get(i).length];

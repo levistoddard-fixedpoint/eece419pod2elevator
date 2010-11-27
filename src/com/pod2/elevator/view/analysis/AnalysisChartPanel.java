@@ -63,7 +63,7 @@ public class AnalysisChartPanel extends JPanel implements ActionListener {
 		time_ElevatorPosition = ChartFactory.createXYLineChart(
 				"Time vs Elevator Position", "Time", "Elevator Position",
 				time_ElevatorPositionSeriesCollection,
-				PlotOrientation.HORIZONTAL, true, false, false);
+				PlotOrientation.VERTICAL, true, false, false);
 
 		time_CumulativeDistanceSeries = new XYSeries[numElevators];
 		for (int i = 0; i < time_CumulativeDistanceSeries.length; i++) {
@@ -75,7 +75,7 @@ public class AnalysisChartPanel extends JPanel implements ActionListener {
 		time_CumulativeDistance = ChartFactory.createXYLineChart(
 				"Time vs Cumulative Distance", "Time", "Cumulative Distance",
 				time_CumulativeDistanceSeriesCollection,
-				PlotOrientation.HORIZONTAL, true, false, false);
+				PlotOrientation.VERTICAL, true, false, false);
 
 		time_CumulativeServiceTimeSeries = new XYSeries[numElevators];
 		for (int i = 0; i < time_CumulativeServiceTimeSeries.length; i++) {
@@ -87,7 +87,7 @@ public class AnalysisChartPanel extends JPanel implements ActionListener {
 		time_CumulativeServiceTime = ChartFactory.createXYLineChart(
 				"Time vs Service Time", "Time", "Service Time",
 				time_CumulativeServiceTimeSeriesCollection,
-				PlotOrientation.HORIZONTAL, true, false, false);
+				PlotOrientation.VERTICAL, true, false, false);
 
 		time_PassengersWaitingSeries = new XYSeries[numElevators];
 		for (int i = 0; i < time_PassengersWaitingSeries.length; i++) {
@@ -99,7 +99,7 @@ public class AnalysisChartPanel extends JPanel implements ActionListener {
 		time_PassengersWaiting = ChartFactory.createXYLineChart(
 				"Time vs Passengers Waiting", "Time", "Passengers Waiting",
 				time_PassengersWaitingSeriesCollection,
-				PlotOrientation.HORIZONTAL, true, false, false);
+				PlotOrientation.VERTICAL, true, false, false);
 
 		graphComboBoxLeft.addActionListener(this);
 		graphComboBoxLeft.setAlignmentX(CENTER_ALIGNMENT);
