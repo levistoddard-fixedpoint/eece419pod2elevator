@@ -76,8 +76,21 @@ public class AnalysisView extends JPanel implements ActionListener {
 						+ " : " + "[" + tempResults.getStartTime() + "]");
 			}
 		} catch (SQLException s) {
-			JOptionPane.showMessageDialog(this,
-					"Cannnot connect to database: Press refresh to try again");
+			// JOptionPane.showMessageDialog(this,
+			// "Cannnot connect to database: Press refresh to try again");
+			int i = JOptionPane.showConfirmDialog(this,
+					"Cannnot connect to database: Try again?", "Error",
+					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			switch (i) {
+			case 0:
+				getSimulationList();
+				break;
+			case 1:
+				System.exit(0);
+				break;
+			case 2:
+				break;
+			}
 		}
 
 	}
