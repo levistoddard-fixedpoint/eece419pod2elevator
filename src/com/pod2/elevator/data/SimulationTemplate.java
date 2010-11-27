@@ -16,7 +16,7 @@ public class SimulationTemplate extends SimulationTemplateDetail {
 	private int numberFloors = 5;
 	private int elevatorCapacity = 5;
 	private int numberElevators = 1;
-	private double speed = 0.01; /* floors per second */
+	private double speed = 0.2; /* floors per second */
 	private Set<Integer> restrictedFloors = new HashSet<Integer>();
 	private ElevatorScheduler scheduler = SchedulerRegistry.getAvailableSchedulers().iterator()
 			.next();
@@ -24,8 +24,8 @@ public class SimulationTemplate extends SimulationTemplateDetail {
 	private List<TemplatePassengerRequest> passengerRequests = new LinkedList<TemplatePassengerRequest>();
 	private List<TemplateFailureEvent> failureEvents = new LinkedList<TemplateFailureEvent>();
 	private List<TemplateServiceEvent> serviceEvents = new LinkedList<TemplateServiceEvent>();
-	private long quantumsBeforeService = 100000;
-	private double distanceBeforeService = 100000.00;
+	private long quantumsBeforeService = 2500;
+	private double distanceBeforeService = 2500.00;
 
 	public List<Event> getEvents() {
 		List<Event> eventList = new LinkedList<Event>();

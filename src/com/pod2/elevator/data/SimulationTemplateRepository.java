@@ -27,8 +27,9 @@ public class SimulationTemplateRepository {
 		//
 		String sqlQuery = "INSERT INTO `SimulationTemplate` (" + "`numberFloors`,"
 				+ "`elevatorCapacity`," + "`numberElevators`," + "`scheduler`,"
-				+ "`requestGenerationOn`," + "`name`," + "`created`" + ") "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
+				+ "`requestGenerationOn`," + "`name`," + "`created`," + "`speed`,"
+				+ "`distanceBeforeService`," + "`quantumsBeforeService`" + ") "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement preparedStmt = conn.prepareStatement(sqlQuery);
 
@@ -39,6 +40,9 @@ public class SimulationTemplateRepository {
 		preparedStmt.setBoolean(5, template.isRequestGenerationOn());
 		preparedStmt.setString(6, template.getName());
 		preparedStmt.setDate(7, new Date(template.getCreated().getTime()));
+		preparedStmt.setDouble(8, template.getSpeed());
+		preparedStmt.setDouble(9, template.getDistanceBeforeService());
+		preparedStmt.setLong(10, template.getQuantumsBeforeService());
 
 		preparedStmt.execute();
 
@@ -202,6 +206,9 @@ public class SimulationTemplateRepository {
 		template.setScheduler(SchedulerRegistry.getSchedulerByKey(rs.getString("scheduler")));
 		template.setRequestGenerationOn(rs.getBoolean("requestGenerationOn"));
 		template.setCreated(rs.getDate("created"));
+		template.setSpeed(rs.getDouble("speed"));
+		template.setDistanceBeforeService(rs.getDouble("distanceBeforeService"));
+		template.setQuantumsBeforeService(rs.getLong("quantumsBeforeService"));
 
 		//
 		// Get many-to-one template attributes
