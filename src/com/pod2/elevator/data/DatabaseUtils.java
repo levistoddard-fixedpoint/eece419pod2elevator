@@ -11,6 +11,8 @@ public class DatabaseUtils {
 	private static String password;
 	private static String url;
 
+	private static int UNIQUE_KEY_VIOLATION_CODE = 1062;
+
 	public static void initialize(Properties properties)
 			throws InvalidDatabaseConfigurationException {
 		final String USER_KEY = "user";
@@ -36,6 +38,10 @@ public class DatabaseUtils {
 
 	public static Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(url, user, password);
+	}
+
+	public static boolean isUniqueConstraintViolation(int code) {
+		return code == UNIQUE_KEY_VIOLATION_CODE;
 	}
 
 }

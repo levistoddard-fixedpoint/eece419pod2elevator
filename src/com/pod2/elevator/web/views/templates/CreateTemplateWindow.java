@@ -1,14 +1,15 @@
 package com.pod2.elevator.web.views.templates;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.pod2.elevator.core.events.EventType;
+import com.pod2.elevator.data.DatabaseUtils;
 import com.pod2.elevator.data.SimulationTemplate;
 import com.pod2.elevator.data.SimulationTemplateRepository;
 import com.pod2.elevator.data.TemplateEvent;
@@ -150,7 +151,6 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 	protected void onSave() {
 		try {
 			basicInfo.commit();
-			template.setLastEdit(new Date());
 			template.setRestrictedFloors(getRestrictedFloors());
 			template.setPassengerRequests(getPassengerEvents());
 			template.setServiceEvents(getServiceEvents());
@@ -160,8 +160,15 @@ public class CreateTemplateWindow extends EditWindow implements EventConsumer {
 				manageView.templateCreated(template);
 				close();
 			} catch (Exception e) {
+				String message = e.getMessage();
+				if (e instanceof SQLException) {
+					SQLException sqlException = (SQLException) e;
+					if (DatabaseUtils.isUniqueConstraintViolation(sqlException.getErrorCode())) {
+						message = "Template with name '" + template.getName() + "' already exists.";
+					}
+				}
 				Notification databaseError = new Notification("Unable to create template.<br>",
-						e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
+						message, Notification.TYPE_ERROR_MESSAGE);
 				parent.showNotification(databaseError);
 			}
 		} catch (InvalidValueException e) {

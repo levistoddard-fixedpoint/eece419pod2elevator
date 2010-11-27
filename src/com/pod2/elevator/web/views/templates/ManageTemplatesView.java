@@ -104,7 +104,6 @@ public class ManageTemplatesView extends CustomComponent {
 
 		templates.addContainerProperty(TemplateFields.Name, String.class, null);
 		templates.addContainerProperty(TemplateFields.CreatedDate, Date.class, null);
-		templates.addContainerProperty(TemplateFields.EditDate, Date.class, null);
 		templates.addContainerProperty(TemplateFields.Copy, Button.class, null);
 		templates.addContainerProperty(TemplateFields.Delete, Button.class, null);
 
@@ -130,7 +129,7 @@ public class ManageTemplatesView extends CustomComponent {
 		Button copyButton = new Button("Copy", new CopyClickHandler(id));
 		Button deleteButton = new Button("Delete", new DeleteClickHandler(id));
 		Object[] templateRow = new Object[] { template.getName(), template.getCreated(),
-				template.getLastEdit(), copyButton, deleteButton };
+				copyButton, deleteButton };
 		templates.addItem(templateRow, id);
 	}
 
@@ -156,7 +155,7 @@ public class ManageTemplatesView extends CustomComponent {
 	 */
 	public enum TemplateFields {
 
-		Name("Name"), CreatedDate("Created"), EditDate("Last Edit"), Copy("Copy"), Delete("Delete");
+		Name("Name"), CreatedDate("Created"), Copy("Copy"), Delete("Delete");
 
 		private String title;
 

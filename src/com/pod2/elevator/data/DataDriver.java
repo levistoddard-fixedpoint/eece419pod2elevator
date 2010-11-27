@@ -34,7 +34,6 @@ public class DataDriver {
 		//
 		template.setName("Test Template");
 		template.setCreated(curDate);
-		template.setLastEdit(curDate);
 		template.setElevatorCapacity(8);
 		template.setNumberElevators(2);
 		template.setNumberFloors(12);
@@ -76,9 +75,6 @@ public class DataDriver {
 		//
 		SimulationTemplateRepository.createTemplate(template);
 
-		template.setName("Modified Template");
-		SimulationTemplateRepository.updateTemplate(template);
-
 		//
 		// Get list of all templates
 		//
@@ -90,8 +86,7 @@ public class DataDriver {
 
 		System.out.println("Details for template id # " + fetchedTemplate.getId() + ":\n"
 				+ "Name: " + fetchedTemplate.getName() + "\n" + "Created: "
-				+ fetchedTemplate.getCreated() + "\n" + "Last Edit: "
-				+ fetchedTemplate.getLastEdit() + "\n" + "Elevator Capacity: "
+				+ fetchedTemplate.getCreated() + "\n" + "Elevator Capacity: "
 				+ fetchedTemplate.getElevatorCapacity() + "\n" + "Number of Elevators: "
 				+ fetchedTemplate.getNumberElevators() + "\n" + "Number of Floors: "
 				+ fetchedTemplate.getNumberFloors() + "\n" + "Request Generation On: "
