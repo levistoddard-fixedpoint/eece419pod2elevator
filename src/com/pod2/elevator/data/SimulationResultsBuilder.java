@@ -43,8 +43,8 @@ public class SimulationResultsBuilder implements ResultsBuilder {
 
 		preparedStmt.setString(1, results.getName());
 		preparedStmt.setInt(2, results.getTemplateId());
-		preparedStmt.setDate(3, new java.sql.Date(results.getStartTime().getTime()));
-		preparedStmt.setDate(4, new java.sql.Date(results.getStopTime().getTime()));
+		preparedStmt.setTimestamp(3, new java.sql.Timestamp(results.getStartTime().getTime()));
+		preparedStmt.setTimestamp(4, new java.sql.Timestamp(results.getStopTime().getTime()));
 		preparedStmt.setLong(5, results.getStartQuantum());
 		preparedStmt.setLong(6, results.getStopQuantum());
 

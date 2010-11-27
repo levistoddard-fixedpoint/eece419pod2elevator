@@ -1,8 +1,11 @@
 package com.pod2.elevator.data;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.pod2.elevator.core.DeliveryStatus;
 
 public class SimulationResults {
 	private int uuid;
@@ -110,6 +113,18 @@ public class SimulationResults {
 
 	public void setEvents(List<LoggedEvent> events) {
 		this.events = events;
+	}
+	
+	public int getRescuedCount() {
+		Iterator<CompletedRequest> compReqs = passengerDeliveries.iterator();
+		int count = 0;
+		while (compReqs.hasNext()) {
+			CompletedRequest req = compReqs.next();
+			if (req.getDeliveryStatus() == DeliveryStatus.Rescued) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 }

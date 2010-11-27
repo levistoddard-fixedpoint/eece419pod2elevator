@@ -65,8 +65,8 @@ public class SimulationDataRepository {
 		results.setUuid(uuid);
 		results.setName(rs.getString("name"));
 		results.setTemplateId(rs.getInt("templateId"));
-		results.setStartTime(rs.getDate("startTime"));
-		results.setStopTime(rs.getDate("stopTime"));
+		results.setStartTime(rs.getTimestamp("startTime"));
+		results.setStopTime(rs.getTimestamp("stopTime"));
 		results.setStartQuantum(rs.getLong("startQuantum"));
 		results.setStopQuantum(rs.getLong("stopQuantum"));
 

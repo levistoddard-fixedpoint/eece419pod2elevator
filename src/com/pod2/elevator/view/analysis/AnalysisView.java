@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -72,8 +73,9 @@ public class AnalysisView extends JPanel implements ActionListener {
 				Uuid = simulationList.get(i).getId();
 				tempResults = SimulationDataRepository
 						.getSimulationResults(Uuid);
+				SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm"); 
 				simulationComboBox.addItem(simulationList.get(i).getName()
-						+ " : " + "[" + tempResults.getStartTime() + "]");
+						+ " : " + "[" + formatter.format(tempResults.getStartTime()) + "]");
 			}
 		} catch (SQLException s) {
 			// JOptionPane.showMessageDialog(this,
