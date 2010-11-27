@@ -10,7 +10,11 @@ public class TextArea extends JTextArea {
 
 	public void append(String text) {
 		super.append(text);
-		this.setCaretPosition(this.getCaretPosition() + text.length());
+		try{
+			this.setCaretPosition(this.getCaretPosition() + text.length());
+		}catch(IllegalArgumentException e){
+			
+		}
 	}
 
 }

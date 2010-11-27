@@ -4,10 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 import javax.swing.JTabbedPane;
-import javax.swing.JToolBar;
-
 import com.pod2.elevator.main.CentralController;
 import com.pod2.elevator.view.active.ActiveView;
 import com.pod2.elevator.view.analysis.AnalysisView;
