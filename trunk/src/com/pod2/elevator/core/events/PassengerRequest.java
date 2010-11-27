@@ -2,11 +2,10 @@ package com.pod2.elevator.core.events;
 
 import com.pod2.elevator.core.ActiveSimulation;
 
-/**
- * An Event which inserts a passenger request into the ActiveSimulation.
- * 
- */
 public class PassengerRequest extends Event {
+	/**
+	 *  OVERVIEW: An Event which inserts a passenger request into the ActiveSimulation.
+	 */
 
 	private final int onloadFloor;
 	private final int offloadFloor;
@@ -14,6 +13,13 @@ public class PassengerRequest extends Event {
 
 	PassengerRequest(EventSource source, long quantum, int onloadFloor,
 			int offloadFloor, long timeConstraint) {
+		/**
+		 *  REQUIRES: source != null && quantum >= 0 && onloadFloor >= 0 &&
+		 *  	offloadFloor >= 0 && timeConstraint >= 0
+		 *  MODIFIES: this
+		 *  EFFECTS: Constructor for the class.  Initiate all variables used in this class.
+		 */
+		
 		super(source, quantum);
 		assert (onloadFloor >= 0);
 		assert (offloadFloor >= 0);
@@ -25,6 +31,11 @@ public class PassengerRequest extends Event {
 
 	@Override
 	public void apply(ActiveSimulation simulation) {
+		/**
+		 * 	REQUIRES: simulation != null
+		 * 	MODIFIES: this
+		 * 	EFFECTS: Apply passenger request event to simulation.
+		 */
 		simulation.enqueuePassenger(this);
 	}
 
@@ -42,6 +53,9 @@ public class PassengerRequest extends Event {
 
 	@Override
 	public String toString() {
+		/**
+		 * 	EFFECTS: Returns a string with the information of the passenger request.
+		 */
 		final String format = "%s: Passenger entered floor %d. Wants to go to floor %d within %d quantum.";
 		return String.format(format, super.toString(), onloadFloor,
 				offloadFloor, timeConstraint);

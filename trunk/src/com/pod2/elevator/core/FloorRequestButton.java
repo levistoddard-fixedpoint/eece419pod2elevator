@@ -22,10 +22,9 @@ public class FloorRequestButton {
 		/**
 		 * 	REQUIRES: quantum != null && quantum > 0 && isGoingUp != null
 		 * 	MODIFIES: this
-		 * 	EFFECTS: Set the buttons for going up or down.  isUpSelected is set
-		 * 		if isGoingUp is true.  Else, isDownSelected is set.  Only set the
-		 * 		buttons if it has not been set before.  Once set, record the quantum
-		 * 		which the button is set.
+		 * 	EFFECTS: Set the buttons for going up or down.  Only set the
+		 * 		buttons if it has not been set before.  Once set, record the
+		 * 		quantum when the button is set.
 		 */
 		if (isGoingUp && !isUpSelected) {
 			upSelectedQuantum = quantum;
