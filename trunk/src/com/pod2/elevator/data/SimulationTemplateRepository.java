@@ -2,7 +2,6 @@ package com.pod2.elevator.data;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,8 +18,7 @@ import com.pod2.elevator.scheduling.SchedulerRegistry;
 public class SimulationTemplateRepository {
 
 	static public void createTemplate(SimulationTemplate template) throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root",
-				"");
+		Connection conn = DatabaseUtils.getConnection();
 
 		//
 		// One-to-one attributes
@@ -137,8 +135,7 @@ public class SimulationTemplateRepository {
 
 	static public void deleteTemplate(int id) throws SQLException {
 
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root",
-				"");
+		Connection conn = DatabaseUtils.getConnection();
 
 		String sqlQuery = "DELETE FROM `SimulationTemplate` WHERE `id` = ?";
 		PreparedStatement preparedStmt = conn.prepareStatement(sqlQuery);
@@ -156,8 +153,7 @@ public class SimulationTemplateRepository {
 
 		List<SimulationTemplateDetail> allTemplates = new Vector<SimulationTemplateDetail>();
 
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root",
-				"");
+		Connection conn = DatabaseUtils.getConnection();
 
 		Statement s = conn.createStatement();
 		s.executeQuery("SELECT * FROM `SimulationTemplate`");
@@ -188,8 +184,7 @@ public class SimulationTemplateRepository {
 		List<TemplateFailureEvent> failureEvents = new Vector<TemplateFailureEvent>();
 		List<TemplateServiceEvent> serviceEvents = new Vector<TemplateServiceEvent>();
 
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root",
-				"");
+		Connection conn = DatabaseUtils.getConnection();
 		Statement s = conn.createStatement();
 		s.executeQuery("SELECT * FROM `SimulationTemplate` WHERE `id` = " + id);
 		ResultSet rs = s.getResultSet();

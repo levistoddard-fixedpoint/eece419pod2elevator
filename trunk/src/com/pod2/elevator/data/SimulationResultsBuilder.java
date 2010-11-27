@@ -1,7 +1,6 @@
 package com.pod2.elevator.data;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,8 +29,7 @@ public class SimulationResultsBuilder implements ResultsBuilder {
 	}
 
 	public void save() throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root",
-				"");
+		Connection conn = DatabaseUtils.getConnection();
 
 		//
 		// Insert one-to-one data
