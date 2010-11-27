@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.swing.Box;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -43,7 +44,10 @@ public class AnalysisView extends JPanel implements ActionListener {
 		analyzeButton.addActionListener(this);
 		analyzeButton.setPreferredSize(new Dimension(150, 30));
 		simulationComboBox = new JComboBox();
-		simulationComboBox.setPreferredSize(new Dimension(150, 30));
+		DefaultListCellRenderer dlcr = new DefaultListCellRenderer();
+		dlcr.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
+		simulationComboBox.setRenderer(dlcr);
+		simulationComboBox.setPreferredSize(new Dimension(300, 30));
 
 		// Add components
 		setLayout(new VerticalLayout());
@@ -60,8 +64,14 @@ public class AnalysisView extends JPanel implements ActionListener {
 		try {
 			simulationList = (LinkedList<SimulationDetail>) SimulationDataRepository
 					.getCompletedSimulations();
+			int Uuid;
+			SimulationResults tempResults;
 			for (int i = 0; i < simulationList.size(); i++) {
-				simulationComboBox.addItem(simulationList.get(i).getName());
+				Uuid = simulationList.get(i).getId();
+				tempResults = SimulationDataRepository
+						.getSimulationResults(Uuid);
+				simulationComboBox.addItem(simulationList.get(i).getName()
+						+ " : " + "[" + tempResults.getStartTime() + "]");
 			}
 		} catch (SQLException s) {
 			if (simulationComboBox == null) {
@@ -181,10 +191,10 @@ public class AnalysisView extends JPanel implements ActionListener {
 		// Event Log
 		Collection<LoggedEvent> eventLog = simulationResults.getEvents();
 
-		analysisPanel.statusUpdate(eventLog, elevatorPosition, cumulativeDistance,
-				cumulativeServiceTime, passengersWaiting, simulationName,
-				startQuantum, stopQuantum, numberPassengersDelivered,
-				meanTimeToFailure, meanWaitTime);
+		analysisPanel.statusUpdate(eventLog, elevatorPosition,
+				cumulativeDistance, cumulativeServiceTime, passengersWaiting,
+				simulationName, startQuantum, stopQuantum,
+				numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
 	}
 
 	public void actionPerformed(ActionEvent e) {

@@ -1,6 +1,8 @@
 package com.pod2.elevator.scheduling;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.pod2.elevator.core.ActiveSimulation;
@@ -11,8 +13,8 @@ import com.pod2.elevator.core.ServiceStatus;
 
 public class ShortestSeekTimeFirstScheduler implements ElevatorScheduler {
 
-	private Set<Integer> assignedElevator = new HashSet<Integer>();
-	private Set<Double> assignedFloor = new HashSet<Double>();
+	private Map<Integer, Integer> floorRequest = new HashMap<Integer, Integer>();
+	private Map<Integer, Integer> elevatorRequest = new HashMap<Integer, Integer>();
 
 	@Override
 	public String getKey() {
@@ -43,29 +45,42 @@ public class ShortestSeekTimeFirstScheduler implements ElevatorScheduler {
 		// retrieve all requests
 		FloorRequestButton[] requests = simulation.getRequestButtons();
 		Elevator[] elevators = simulation.getElevators();
+		int nearestElevator;
 
 		for (int floor = 0; floor < requests.length; floor++) {
-			if ((requests[floor].isUpSelected() || requests[floor].isDownSelected())
-					&& !assignedFloor.contains((double) floor)) {
+			if ((requests[floor].isUpSelected() || requests[floor]
+					.isDownSelected())) {
 				// assign floors to elevators without passengers
-				int nearestElevator = 0;
+				nearestElevator = 0;
 				for (int j = 0; j < elevators.length; j++) {
-					if (elevators[j].getServiceStatus().equals(ServiceStatus.InService)) {
+					if (elevators[j].getServiceStatus().equals(
+							ServiceStatus.InService)) {
+						if (!elevators[nearestElevator].getServiceStatus()
+								.equals(ServiceStatus.InService)) {
+							nearestElevator = j;
+						}
 						if (Math.abs(elevators[j].getPosition() - floor) < Math
-								.abs(elevators[nearestElevator].getPosition() - floor)) {
+								.abs(elevators[nearestElevator].getPosition()
+										- floor)) {
 							nearestElevator = j;
 						} else if (Math.abs(elevators[j].getPosition() - floor) == Math
-								.abs(elevators[nearestElevator].getPosition() - floor)) {
+								.abs(elevators[nearestElevator].getPosition()
+										- floor)) {
 							if (elevators[j].getRequestPanel().getRequestSize() < elevators[nearestElevator]
 									.getRequestPanel().getRequestSize()) {
 								nearestElevator = j;
 							}
 						}
+					} else {
+						floorRequest.remove(j);
 					}
 				}
-				if (!assignedElevator.contains(nearestElevator)) {
-					assignedElevator.add(nearestElevator);
-					assignedFloor.add((double) floor);
+
+				if (!floorRequest.containsKey(nearestElevator)
+						&& !floorRequest.containsValue(floor)
+						&& elevators[nearestElevator].getServiceStatus()
+								.equals(ServiceStatus.InService)) {
+					floorRequest.put(nearestElevator, floor);
 					if (elevators[nearestElevator].getPosition() != floor) {
 						elevators[nearestElevator].moveToFloor(floor);
 					} else {
@@ -78,18 +93,21 @@ public class ShortestSeekTimeFirstScheduler implements ElevatorScheduler {
 
 		for (Elevator elevator : simulation.getElevators()) {
 			if (MotionStatus.DoorsOpen.equals(elevator.getMotionStatus())) {
-				assignedFloor.remove(elevator.getPosition());
+				floorRequest.remove(elevator.getElevatorNumber());
+				elevatorRequest.remove(elevator.getElevatorNumber());
 				elevator.closeDoors();
-			} else if (MotionStatus.DoorsClosed.equals(elevator.getMotionStatus())) {
-				assignedElevator.remove(elevator.getElevatorNumber());
+			} else if (MotionStatus.DoorsClosed.equals(elevator
+					.getMotionStatus())) {
+				floorRequest.remove(elevator.getElevatorNumber());
+				elevatorRequest.remove(elevator.getElevatorNumber());
 				for (int i = 0; i < requests.length; i++) {
 					if (elevator.getRequestPanel().isRequested(i)) {
-						assignedElevator.add(elevator.getElevatorNumber());
-						assignedFloor.add((double) i);
+						elevatorRequest.put(elevator.getElevatorNumber(), i);
 						elevator.moveToFloor(i);
 					}
 				}
-			} else if (MotionStatus.ReachedDestinationFloor.equals(elevator.getMotionStatus())) {
+			} else if (MotionStatus.ReachedDestinationFloor.equals(elevator
+					.getMotionStatus())) {
 				elevator.openDoors();
 			}
 		}

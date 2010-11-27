@@ -100,6 +100,7 @@ public class SimulationResultsBuilder implements ResultsBuilder {
 		preparedStmt = conn.prepareStatement(sqlQuery);
 		Iterator<ElevatorState[]> elevatorStates = results.getElevatorStates().iterator();
 		while (elevatorStates.hasNext()) {
+			System.out.println("ElevatorState");
 			ElevatorState[] states = elevatorStates.next();
 			for (int i = 0; i < states.length; i++) {
 				preparedStmt.setInt(1, results.getUuid());
