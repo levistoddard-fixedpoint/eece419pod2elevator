@@ -232,6 +232,9 @@ public class AnalysisView extends JPanel implements ActionListener {
 		long startQuantum = simulationResults.getStartQuantum();
 		// Stop Quantum
 		long stopQuantum = simulationResults.getStopQuantum();
+		
+		// Rescued Passengers
+		int rescued = simulationResults.getRescuedCount();
 
 		// Event Log
 		Collection<LoggedEvent> eventLog = simulationResults.getEvents();
@@ -239,7 +242,7 @@ public class AnalysisView extends JPanel implements ActionListener {
 		analysisPanel.statusUpdate(eventLog, elevatorPosition,
 				cumulativeDistance, cumulativeServiceTime, passengersWaiting,
 				simulationName, startQuantum, stopQuantum,
-				numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
+				numberPassengersDelivered, rescued, meanTimeToFailure, meanWaitTime);
 	}
 
 	public void actionPerformed(ActionEvent e) {
