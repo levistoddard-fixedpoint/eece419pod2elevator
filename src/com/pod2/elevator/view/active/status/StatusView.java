@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
 import com.pod2.elevator.main.CentralController;
@@ -32,11 +31,10 @@ public class StatusView extends JPanel implements ActionListener {
 
 	private CentralController centralController;
 
-	public StatusView(int numFloors, int numElevators,
-			CentralController centralController) {
-		
+	public StatusView(int numFloors, int numElevators, CentralController centralController) {
+
 		this.centralController = centralController;
-		
+
 		elevatorStatus = new ElevatorStatusPanel[numElevators];
 		floorStatusButton = new JButton("Floor Status");
 		floorStatusButton.addActionListener(this);
@@ -94,22 +92,17 @@ public class StatusView extends JPanel implements ActionListener {
 		super.paint(g);
 	}
 
-	public void statusUpdate(int eid, double position,
-			Set<Integer> floorsOffLimit, int numberRequests,
-			int requestCapacity, MotionStatus motionStatus,
-			ServiceStatus serviceStatus,
-			TreeMap<String, Boolean> componentFailure, int fid, long quantum,
-			int passengersWaiting, boolean isUpSelected,
-			boolean isDownSelected, long upSelectedQuantum,
-			long downSelectedQuantum) {
-		elevatorStatus[eid].statusUpdate(position, floorsOffLimit,
-				numberRequests, requestCapacity, motionStatus, serviceStatus,
-				componentFailure);
-		floorStatus.statusUpdate(fid, quantum, passengersWaiting, isUpSelected,
-				isDownSelected, upSelectedQuantum, downSelectedQuantum);
+	public void statusUpdate(int eid, double position, Set<Integer> floorsOffLimit,
+			int numberRequests, int requestCapacity, MotionStatus motionStatus,
+			ServiceStatus serviceStatus, TreeMap<String, Boolean> componentFailure, int fid,
+			long quantum, int passengersWaiting, boolean isUpSelected, boolean isDownSelected,
+			long upSelectedQuantum, long downSelectedQuantum) {
+		elevatorStatus[eid].statusUpdate(position, floorsOffLimit, numberRequests, requestCapacity,
+				motionStatus, serviceStatus, componentFailure);
+		floorStatus.statusUpdate(fid, quantum, passengersWaiting, isUpSelected, isDownSelected,
+				upSelectedQuantum, downSelectedQuantum);
 		quantumLabel.setText("Quantum: " + Long.toString(quantum));
-		schedulerLabel.setText(centralController.getSimulation().getScheduler()
-				.getName());
+		schedulerLabel.setText(centralController.getSimulation().getScheduler().getName());
 	}
 
 	public void actionPerformed(ActionEvent e) {

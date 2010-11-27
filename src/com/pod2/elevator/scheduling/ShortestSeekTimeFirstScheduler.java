@@ -1,9 +1,7 @@
 package com.pod2.elevator.scheduling;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.Elevator;
@@ -48,24 +46,20 @@ public class ShortestSeekTimeFirstScheduler implements ElevatorScheduler {
 		int nearestElevator;
 
 		for (int floor = 0; floor < requests.length; floor++) {
-			if ((requests[floor].isUpSelected() || requests[floor]
-					.isDownSelected())) {
+			if ((requests[floor].isUpSelected() || requests[floor].isDownSelected())) {
 				// assign floors to elevators without passengers
 				nearestElevator = 0;
 				for (int j = 0; j < elevators.length; j++) {
-					if (elevators[j].getServiceStatus().equals(
-							ServiceStatus.InService)) {
-						if (!elevators[nearestElevator].getServiceStatus()
-								.equals(ServiceStatus.InService)) {
+					if (elevators[j].getServiceStatus().equals(ServiceStatus.InService)) {
+						if (!elevators[nearestElevator].getServiceStatus().equals(
+								ServiceStatus.InService)) {
 							nearestElevator = j;
 						}
 						if (Math.abs(elevators[j].getPosition() - floor) < Math
-								.abs(elevators[nearestElevator].getPosition()
-										- floor)) {
+								.abs(elevators[nearestElevator].getPosition() - floor)) {
 							nearestElevator = j;
 						} else if (Math.abs(elevators[j].getPosition() - floor) == Math
-								.abs(elevators[nearestElevator].getPosition()
-										- floor)) {
+								.abs(elevators[nearestElevator].getPosition() - floor)) {
 							if (elevators[j].getRequestPanel().getRequestSize() < elevators[nearestElevator]
 									.getRequestPanel().getRequestSize()) {
 								nearestElevator = j;
@@ -78,8 +72,8 @@ public class ShortestSeekTimeFirstScheduler implements ElevatorScheduler {
 
 				if (!floorRequest.containsKey(nearestElevator)
 						&& !floorRequest.containsValue(floor)
-						&& elevators[nearestElevator].getServiceStatus()
-								.equals(ServiceStatus.InService)) {
+						&& elevators[nearestElevator].getServiceStatus().equals(
+								ServiceStatus.InService)) {
 					floorRequest.put(nearestElevator, floor);
 					if (elevators[nearestElevator].getPosition() != floor) {
 						elevators[nearestElevator].moveToFloor(floor);
@@ -96,8 +90,7 @@ public class ShortestSeekTimeFirstScheduler implements ElevatorScheduler {
 				floorRequest.remove(elevator.getElevatorNumber());
 				elevatorRequest.remove(elevator.getElevatorNumber());
 				elevator.closeDoors();
-			} else if (MotionStatus.DoorsClosed.equals(elevator
-					.getMotionStatus())) {
+			} else if (MotionStatus.DoorsClosed.equals(elevator.getMotionStatus())) {
 				floorRequest.remove(elevator.getElevatorNumber());
 				elevatorRequest.remove(elevator.getElevatorNumber());
 				for (int i = 0; i < requests.length; i++) {
@@ -106,8 +99,7 @@ public class ShortestSeekTimeFirstScheduler implements ElevatorScheduler {
 						elevator.moveToFloor(i);
 					}
 				}
-			} else if (MotionStatus.ReachedDestinationFloor.equals(elevator
-					.getMotionStatus())) {
+			} else if (MotionStatus.ReachedDestinationFloor.equals(elevator.getMotionStatus())) {
 				elevator.openDoors();
 			}
 		}

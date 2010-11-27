@@ -22,7 +22,6 @@ public class DataDriver {
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException, SQLException {
 
-		SimulationTemplateRepository test = new SimulationTemplateRepository();
 		SimulationTemplate template = new SimulationTemplate();
 		SimulationTemplate fetchedTemplate = new SimulationTemplate();
 
@@ -75,17 +74,19 @@ public class DataDriver {
 		//
 		// insert template into database
 		//
-		test.createTemplate(template);
+		SimulationTemplateRepository.createTemplate(template);
 
 		template.setName("Modified Template");
-		test.updateTemplate(template);
+		SimulationTemplateRepository.updateTemplate(template);
 
 		//
 		// Get list of all templates
 		//
-		List<SimulationTemplateDetail> templateList = test.getAllTemplates();
+		List<SimulationTemplateDetail> templateList = SimulationTemplateRepository
+				.getAllTemplates();
 
-		fetchedTemplate = test.getTemplate(templateList.iterator().next().getId());
+		fetchedTemplate = SimulationTemplateRepository.getTemplate(templateList.iterator().next()
+				.getId());
 
 		System.out.println("Details for template id # " + fetchedTemplate.getId() + ":\n"
 				+ "Name: " + fetchedTemplate.getName() + "\n" + "Created: "
@@ -100,12 +101,10 @@ public class DataDriver {
 		// Simulation Data
 		//
 
-		SimulationDataRepository sdr = new SimulationDataRepository();
-		int simcount = sdr.getSimulationCountByTemplate(1);
+		int simcount = SimulationDataRepository.getSimulationCountByTemplate(1);
 		System.out.println("Simcount: " + simcount + "\n");
 
 		System.out.println("Done!");
 
 	}
-
 }
