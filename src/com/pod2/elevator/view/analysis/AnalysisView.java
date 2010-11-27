@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.swing.Box;
@@ -14,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import com.pod2.elevator.core.ServiceStatus;
+import com.pod2.elevator.data.LoggedEvent;
 import com.pod2.elevator.data.SimulationDataRepository;
 import com.pod2.elevator.data.SimulationDetail;
 import com.pod2.elevator.data.SimulationResults;
@@ -176,7 +178,10 @@ public class AnalysisView extends JPanel implements ActionListener {
 		// Stop Quantum
 		long stopQuantum = simulationResults.getStopQuantum();
 
-		analysisPanel.statusUpdate(elevatorPosition, cumulativeDistance,
+		// Event Log
+		Collection<LoggedEvent> eventLog = simulationResults.getEvents();
+
+		analysisPanel.statusUpdate(eventLog, elevatorPosition, cumulativeDistance,
 				cumulativeServiceTime, passengersWaiting, simulationName,
 				startQuantum, stopQuantum, numberPassengersDelivered,
 				meanTimeToFailure, meanWaitTime);
