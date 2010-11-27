@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.util.Set;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -14,78 +13,77 @@ import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
 import com.pod2.elevator.view.active.status.StatusView;
 
-public class ElevatorView extends JPanel{
+public class ElevatorView extends JPanel {
 	private JScrollPane scrollPane;
 	private JPanel rootPanel;
 	private GridLayout gridLayout;
-	
+
 	private ElevatorPanel elevators[];
-	
+
 	private int numElevators;
-	private int numFloors;
-	
-	private StatusView statusView;
-	
-	public ElevatorView(int numFloors, int numElevators, StatusView statusView){
-		//Initialize variables
-		this.numFloors = numFloors;
+
+	public ElevatorView(int numFloors, int numElevators, StatusView statusView) {
 		this.numElevators = numElevators;
 		elevators = new ElevatorPanel[numElevators];
 		rootPanel = new JPanel();
-		gridLayout = new GridLayout(2,5,5,5);
-		
-		//Root panel
+		gridLayout = new GridLayout(2, 5, 5, 5);
+
+		// Root panel
 		rootPanel = new JPanel();
-		rootPanel.setPreferredSize(new Dimension(800,600));
+		rootPanel.setPreferredSize(new Dimension(800, 600));
 		rootPanel.setLayout(gridLayout);
 		rootPanel.setBackground(Color.LIGHT_GRAY);
-		
-		//Scrollpane
+
+		// Scrollpane
 		scrollPane = new JScrollPane(rootPanel);
-		scrollPane.setPreferredSize(new Dimension(800,600));
-		
-		//Elevator Panels
-		for(int i=0; i<numElevators; i++){
+		scrollPane.setPreferredSize(new Dimension(800, 600));
+
+		// Elevator Panels
+		for (int i = 0; i < numElevators; i++) {
 			elevators[i] = new ElevatorPanel(i, numFloors, statusView);
 			rootPanel.add(elevators[i]);
 		}
-		
-		//Add Scroll Pane
+
+		// Add Scroll Pane
 		this.add(scrollPane);
 	}
-	
-	public void paint(Graphics g){
-		//Get current size
+
+	public void paint(Graphics g) {
+		// Get current size
 		Dimension size = this.getSize();
-		
-		//Update scroll pane to fit in current size
+
+		// Update scroll pane to fit in current size
 		scrollPane.setPreferredSize(size);
-		
-		//Calculate number of elevator panels fit in a row
-		int col = (int) Math.floor(this.getSize().getWidth()/135 - 1);
-		//Ensure no divide by 0 error
-		if(col==0)col=1;
-		//Calculate how many columns are required
+
+		// Calculate number of elevator panels fit in a row
+		int col = (int) Math.floor(this.getSize().getWidth() / 135 - 1);
+		// Ensure no divide by 0 error
+		if (col == 0)
+			col = 1;
+		// Calculate how many columns are required
 		int row = (int) Math.ceil(numElevators / col + 1);
-		
-		//Set layout to match resolution
+
+		// Set layout to match resolution
 		gridLayout.setColumns(col);
 		gridLayout.setRows(row);
-		
-		//Scale root panel to reflect change in row
+
+		// Scale root panel to reflect change in row
 		int x = (int) (0);
 		int y = (int) (243 * row);
 		rootPanel.setPreferredSize(new Dimension(x, y));
 		rootPanel.revalidate();
-		
+
 		super.paint(g);
-		for(ElevatorPanel e : elevators){
+		for (ElevatorPanel e : elevators) {
 			e.repaint();
 		}
 	}
-	
-	public void statusUpdate(int eid, double position, Set<Integer> floorsOffLimit, MotionStatus motionStatus, ServiceStatus serviceStatus){
-		elevators[eid].statusUpdate(position, floorsOffLimit, motionStatus, serviceStatus);
+
+	public void statusUpdate(int eid, double position,
+			Set<Integer> floorsOffLimit, MotionStatus motionStatus,
+			ServiceStatus serviceStatus) {
+		elevators[eid].statusUpdate(position, floorsOffLimit, motionStatus,
+				serviceStatus);
 	}
-	
+
 }
