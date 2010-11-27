@@ -27,8 +27,8 @@ public class SimulationTemplateRepository {
 		//
 		String sqlQuery = "INSERT INTO `SimulationTemplate` (" + "`numberFloors`,"
 				+ "`elevatorCapacity`," + "`numberElevators`," + "`scheduler`,"
-				+ "`requestGenerationOn`," + "`name`," + "`created`," + "`lastEdit`" + ") "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "`requestGenerationOn`," + "`name`," + "`created`" + ") "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement preparedStmt = conn.prepareStatement(sqlQuery);
 
@@ -39,7 +39,6 @@ public class SimulationTemplateRepository {
 		preparedStmt.setBoolean(5, template.isRequestGenerationOn());
 		preparedStmt.setString(6, template.getName());
 		preparedStmt.setDate(7, new Date(template.getCreated().getTime()));
-		preparedStmt.setDate(8, new Date(template.getLastEdit().getTime()));
 
 		preparedStmt.execute();
 
@@ -132,135 +131,6 @@ public class SimulationTemplateRepository {
 		conn.close();
 	}
 
-	static public void updateTemplate(SimulationTemplate template) throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root",
-				"");
-
-		//
-		// Update one-to-one template attributes
-		//
-		String sqlQuery = "UPDATE `SimulationTemplate` SET " + "`numberFloors` = ?,"
-				+ "`elevatorCapacity` = ?," + "`numberElevators` = ?," + "`scheduler` = ?,"
-				+ "`requestGenerationOn` = ?," + "`name` = ?," + "`created` = ?,"
-				+ "`lastEdit` = ?" + " WHERE `id` = ?";
-
-		PreparedStatement preparedStmt = conn.prepareStatement(sqlQuery);
-		preparedStmt.setInt(1, template.getNumberFloors());
-		preparedStmt.setInt(2, template.getElevatorCapacity());
-		preparedStmt.setInt(3, template.getNumberElevators());
-		preparedStmt.setString(4, template.getScheduler().getKey());
-		preparedStmt.setBoolean(5, template.isRequestGenerationOn());
-		preparedStmt.setString(6, template.getName());
-		preparedStmt.setDate(7, new Date(template.getCreated().getTime()));
-		preparedStmt.setDate(8, new Date(template.getLastEdit().getTime()));
-		preparedStmt.setInt(9, template.getId());
-
-		preparedStmt.executeUpdate();
-
-		//
-		// Update many-to-one attributes
-		//
-
-		//
-		// Restricted Floors
-		//
-
-		// Delete old entries
-		sqlQuery = "DELETE FROM `RestrictedFloors` WHERE `templateId` = ?";
-		preparedStmt = conn.prepareStatement(sqlQuery);
-		preparedStmt.setInt(1, template.getId());
-		preparedStmt.execute();
-
-		// Insert new entries
-		Iterator<Integer> rf = template.getRestrictedFloors().iterator();
-		while (rf.hasNext()) {
-			sqlQuery = "INSERT INTO `RestrictedFloors` (`templateId`,`restrictedFloor`)"
-					+ "VALUES (?, ?)";
-			preparedStmt = conn.prepareStatement(sqlQuery);
-			preparedStmt.setInt(1, template.getId());
-			preparedStmt.setInt(2, rf.next());
-			preparedStmt.execute();
-		}
-
-		//
-		// Passenger Requests
-		//
-
-		// Delete old entries
-		sqlQuery = "DELETE FROM `TemplatePassengerRequest` WHERE `templateId` = ?";
-		preparedStmt = conn.prepareStatement(sqlQuery);
-		preparedStmt.setInt(1, template.getId());
-		preparedStmt.execute();
-
-		// Insert new entries
-		Iterator<TemplatePassengerRequest> rq = template.getPassengerRequests().iterator();
-		while (rq.hasNext()) {
-			TemplatePassengerRequest request = rq.next();
-			sqlQuery = "INSERT INTO `TemplatePassengerRequest` (`templateId`, `onloadFloor`,"
-					+ "`offloadFloor`,`timeConstraint`,`quantum`) " + "VALUES (?, ?, ?, ?, ?)";
-			preparedStmt = conn.prepareStatement(sqlQuery);
-			preparedStmt.setInt(1, template.getId());
-			preparedStmt.setInt(2, request.getOnloadFloor());
-			preparedStmt.setInt(3, request.getOffloadFloor());
-			preparedStmt.setLong(4, request.getTimeConstraint());
-			preparedStmt.setLong(5, request.getQuantum());
-			preparedStmt.execute();
-		}
-
-		//
-		// Failure Events
-		//
-
-		// Delete old entries
-		sqlQuery = "DELETE FROM `TemplateFailureEvent` WHERE `templateId` = ?";
-		preparedStmt = conn.prepareStatement(sqlQuery);
-		preparedStmt.setInt(1, template.getId());
-		preparedStmt.execute();
-
-		// Insert new entries
-		Iterator<TemplateFailureEvent> fe = template.getFailureEvents().iterator();
-		while (fe.hasNext()) {
-			TemplateFailureEvent event = fe.next();
-			sqlQuery = "INSERT INTO `TemplateFailureEvent` (`templateId`, `component`,"
-					+ "`elevatorNumber`,`quantum`) " + "VALUES (?, ?, ?, ?)";
-			preparedStmt = conn.prepareStatement(sqlQuery);
-			preparedStmt.setInt(1, template.getId());
-			preparedStmt.setString(2, event.getComponent().getKey());
-			preparedStmt.setInt(3, event.getElevatorNumber());
-			preparedStmt.setLong(4, event.getQuantum());
-			preparedStmt.execute();
-		}
-
-		//
-		// Service Events
-		//
-
-		// Delete old entries
-		sqlQuery = "DELETE FROM `TemplateServiceEvent` WHERE `templateId` = ?";
-		preparedStmt = conn.prepareStatement(sqlQuery);
-		preparedStmt.setInt(1, template.getId());
-		preparedStmt.execute();
-
-		// Insert new entries
-		Iterator<TemplateServiceEvent> se = template.getServiceEvents().iterator();
-		while (se.hasNext()) {
-			TemplateServiceEvent event = se.next();
-			sqlQuery = "INSERT INTO `TemplateServiceEvent` (`templateId`, `putInService`,"
-					+ "`elevatorNumber`,`quantum`) " + "VALUES (?, ?, ?, ?)";
-			preparedStmt = conn.prepareStatement(sqlQuery);
-			preparedStmt.setInt(1, template.getId());
-			preparedStmt.setBoolean(2, event.isPutInService());
-			preparedStmt.setInt(3, event.getElevatorNumber());
-			preparedStmt.setLong(4, event.getQuantum());
-			preparedStmt.execute();
-		}
-
-		//
-		// Done
-		//
-		conn.close();
-	}
-
 	static public void deleteTemplate(int id) throws SQLException {
 
 		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ElevatorDB", "root",
@@ -291,7 +161,7 @@ public class SimulationTemplateRepository {
 
 		while (rs.next()) {
 			SimulationTemplateDetail templateDetail = new SimulationTemplateDetail(rs.getInt("id"),
-					rs.getString("name"), rs.getDate("created"), rs.getDate("lastEdit"));
+					rs.getString("name"), rs.getDate("created"));
 			allTemplates.add(templateDetail);
 		}
 
@@ -332,7 +202,6 @@ public class SimulationTemplateRepository {
 		template.setScheduler(SchedulerRegistry.getSchedulerByKey(rs.getString("scheduler")));
 		template.setRequestGenerationOn(rs.getBoolean("requestGenerationOn"));
 		template.setCreated(rs.getDate("created"));
-		template.setLastEdit(rs.getDate("lastEdit"));
 
 		//
 		// Get many-to-one template attributes

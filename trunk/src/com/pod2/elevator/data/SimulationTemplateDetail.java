@@ -4,20 +4,18 @@ import java.util.Date;
 
 public class SimulationTemplateDetail {
 
-	private int id;
-	private String name;
-	private Date created;
-	private Date lastEdit;
+	private int id = -1;
+	private String name = "";
+	private Date created = new Date();
 
 	public SimulationTemplateDetail() {
 	}
 
-	public SimulationTemplateDetail(int id, String name, Date created, Date lastEdit) {
+	public SimulationTemplateDetail(int id, String name, Date created) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.created = created;
-		this.lastEdit = lastEdit;
 	}
 
 	public int getId() {
@@ -42,14 +40,6 @@ public class SimulationTemplateDetail {
 
 	public void setCreated(Date created) {
 		this.created = created;
-	}
-
-	public Date getLastEdit() {
-		return lastEdit;
-	}
-
-	public void setLastEdit(Date lastEdit) {
-		this.lastEdit = lastEdit;
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.pod2.elevator.data;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,20 +13,17 @@ import com.pod2.elevator.scheduling.SchedulerRegistry;
 
 public class SimulationTemplate extends SimulationTemplateDetail {
 
-	private int id = -1;
-	private String name = "";
 	private int numberFloors = 5;
 	private int elevatorCapacity = 5;
 	private int numberElevators = 1;
 	private double speed = 0.01; /* floors per second */
 	private Set<Integer> restrictedFloors = new HashSet<Integer>();
-	private ElevatorScheduler scheduler = SchedulerRegistry.getAvailableSchedulers().iterator().next();
+	private ElevatorScheduler scheduler = SchedulerRegistry.getAvailableSchedulers().iterator()
+			.next();
 	private boolean requestGenerationOn = false;
 	private List<TemplatePassengerRequest> passengerRequests = new LinkedList<TemplatePassengerRequest>();
 	private List<TemplateFailureEvent> failureEvents = new LinkedList<TemplateFailureEvent>();
 	private List<TemplateServiceEvent> serviceEvents = new LinkedList<TemplateServiceEvent>();
-	private Date created = new Date();
-	private Date lastEdit = new Date();
 	private long quantumsBeforeService = 100000;
 	private double distanceBeforeService = 100000.00;
 
@@ -47,22 +43,6 @@ public class SimulationTemplate extends SimulationTemplateDetail {
 					event.getElevatorNumber(), event.isPutInService()));
 		}
 		return eventList;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public int getNumberFloors() {
@@ -137,22 +117,6 @@ public class SimulationTemplate extends SimulationTemplateDetail {
 		this.serviceEvents = serviceEvents;
 	}
 
-	public Date getCreated() {
-		return created;
-	}
-
-	public void setCreated(Date created) {
-		this.created = created;
-	}
-
-	public Date getLastEdit() {
-		return lastEdit;
-	}
-
-	public void setLastEdit(Date lastEdit) {
-		this.lastEdit = lastEdit;
-	}
-
 	public double getSpeed() {
 		return speed;
 	}
@@ -179,13 +143,12 @@ public class SimulationTemplate extends SimulationTemplateDetail {
 
 	@Override
 	public String toString() {
-		return "SimulationTemplate [id=" + id + ", name=" + name + ", numberFloors=" + numberFloors
-				+ ", elevatorCapacity=" + elevatorCapacity + ", numberElevators=" + numberElevators
-				+ ", speed=" + speed + ", restrictedFloors=" + restrictedFloors + ", scheduler="
-				+ scheduler + ", requestGenerationOn=" + requestGenerationOn
-				+ ", passengerRequests=" + passengerRequests + ", failureEvents=" + failureEvents
-				+ ", serviceEvents=" + serviceEvents + ", created=" + created + ", lastEdit="
-				+ lastEdit + ", quantumsBeforeService=" + quantumsBeforeService
+		return "SimulationTemplate [numberFloors=" + numberFloors + ", elevatorCapacity="
+				+ elevatorCapacity + ", numberElevators=" + numberElevators + ", speed=" + speed
+				+ ", restrictedFloors=" + restrictedFloors + ", scheduler=" + scheduler
+				+ ", requestGenerationOn=" + requestGenerationOn + ", passengerRequests="
+				+ passengerRequests + ", failureEvents=" + failureEvents + ", serviceEvents="
+				+ serviceEvents + ", quantumsBeforeService=" + quantumsBeforeService
 				+ ", distanceBeforeService=" + distanceBeforeService + "]";
 	}
 

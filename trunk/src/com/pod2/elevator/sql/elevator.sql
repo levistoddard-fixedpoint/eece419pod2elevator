@@ -17,9 +17,9 @@ CREATE  TABLE IF NOT EXISTS `ElevatorDB`.`SimulationTemplate` (
   `requestGenerationOn` TINYINT(1)  NOT NULL ,
   `name` VARCHAR(90) NOT NULL ,
   `created` DATE NOT NULL ,
-  `lastEdit` DATE NOT NULL ,
   PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) )
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  UNIQUE (`name`) )
 ENGINE = InnoDB;
 
 
