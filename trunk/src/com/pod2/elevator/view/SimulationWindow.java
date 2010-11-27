@@ -22,16 +22,11 @@ public class SimulationWindow extends JFrame implements Runnable {
 	 * 
 	 */
 	private static final long serialVersionUID = 6664795648746130396L;
-	private int numFloors;
-	private int numElevators;
-	private JMenuBar menubar;
-	private JToolBar toolbar;
 	private JTabbedPane tabPane;
 	private ActiveView activeView;
 	private AnalysisView analysisView;
 	private ConfigurationView configurationView;
 	private SystemSnapShot prevSystemSnapShot;
-	private CentralController centralController;
 
 	public SimulationWindow() {
 		// Get screen size
@@ -47,14 +42,6 @@ public class SimulationWindow extends JFrame implements Runnable {
 		setLocation(size.width / 2 - getWidth() / 2, size.height / 2
 				- getHeight() / 2);
 
-		// Add menu
-		menubar = new Menu();
-		setJMenuBar(menubar);
-
-		// Add toolbar
-		toolbar = new Toolbar();
-		add(toolbar, BorderLayout.NORTH);
-
 		// Add tabs
 		tabPane = new JTabbedPane();
 		tabPane.setPreferredSize(new Dimension(640, 480));
@@ -69,15 +56,13 @@ public class SimulationWindow extends JFrame implements Runnable {
 		pack();
 		setVisible(true);
 	}
-	
-	public void startup(int numFloors, int numElevators, String scheduler){
-		this.numFloors = numFloors;
-		this.numElevators = numElevators;
+
+	public void startup(int numFloors, int numElevators, String scheduler) {
 		activeView = new ActiveView(numFloors, numElevators, scheduler);
 		tabPane.setComponentAt(0, activeView);
 	}
-	
-	public void teardown(){
+
+	public void teardown() {
 		activeView = new ActiveView();
 		tabPane.setComponentAt(0, activeView);
 	}
@@ -87,14 +72,14 @@ public class SimulationWindow extends JFrame implements Runnable {
 	}
 
 	public void statusUpdate(SystemSnapShot systemSnapShot) {
-		if(prevSystemSnapShot == null || !prevSystemSnapShot.equals(systemSnapShot)){
+		if (prevSystemSnapShot == null
+				|| !prevSystemSnapShot.equals(systemSnapShot)) {
 			activeView.statusUpdate(systemSnapShot);
 		}
 		prevSystemSnapShot = systemSnapShot;
 	}
 
 	public void setCentralController(CentralController centralController) {
-		this.centralController = centralController;
 		configurationView.setCentralController(centralController);
 	}
 

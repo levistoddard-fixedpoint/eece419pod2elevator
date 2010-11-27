@@ -2,7 +2,6 @@ package com.pod2.elevator.view.data;
 
 import java.util.Collection;
 
-
 public class SystemSnapShot {
 
 	private long quantum;
