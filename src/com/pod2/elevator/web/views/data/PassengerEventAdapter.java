@@ -1,4 +1,4 @@
-package com.pod2.elevator.web.views.templates;
+package com.pod2.elevator.web.views.data;
 
 import com.pod2.elevator.data.TemplatePassengerRequest;
 import com.vaadin.ui.Button;
