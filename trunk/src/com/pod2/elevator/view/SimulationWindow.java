@@ -47,6 +47,7 @@ public class SimulationWindow extends JFrame implements Runnable {
 		tabPane.addTab("Active Simulation", activeView);
 		tabPane.addTab("Analysis", analysisView);
 		tabPane.addTab("Configuration", configurationView);
+		tabPane.setSelectedComponent(analysisView);
 		add(tabPane, BorderLayout.CENTER);
 
 		pack();

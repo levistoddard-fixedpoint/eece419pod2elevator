@@ -14,6 +14,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.pod2.elevator.core.ServiceStatus;
@@ -69,15 +70,14 @@ public class AnalysisView extends JPanel implements ActionListener {
 			SimulationResults tempResults;
 			for (int i = 0; i < simulationList.size(); i++) {
 				Uuid = simulationList.get(i).getId();
-				tempResults = SimulationDataRepository.getSimulationResults(Uuid);
-				simulationComboBox.addItem(simulationList.get(i).getName() + " : " + "["
-						+ tempResults.getStartTime() + "]");
+				tempResults = SimulationDataRepository
+						.getSimulationResults(Uuid);
+				simulationComboBox.addItem(simulationList.get(i).getName()
+						+ " : " + "[" + tempResults.getStartTime() + "]");
 			}
 		} catch (SQLException s) {
-			if (simulationComboBox == null) {
-				simulationComboBox = new JComboBox();
-			}
-			s.printStackTrace();
+			JOptionPane.showMessageDialog(this,
+					"Cannnot connect to database: Press refresh to try again");
 		}
 
 	}
@@ -137,19 +137,20 @@ public class AnalysisView extends JPanel implements ActionListener {
 
 			for (int j = 0; j < simulationResults.getElevatorStates().get(i).length; j++) {
 				// Get elevator position
-				position[j] = simulationResults.getElevatorStates().get(i)[j].getPosition();
+				position[j] = simulationResults.getElevatorStates().get(i)[j]
+						.getPosition();
 
 				// Get cumulative distance
 				deltaDistance = Math.abs(position[j] - prevDistance);
-				if(j>0){
-					prevDistance = distance[j-1];
+				if (j > 0) {
+					prevDistance = distance[j - 1];
 				}
 				distance[j] = prevDistance + deltaDistance;
 				prevDistance = position[j];
 
 				// Get service time
-				if(j>0){
-					prevTime = service[j-1];
+				if (j > 0) {
+					prevTime = service[j - 1];
 				}
 				if (simulationResults.getElevatorStates().get(i)[j].getStatus() == ServiceStatus.InService) {
 					service[j] = prevTime + 1;
@@ -161,7 +162,7 @@ public class AnalysisView extends JPanel implements ActionListener {
 				totalTime += service[j];
 
 			}
-			
+
 			elevatorPosition.add(i, position);
 			cumulativeDistance.add(i, distance);
 			cumulativeServiceTime.add(i, service);
@@ -178,7 +179,9 @@ public class AnalysisView extends JPanel implements ActionListener {
 				if (j >= simulationResults.getPassengerDeliveries().get(j)
 						.getEnterQuantum()
 						&& j <= simulationResults.getPassengerDeliveries()
-								.get(j).getOnloadQuantum() && i == simulationResults.getPassengerDeliveries().get(j).getOnloadFloor()) {
+								.get(j).getOnloadQuantum()
+						&& i == simulationResults.getPassengerDeliveries()
+								.get(j).getOnloadFloor()) {
 					wait[i]++;
 				}
 			}
@@ -187,24 +190,26 @@ public class AnalysisView extends JPanel implements ActionListener {
 
 		for (int i = 0; i < simulationResults.getPassengerDeliveries().size(); i++) {
 			// Calculate mean wait time
-			meanWaitTime += (simulationResults.getPassengerDeliveries().get(i).getOnloadQuantum()
-					- simulationResults.getPassengerDeliveries().get(i).getEnterQuantum());
+			meanWaitTime += (simulationResults.getPassengerDeliveries().get(i)
+					.getOnloadQuantum() - simulationResults
+					.getPassengerDeliveries().get(i).getEnterQuantum());
 		}
-		if(simulationResults.getPassengerDeliveries().size() > 0){
+		if (simulationResults.getPassengerDeliveries().size() > 0) {
 			meanWaitTime /= simulationResults.getPassengerDeliveries().size();
-		}else {
+		} else {
 			meanWaitTime = -1;
 		}
 
 		// Calculate mean time to failure
-		if(numberFailures > 0){
+		if (numberFailures > 0) {
 			meanTimeToFailure = totalTime / numberFailures;
-		}else {
+		} else {
 			meanTimeToFailure = -1;
 		}
 
 		// Calculate total passengers delivered
-		numberPassengersDelivered = simulationResults.getPassengerDeliveries().size();
+		numberPassengersDelivered = simulationResults.getPassengerDeliveries()
+				.size();
 
 		// Simulation Name
 		String simulationName = simulationResults.getName();
@@ -216,9 +221,10 @@ public class AnalysisView extends JPanel implements ActionListener {
 		// Event Log
 		Collection<LoggedEvent> eventLog = simulationResults.getEvents();
 
-		analysisPanel.statusUpdate(eventLog, elevatorPosition, cumulativeDistance,
-				cumulativeServiceTime, passengersWaiting, simulationName, startQuantum,
-				stopQuantum, numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
+		analysisPanel.statusUpdate(eventLog, elevatorPosition,
+				cumulativeDistance, cumulativeServiceTime, passengersWaiting,
+				simulationName, startQuantum, stopQuantum,
+				numberPassengersDelivered, meanTimeToFailure, meanWaitTime);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -228,23 +234,34 @@ public class AnalysisView extends JPanel implements ActionListener {
 		if (analyzeButton.equals(e.getSource())) {
 			int index = (int) simulationComboBox.getSelectedIndex();
 			int Uuid;
-			try {
-				Uuid = simulationList.get(index).getId();
-				simulationResults = SimulationDataRepository.getSimulationResults(Uuid);
-				simulationTemplate = SimulationTemplateRepository.getTemplate(simulationResults
-						.getTemplateId());
-				analysisPanel = new AnalysisPanel(simulationTemplate.getNumberFloors(),
-						simulationTemplate.getNumberElevators());
-				this.statusUpdate(simulationTemplate.getNumberFloors(), simulationTemplate
-						.getNumberElevators(), simulationTemplate.getScheduler().getName());
-				JFrame temp = new JFrame(simulationResults.getName());
-				temp.add(analysisPanel);
-				temp.pack();
-				temp.setVisible(true);
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			} catch (IndexOutOfBoundsException e1) {
-				e1.printStackTrace();
+			if (simulationList == null) {
+				JOptionPane.showMessageDialog(this,
+						"No Simulation Available: Press refresh to try again");
+			} else {
+				try {
+					Uuid = simulationList.get(index).getId();
+					simulationResults = SimulationDataRepository
+							.getSimulationResults(Uuid);
+					simulationTemplate = SimulationTemplateRepository
+							.getTemplate(simulationResults.getTemplateId());
+					analysisPanel = new AnalysisPanel(
+							simulationTemplate.getNumberFloors(),
+							simulationTemplate.getNumberElevators());
+					this.statusUpdate(simulationTemplate.getNumberFloors(),
+							simulationTemplate.getNumberElevators(),
+							simulationTemplate.getScheduler().getName());
+					JFrame temp = new JFrame(simulationResults.getName());
+					temp.add(analysisPanel);
+					temp.pack();
+					temp.setVisible(true);
+				} catch (SQLException e1) {
+					JOptionPane
+							.showMessageDialog(this,
+									"Cannnot connect to database: Press refresh to try again");
+				} catch (IndexOutOfBoundsException e1) {
+					JOptionPane.showMessageDialog(this,
+							"No Simulation Selected");
+				}
 			}
 
 		}
