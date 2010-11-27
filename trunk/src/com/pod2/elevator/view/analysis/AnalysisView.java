@@ -220,7 +220,6 @@ public class AnalysisView extends JPanel implements ActionListener{
 
 	public void actionPerformed(ActionEvent e) {
 		if(refreshButton.equals(e.getSource())){
-			System.out.println("Refresh");
 			getSimulationList();
 		}
 		if(analyzeButton.equals(e.getSource())){
