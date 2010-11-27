@@ -16,8 +16,8 @@ public class SimulationView implements SimulationDisplay {
 	}
 
 	public void startup(SimulationTemplate template) {
-		window.startup(template.getNumberFloors(), template
-				.getNumberElevators(), template.getScheduler().getName());
+		window.startup(template.getNumberFloors(),
+				template.getNumberElevators());
 	}
 
 	public void update(final SystemSnapShot snapshot) {

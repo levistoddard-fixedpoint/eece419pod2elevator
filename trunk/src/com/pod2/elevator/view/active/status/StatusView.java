@@ -11,8 +11,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import com.pod2.elevator.core.ActiveSimulation;
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
+import com.pod2.elevator.main.CentralController;
 import com.pod2.elevator.view.active.status.elevator.ElevatorStatusPanel;
 import com.pod2.elevator.view.active.status.floor.FloorStatusPanel;
 import com.pod2.elevator.view.layout.VerticalLayout;
@@ -27,12 +30,18 @@ public class StatusView extends JPanel implements ActionListener {
 	private JLabel quantumLabel;
 	private JLabel schedulerLabel;
 
-	public StatusView(int numFloors, int numElevators, String scheduler) {
+	private CentralController centralController;
+
+	public StatusView(int numFloors, int numElevators,
+			CentralController centralController) {
+		
+		this.centralController = centralController;
+		
 		elevatorStatus = new ElevatorStatusPanel[numElevators];
 		floorStatusButton = new JButton("Floor Status");
 		floorStatusButton.addActionListener(this);
 		quantumLabel = new JLabel("Quantum: 0");
-		schedulerLabel = new JLabel(scheduler);
+		schedulerLabel = new JLabel();
 
 		// Root Panel
 		rootPanel = new JPanel();
@@ -99,6 +108,8 @@ public class StatusView extends JPanel implements ActionListener {
 		floorStatus.statusUpdate(fid, quantum, passengersWaiting, isUpSelected,
 				isDownSelected, upSelectedQuantum, downSelectedQuantum);
 		quantumLabel.setText("Quantum: " + Long.toString(quantum));
+		schedulerLabel.setText(centralController.getSimulation().getScheduler()
+				.getName());
 	}
 
 	public void actionPerformed(ActionEvent e) {
