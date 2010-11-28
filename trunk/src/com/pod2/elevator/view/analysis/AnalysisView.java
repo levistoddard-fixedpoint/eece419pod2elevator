@@ -73,9 +73,11 @@ public class AnalysisView extends JPanel implements ActionListener {
 				Uuid = simulationList.get(i).getId();
 				tempResults = SimulationDataRepository
 						.getSimulationResults(Uuid);
-				SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm"); 
+				SimpleDateFormat formatter = new SimpleDateFormat(
+						"MM/dd/yyyy HH:mm");
 				simulationComboBox.addItem(simulationList.get(i).getName()
-						+ " : " + "[" + formatter.format(tempResults.getStartTime()) + "]");
+						+ " : " + "["
+						+ formatter.format(tempResults.getStartTime()) + "]");
 			}
 		} catch (SQLException s) {
 			// JOptionPane.showMessageDialog(this,
@@ -188,17 +190,19 @@ public class AnalysisView extends JPanel implements ActionListener {
 		for (int i = 0; i < simulationTemplate.getNumberFloors(); i++) {
 			// Initialize Array
 			wait = new int[(int) simulationResults.getStopQuantum()];
-			for (int j = 0; j < simulationResults.getPassengerDeliveries()
-					.size(); j++) {
-				// Check if there is a passenger waiting on this floor
-				if (j >= simulationResults.getPassengerDeliveries().get(j)
-						.getEnterQuantum()
-						&& j <= simulationResults.getPassengerDeliveries()
-								.get(j).getOnloadQuantum()
-						&& i == simulationResults.getPassengerDeliveries()
-								.get(j).getOnloadFloor()) {
-					wait[i]++;
-				}
+			for (int k = 0; k < simulationResults.getStopQuantum(); k++) {
+				for (int j = 0; j < simulationResults.getPassengerDeliveries()
+						.size(); j++) {
+					// Check if there is a passenger waiting on this floor
+					if (k <= simulationResults.getPassengerDeliveries().get(j)
+							.getOnloadQuantum()
+							&& k >= simulationResults.getPassengerDeliveries()
+									.get(j).getEnterQuantum()
+							&& i == simulationResults.getPassengerDeliveries()
+									.get(j).getOnloadFloor()) {
+						wait[k]++;
+					}
+				}	
 			}
 			passengersWaiting.add(i, wait);
 		}
@@ -217,7 +221,8 @@ public class AnalysisView extends JPanel implements ActionListener {
 
 		// Calculate mean time to failure
 		if (numberFailures > 0) {
-			meanTimeToFailure = totalTime / numberFailures;
+			meanTimeToFailure = totalTime / numberFailures
+					/ simulationTemplate.getNumberElevators();
 		} else {
 			meanTimeToFailure = -1;
 		}
@@ -232,7 +237,7 @@ public class AnalysisView extends JPanel implements ActionListener {
 		long startQuantum = simulationResults.getStartQuantum();
 		// Stop Quantum
 		long stopQuantum = simulationResults.getStopQuantum();
-		
+
 		// Rescued Passengers
 		int rescued = simulationResults.getRescuedCount();
 
@@ -242,7 +247,8 @@ public class AnalysisView extends JPanel implements ActionListener {
 		analysisPanel.statusUpdate(eventLog, elevatorPosition,
 				cumulativeDistance, cumulativeServiceTime, passengersWaiting,
 				simulationName, startQuantum, stopQuantum,
-				numberPassengersDelivered, rescued, meanTimeToFailure, meanWaitTime);
+				numberPassengersDelivered, rescued, meanTimeToFailure,
+				meanWaitTime);
 	}
 
 	public void actionPerformed(ActionEvent e) {
