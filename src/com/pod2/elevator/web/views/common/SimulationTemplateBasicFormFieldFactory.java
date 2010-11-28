@@ -2,10 +2,8 @@ package com.pod2.elevator.web.views.common;
 
 import com.pod2.elevator.scheduling.ElevatorScheduler;
 import com.pod2.elevator.scheduling.SchedulerRegistry;
-import com.pod2.elevator.web.validators.MaxDoubleValidator;
-import com.pod2.elevator.web.validators.MaxIntegerValidator;
-import com.pod2.elevator.web.validators.PositiveIntegerValidator;
-import com.pod2.elevator.web.validators.PositiveNumberValidator;
+import com.pod2.elevator.web.validators.DoubleRangeValidator;
+import com.pod2.elevator.web.validators.IntegerRangeValidator;
 import com.vaadin.data.Item;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.CheckBox;
@@ -56,10 +54,7 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 			speed.setWidth(LayoutUtils.getFieldWidth());
 			speed.setRequired(true);
 			speed.setRequiredError("Please enter an elevator speed.");
-			speed.addValidator(new PositiveNumberValidator(
-					"Elevator speed must be a positive number."));
-			speed.addValidator(new MaxDoubleValidator(MAX_SPEED,
-					"Speed must be less than or equal to " + MAX_SPEED + " floors/quantum"));
+			speed.addValidator(new DoubleRangeValidator("Speed", 0.0, MAX_SPEED));
 			return speed;
 		} else if (pid.equals("elevatorCapacity")) {
 			final int MIN_CAPACITY = 1;
@@ -74,10 +69,8 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 			quantums.setWidth(LayoutUtils.getFieldWidth());
 			quantums.setRequired(true);
 			quantums.setRequiredError("Please enter quantums before required service.");
-			quantums.addValidator(new PositiveIntegerValidator("Time must be a positive integer."));
-			quantums.addValidator(new MaxIntegerValidator(5000,
-					"Time must be less than or equal to " + MAX_QUANTUMS_BEFORE_SERVICE
-							+ " quantums."));
+			quantums.addValidator(new IntegerRangeValidator("Time", 1, MAX_QUANTUMS_BEFORE_SERVICE));
+	
 			return quantums;
 		} else if (pid.equals("distanceBeforeService")) {
 			final double MAX_DISTANCE_BEFORE_SERVICE = 5000.0;
@@ -86,10 +79,7 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 			distance.setWidth(LayoutUtils.getFieldWidth());
 			distance.setRequired(true);
 			distance.setRequiredError("Please enter distance before required service.");
-			distance.addValidator(new PositiveNumberValidator("Distance must be a positive number."));
-			distance.addValidator(new MaxDoubleValidator(MAX_DISTANCE_BEFORE_SERVICE,
-					"Distance must be less than or equal to " + MAX_DISTANCE_BEFORE_SERVICE
-							+ " floors."));
+			distance.addValidator(new DoubleRangeValidator("Distance", 0.0, MAX_DISTANCE_BEFORE_SERVICE));
 			return distance;
 		}
 		throw new RuntimeException("unexpected property: " + pid);
@@ -109,7 +99,6 @@ public class SimulationTemplateBasicFormFieldFactory implements FormFieldFactory
 		selectInput.setWriteThrough(true);
 		selectInput.setReadThrough(true);
 		selectInput.setImmediate(true);
-		selectInput.addValidator(new PositiveIntegerValidator(failureMessage));
 		for (int n = min; n <= max; n++) {
 			selectInput.addItem(n);
 		}
