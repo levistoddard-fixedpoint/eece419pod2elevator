@@ -5,13 +5,12 @@ import com.pod2.elevator.core.Elevator;
 import com.pod2.elevator.core.MotionStatus;
 import com.pod2.elevator.core.ServiceStatus;
 
-/**
- * OVERVIEW: An ElevatorScheduler which makes each elevator continuously travel from the
- * bottom to the top floor, then back to the bottom floor again.
- * 
- */
 public class BasicUpDownScheduler implements ElevatorScheduler {
-
+	/**
+	 * OVERVIEW: An ElevatorScheduler which makes each elevator continuously travel from the
+	 * bottom to the top floor, then back to the bottom floor again.
+	 */
+	
 	int nextFloor = 1;
 
 	@Override
@@ -40,7 +39,13 @@ public class BasicUpDownScheduler implements ElevatorScheduler {
 
 	@Override
 	public void schedule(ActiveSimulation simulation) {
-
+		/**
+		 * REQUIRES: simulation != null
+		 * EFFECTS: Scheduler will move each elevator by 1 floor per quantum.
+		 * 		Once elevator has reached the highest floor, elevator will move
+		 * 		1 floor down on next quantum.  Once elevator has reached the
+		 * 		lowest floor, elevator will move 1 floor up on next quantum.
+		 */
 		for (Elevator elevator : simulation.getElevators()) {
 			if (!elevator.getServiceStatus().equals(ServiceStatus.InService))
 				continue;
