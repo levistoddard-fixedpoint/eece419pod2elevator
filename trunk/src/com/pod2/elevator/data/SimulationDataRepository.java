@@ -1,6 +1,7 @@
 package com.pod2.elevator.data;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -94,7 +95,7 @@ public class SimulationDataRepository {
 		// Elevator States
 
 		// Find Elevator Max
-		s.executeQuery("SELECT MAX(elevatorNumber) as maxElevator FROM `ElevatorState` WHERE `resultId` = "
+		s.executeQuery("SELECT MAX(elevatorNumber) AS maxElevator FROM `ElevatorState` WHERE `resultId` = "
 				+ uuid);
 		rs = s.getResultSet();
 
@@ -106,10 +107,13 @@ public class SimulationDataRepository {
 		ElevatorState[] esArray = new ElevatorState[0];
 
 		// Fill array for each elevator
-		for (int i = 0; i < numElevators; i++) {
-			s.executeQuery("SELECT * FROM `ElevatorState` WHERE `resultId` = " + uuid
-					+ " AND elevatorNumber = " + i);
-			rs = s.getResultSet();
+		for (int i = 0; i <= numElevators; i++) {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `ElevatorState` WHERE `resultId` = ?"
+					+ " AND elevatorNumber = ?");
+			ps.setInt(1, uuid);
+			ps.setInt(2, i);
+			ps.execute();
+			rs = ps.getResultSet();
 
 			esArrayList = new ArrayList<ElevatorState>();
 			while (rs.next()) {
