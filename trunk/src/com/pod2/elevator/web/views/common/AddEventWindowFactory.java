@@ -8,8 +8,7 @@ import com.pod2.elevator.data.TemplateEvent;
 import com.pod2.elevator.data.TemplateFailureEvent;
 import com.pod2.elevator.data.TemplatePassengerRequest;
 import com.pod2.elevator.data.TemplateServiceEvent;
-import com.pod2.elevator.web.validators.MaxIntegerValidator;
-import com.pod2.elevator.web.validators.NonNegativeIntegerValidator;
+import com.pod2.elevator.web.validators.IntegerRangeValidator;
 import com.pod2.elevator.web.views.data.FailureEventAdapter;
 import com.pod2.elevator.web.views.data.PassengerEventAdapter;
 import com.pod2.elevator.web.views.data.ServiceEventAdapter;
@@ -75,10 +74,7 @@ public class AddEventWindowFactory {
 				TextField time = new TextField("Event Time:");
 				time.setRequired(true);
 				time.setRequiredError("Please enter time at which event should occur.");
-				time.addValidator(new NonNegativeIntegerValidator(
-						"Time must be a non-negative integer."));
-				time.addValidator(new MaxIntegerValidator(MAX_QUANTUM,
-						"Time must be less than or equal to " + MAX_QUANTUM + " quantums."));
+				time.addValidator(new IntegerRangeValidator("Time", 0, MAX_QUANTUM));
 				return time;
 			} else if (propertyId.equals("elevatorNumber")) {
 				Select elevators = new Select("Elevator Number:");
@@ -121,10 +117,7 @@ public class AddEventWindowFactory {
 				timeConstraint.setWidth(LayoutUtils.getFieldWidth());
 				timeConstraint.setRequired(true);
 				timeConstraint.setRequiredError("Please enter a time constraint.");
-				timeConstraint.addValidator(new NonNegativeIntegerValidator(
-						"Time constraint must be a non-negative integer."));
-				timeConstraint.addValidator(new MaxIntegerValidator(MAX_QUANTUM,
-						"Time must be less than or equal to " + MAX_QUANTUM + "quantums."));
+				timeConstraint.addValidator(new IntegerRangeValidator("Time", 0, MAX_QUANTUM));
 				return timeConstraint;
 			}
 			return super.createField(item, propertyId, uiContext);
@@ -170,8 +163,8 @@ public class AddEventWindowFactory {
 			floors.setNullSelectionItemId(-1);
 			floors.setInvalidCommitted(true);
 			floors.addValidator(new SelectedFloorsValidator());
-			floors.addValidator(new NonNegativeIntegerValidator(
-					"Floor must be a non-negative integer."));
+			floors.addValidator(new IntegerRangeValidator("Floor", 0,
+					template.getNumberFloors() - 1));
 			for (int floor = 0; floor < template.getNumberFloors(); floor++) {
 				if (!includeRestricted && template.getRestrictedFloors().contains(floor)) {
 					continue;
