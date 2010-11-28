@@ -253,6 +253,7 @@ public class SimulationTemplateRepository {
 			TemplateServiceEvent servEvent = new TemplateServiceEvent();
 			servEvent.setElevatorNumber(rs.getInt("elevatorNumber"));
 			servEvent.setQuantum(rs.getLong("quantum"));
+			servEvent.setPutInService(rs.getBoolean("putInService"));
 			serviceEvents.add(servEvent);
 		}
 		template.setServiceEvents(serviceEvents);
